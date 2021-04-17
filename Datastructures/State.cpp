@@ -4,7 +4,7 @@
 
 #include "State.h"
 
-State *State::operator[](std::string action) const {
+State *State::operator[](Action action) const {
     for(auto it:action_to_state){
         if(it.first == action){
             return it.second;
