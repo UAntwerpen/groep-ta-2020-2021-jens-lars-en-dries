@@ -17,13 +17,11 @@ class State {
     std::vector<std::pair<std::string, State*>> action_to_state;
     // list of state-probability pairs
     std::vector<std::pair<State*, double>> state_to_probability;
-    // list of state-reward pairs
-    std::vector<std::pair<State*, double>> state_to_reward;
 
 public:
     // find corresponding state to an action
     State* operator[](std::string action) const;
-    // find corresponding probability to a state //TODO: probability or reward?
+    // find corresponding probability to a state
     double operator[](State* state) const;
 
 };
