@@ -15,13 +15,14 @@ public:
     int seed;
     bool deterministic;
     float living_reward;
+    float percentage_obstacles;
     std::vector<std::tuple<int, int>> observable_states;
     std::tuple<int, int> start;
     // need the near_terminal for the final action -> terminal action is a loop outside of the gridworld (there's reasons for this).
     std::tuple<int, int> end;
     std::tuple<int, int> current_state;
 
-    Environment(int height, int width, int seed, bool deterministic, float living_reward);
+    Environment(int height, int width, int seed, bool deterministic, float living_reward, float percentage_obstacles);
 
     // accepts: action (int), 0 = UP, 1 = RIGHT, 2 = DOWN, 3 = LEFT
     // returns: next_state (coordinates, tuple of ints), reward (float), done (bool)
