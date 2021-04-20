@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "Environment.h"
 
 Environment::Environment(int height, int width, int seed, bool deterministic, float living_reward,
