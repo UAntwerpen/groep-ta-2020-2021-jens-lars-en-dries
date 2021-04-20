@@ -1,7 +1,9 @@
 #define CATCH_CONFIG_MAIN
 
+#include <iostream>
 #include "catch.hpp"
 #include "../datastructures/Environment.h"
+#include "../random/Random.h"
 
 TEST_CASE("Environment Basics"){
     Environment env = Environment(10, 5, 42, true, -0.01, 0.2);
@@ -99,3 +101,9 @@ TEST_CASE("Environment Generation: Deterministic with Obstacles"){
     }
 }
 
+TEST_CASE("Randomness"){
+    Random random(420);
+    REQUIRE(random.rand() == 1713004723);
+    REQUIRE(random.random() == 1606954614);
+    REQUIRE(random.random() == 1705136989);
+}
