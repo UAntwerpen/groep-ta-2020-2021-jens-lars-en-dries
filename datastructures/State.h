@@ -14,35 +14,35 @@ class State {
     // list of all actions
     std::vector<int> actions;
     // list of action values
-    std::vector<std::pair<int, double>> value;
+    std::vector<std::pair<int, float>> Q_value;
     // list of action-state pairs
     std::vector<std::pair<int, State*>> action_to_state;
     // list of state-probability pairs
-    std::vector<std::pair<State*, double>> state_to_probability;
+    std::vector<std::pair<State*, float>> state_to_probability;
 public:
     // getters and setters
     const std::vector<int> &getActions() const;
     void setActions(const std::vector<int> &actions);
-    const std::vector<std::pair<int, double>> &getValue1() const;
-    void setValue1(const std::vector<std::pair<int, double>> &value);
+    const std::vector<std::pair<int, float>> &getQValue() const;
+    void setValue1(const std::vector<std::pair<int, float>> &value);
     const std::vector<std::pair<int, State *>> &getActionToState() const;
     void setActionToState(const std::vector<std::pair<int, State *>> &actionToState);
-    const std::vector<std::pair<State *, double>> &getStateToProbability() const;
+    const std::vector<std::pair<State *, float>> &getStateToProbability() const;
 
-    void setStateToProbability(const std::vector<std::pair<State *, double>> &stateToProbability);
+    void setStateToProbability(const std::vector<std::pair<State *, float>> &stateToProbability);
 
     // find corresponding state to an action
     State* operator[](int action) const;
     // find corresponding probability to a state
-    double operator[](State* state) const;
+    float operator[](State* state) const;
 
-    void setValue(int action, double in_value);
+    void setValue(int action, float in_value);
 
-    double getValue(int action);
+    float getValue(int action);
 
-    std::pair<int, double>& findActionValuePair(int action);
+    std::pair<int, float>& findActionValuePair(int action);
 
-    double pToState(State* in_state);
+    float pToState(State* in_state);
 
 };
 

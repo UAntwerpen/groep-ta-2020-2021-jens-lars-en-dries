@@ -2,6 +2,7 @@
 // Created by driesdemaeseneer on 4/15/21.
 //
 
+#include <complex>
 #include "Agent.h"
 #include "Environment.h"
 
@@ -16,7 +17,8 @@ void Agent::onPolicyImprove(int nr_episodes, Environment& gridworld) {
         auto episode = play(gridworld);
 
         // Calculate cumulative reward of episode
-        double cumulative_reward;// TODO: update cumulative_reward
+        float cumulative_reward = 0;
+        for(int i = 0;i<episode.size();i++) cumulative_reward += std::get<1>(episode[i])*std::pow(discountfactor, i);
 
         // Loop over time steps in the i'th episode
         for(int time_step = 0; time_step<episode.size(); time_step++){
@@ -28,22 +30,22 @@ void Agent::onPolicyImprove(int nr_episodes, Environment& gridworld) {
 
             auto state = std::get<0>(episode[time_step]);
             int action = std::get<1>(episode[time_step]);
-            double reward = std::get<2>(episode[time_step]);
-            double value = state->getValue(action);
+            float reward = std::get<2>(episode[time_step]);
+            float value = state->getValue(action);
             auto state_action_count = std::get<1>(findStateActionCounter(std::make_tuple(state, action)));
-            state->setValue(action, value + ((double)1/state_action_count) * (reward - value));
+            state->setValue(action, value + ((float)1/state_action_count) * (reward - value));
 
         }
-        epsilon = (double)1/i;
+        epsilon = (float)1/i;
         policy = epsilon_greedy_policy_improvement();
         // policy improvement
         // TODO: update policy_i
     }
 }
 
-std::vector<std::tuple<State*, int, double>>  Agent::play(Environment& gridworld) {
+std::vector<std::tuple<State*, int, float>>  Agent::play(Environment& gridworld) {
     // the resulting episode.
-    std::vector<std::tuple<State*, int, double>> to_export;
+    std::vector<std::tuple<State*, int, float>> to_export;
     bool finished= false;
     float reward;
     int action_to_do;
@@ -74,7 +76,18 @@ std::tuple<std::tuple<State *, int>, int>& Agent::findStateActionCounter(std::tu
     }
 }
 
-std::vector<std::pair<State *, int>> Agent::epsilon_greedy_policy_improvement() {
+std::map<State *, int> Agent::epsilon_greedy_policy_improvement() {
+    Random random;
     // TODO: implement epsilon greedy poolicy improvement.
-    return std::vector<std::pair<State *, int>>();
+    std::map<State *, int> to_export;
+    for(auto& it:la.getAllStates()){
+        float random_percentage = (random.rand()%10000)/10000;
+        if(epsilon>random_percentage){
+            to_export[it] = la.getAllActions()[random.rand()%la.getAllActions().size()];
+        }
+        else{
+            to_export[it] = la.pickAction(it);
+        }
+    }
+    return to_export;
 }

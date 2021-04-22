@@ -19,7 +19,7 @@ State *LA::G(State *in_state, int in_action) {
 int LA::pickAction(State *in_state) {
     int current_max = std::numeric_limits<int>::min();
     int current_action;
-    for(auto it: in_state->getValue1()){
+    for(auto it: in_state->getQValue()){
         if(it.second<current_max){
             current_action = it.first;
         }
@@ -31,4 +31,12 @@ State *LA::coordinatesToState(std::tuple<int, int> in_coords) {
     for (auto it: coordinates_to_state) {
         if (std::make_tuple(it.first.first, it.first.second) == in_coords) return it.second;
     }
+}
+
+std::vector<State *> LA::getAllStates() {
+    return all_states;
+}
+
+std::vector<int> LA::getAllActions() {
+    return all_actions;
 }

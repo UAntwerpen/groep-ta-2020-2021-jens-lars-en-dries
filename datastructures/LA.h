@@ -14,6 +14,7 @@ class LA {
     std::vector<State*> all_states;
     std::vector<int> all_actions;
     State* start_state;
+
     std::vector<std::pair<std::pair<int,int>,State*>> coordinates_to_state;
 
 public:
@@ -27,6 +28,8 @@ public:
 
     State* getStartState() { return start_state; }
 
+    std::vector<State*> getAllStates();
+    std::vector<int> getAllActions();
 };
 
 
