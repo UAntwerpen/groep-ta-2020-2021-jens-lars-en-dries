@@ -8,6 +8,12 @@
 
 
 void Agent::onPolicyImprove(int nr_episodes, Environment& gridworld) {
+    /*
+     *  the onPolicyImprove method will improve the agent's policy over nr_episodes episodes.
+     *  we use the GLIE Monte-Carlo Control to converge to the optimal action-Q_value function Q(s,a) -> q*(s,a).
+     *  the GLIE method will encourage exploration and overtime become more greedy to optimize the policy.
+     */
+
     //init variables
     // TODO: init vars
 
@@ -44,6 +50,10 @@ void Agent::onPolicyImprove(int nr_episodes, Environment& gridworld) {
 }
 
 std::vector<std::tuple<State*, int, float>>  Agent::play(Environment& gridworld) {
+    /*
+     * the play method will use polocy[time_step] to generate an episode.
+     */
+
     // the resulting episode.
     std::vector<std::tuple<State*, int, float>> to_export;
     bool finished= false;
@@ -77,16 +87,25 @@ std::tuple<std::tuple<State *, int>, int>& Agent::findStateActionCounter(std::tu
 }
 
 std::map<State *, int> Agent::epsilon_greedy_policy_improvement() {
+    /*
+     * the epsilon_greedy_policy_improvement method will become more greedy over time, this is usefull to encourage exploration.
+     */
+
+    // include random source with automatic seed
     Random random;
-    // TODO: implement epsilon greedy poolicy improvement.
+    // initialize the return policy
     std::map<State *, int> to_export;
+    // loop over all the states in the learning automata
     for(auto& it:la.getAllStates()){
-        float random_percentage = (random.rand()%10000)/10000;
-        if(epsilon>random_percentage){
-            to_export[it] = la.getAllActions()[random.rand()%la.getAllActions().size()];
-        }
-        else{
+
+        float random_percentage = (float)(random.rand()%10000)/10000;
+        // take a* (the optimal action in by value)
+        if((1-epsilon)+(epsilon/(float)la.getAllActions().size())>random_percentage){
             to_export[it] = la.pickAction(it);
+        }
+        // else taken random a to encourage exploration
+        else{
+            to_export[it] = la.getAllActions()[random.rand()%la.getAllActions().size()];
         }
     }
     return to_export;
