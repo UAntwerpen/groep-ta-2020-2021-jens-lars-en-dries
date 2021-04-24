@@ -5,22 +5,22 @@
 #include "../datastructures/Environment.h"
 #include "../random/Random.h"
 
-TEST_CASE("Environment Basics"){
+TEST_CASE("Environment Basics") {
     Environment env = Environment(10, 5, 42, true, -0.01, 0.2);
     REQUIRE(env.height == 10);
     REQUIRE(env.width == 5);
     REQUIRE(env.start != env.end);
-    REQUIRE(env.observable_states.size() == 50);
+    REQUIRE(env.states.size() == 50);
 }
 
-TEST_CASE("Environment Generation: Deterministic without Obstacles"){
-    Environment env = Environment(10, 5, 42, true,-0.01, 0.0);
-    SECTION("edge state (0, 0), action: left"){
-        std::tuple<int, int> edge_state (0, 0);
-        std::tuple<std::tuple<int, int>, float> edge_state_reward (edge_state, env.living_reward);
+TEST_CASE("Environment Generation: Deterministic without Obstacles") {
+    Environment env = Environment(10, 5, 42, true, -0.01, 0.0);
+    SECTION("edge state (0, 0), action: left") {
+        MDPState *edge_state = env.get_state_by_coordinates(0, 0);
+        std::tuple<MDPState *, float> edge_state_reward(edge_state, env.living_reward);
         // go to the left
         int action = 3;
-        std::map <std::tuple<std::tuple<int, int>, float>, float> state_reward_prob = env.p(edge_state, action);
+        std::map<std::tuple<MDPState *, float>, float> state_reward_prob = env.p(edge_state, action);
         // can only be one next state since it's a deterministic environment
         REQUIRE(state_reward_prob.size() == 1);
         // the next state should be the current state
@@ -29,79 +29,130 @@ TEST_CASE("Environment Generation: Deterministic without Obstacles"){
         REQUIRE(state_reward_prob.begin()->second == 1.0);
     }
 
-    SECTION("edge state (0, 0), action: up"){
-        std::tuple<int, int> edge_state (0, 0);
-        std::tuple<std::tuple<int, int>, float> edge_state_reward (edge_state, env.living_reward);
+    SECTION("edge state (0, 0), action: up") {
+        MDPState *edge_state = env.get_state_by_coordinates(0, 0);
+        std::tuple<MDPState *, float> edge_state_reward(edge_state, env.living_reward);
         // go up
         int action = 0;
-        std::map <std::tuple<std::tuple<int, int>, float>, float> state_reward_prob = env.p(edge_state, action);
+        std::map<std::tuple<MDPState *, float>, float> state_reward_prob = env.p(edge_state, action);
         // can only be one next state since it's a deterministic environment
         REQUIRE(state_reward_prob.size() == 1);
         // next state should be (0, 1) when going up
-        std::tuple<int, int> next_state (0, 1);
-        std::tuple<std::tuple<int, int>, float> next_state_reward (next_state, env.living_reward);
+        MDPState *next_state = env.get_state_by_coordinates(0, 1);
+        std::tuple<MDPState *, float> next_state_reward(next_state, env.living_reward);
         REQUIRE(state_reward_prob.begin()->first == next_state_reward);
         REQUIRE(state_reward_prob.begin()->second == 1.0);
     }
 
-    SECTION("edge state (4, 9), action: up"){
-        std::tuple<int, int> edge_state (4, 9);
-        std::tuple<std::tuple<int, int>, float> edge_state_reward (edge_state, env.living_reward);
+    SECTION("edge state (4, 9), action: up") {
+        MDPState *edge_state = env.get_state_by_coordinates(4, 9);
+        std::tuple<MDPState *, float> edge_state_reward(edge_state, env.living_reward);
         // go up
         int action = 0;
-        std::map <std::tuple<std::tuple<int, int>, float>, float> state_reward_prob = env.p(edge_state, action);
+        std::map<std::tuple<MDPState *, float>, float> state_reward_prob = env.p(edge_state, action);
+        // can only be one next state since it's a deterministic environment
         REQUIRE(state_reward_prob.size() == 1);
         // the next state should be the current state
         REQUIRE(state_reward_prob.begin()->first == edge_state_reward);
+        // probability should be 100% (deterministic)
         REQUIRE(state_reward_prob.begin()->second == 1.0);
     }
 
 
-    SECTION("edge state (4, 9), action: down"){
-        std::tuple<int, int> edge_state (4, 9);
-        std::tuple<std::tuple<int, int>, float> edge_state_reward (edge_state, env.living_reward);
-        // go down
+    SECTION("edge state (4, 9), action: down") {
+        MDPState *edge_state = env.get_state_by_coordinates(4, 9);
+        std::tuple<MDPState *, float> edge_state_reward(edge_state, env.living_reward);
+        // go up
         int action = 2;
-        std::map <std::tuple<std::tuple<int, int>, float>, float> state_reward_prob = env.p(edge_state, action);
+        std::map<std::tuple<MDPState *, float>, float> state_reward_prob = env.p(edge_state, action);
+        // can only be one next state since it's a deterministic environment
         REQUIRE(state_reward_prob.size() == 1);
-        // next state should be (4, 8) when going down
-        std::tuple<int, int> next_state (4, 8);
-        std::tuple<std::tuple<int, int>, float> next_state_reward (next_state, env.living_reward);
+        // next state should be (0, 1) when going up
+        MDPState *next_state = env.get_state_by_coordinates(4, 8);
+        std::tuple<MDPState *, float> next_state_reward(next_state, env.living_reward);
         REQUIRE(state_reward_prob.begin()->first == next_state_reward);
         REQUIRE(state_reward_prob.begin()->second == 1.0);
     }
 
-    SECTION("edge state (4, 9), action: right"){
-        std::tuple<int, int> edge_state (4, 9);
-        std::tuple<std::tuple<int, int>, float> edge_state_reward (edge_state, env.living_reward);
-        // go right
+    SECTION("edge state (4, 9), action: right") {
+        MDPState *edge_state = env.get_state_by_coordinates(4, 9);
+        std::tuple<MDPState *, float> edge_state_reward(edge_state, env.living_reward);
+        // go up
         int action = 1;
-        std::map <std::tuple<std::tuple<int, int>, float>, float> state_reward_prob = env.p(edge_state, action);
+        std::map<std::tuple<MDPState *, float>, float> state_reward_prob = env.p(edge_state, action);
+        // can only be one next state since it's a deterministic environment
         REQUIRE(state_reward_prob.size() == 1);
         // the next state should be the current state
         REQUIRE(state_reward_prob.begin()->first == edge_state_reward);
+        // probability should be 100% (deterministic)
         REQUIRE(state_reward_prob.begin()->second == 1.0);
     }
 }
 
-TEST_CASE("Environment Generation: Deterministic with Obstacles"){
-    Environment env = Environment(5, 2, 42, true,-0.01, 0.2);
+TEST_CASE("Environment Generation: Deterministic with Obstacles") {
+    Environment env = Environment(5, 2, 42, true, -0.01, 0.2);
     // this seed and configuration leads to (1, 0) and (0, 1) being chosen as obstacles
     // todo this result will change when we implement the path checking!
-    SECTION("edge state (0, 0), action: up"){
-        std::tuple<int, int> edge_state (0, 0);
-        std::tuple<std::tuple<int, int>, float> edge_state_reward (edge_state, env.living_reward);
+    SECTION("edge state (0, 0), action: up") {
+        MDPState *edge_state = env.get_state_by_coordinates(0, 0);
+        std::tuple<MDPState *, float> edge_state_reward(edge_state, env.living_reward);
         // go up
         int action = 0;
-        std::map <std::tuple<std::tuple<int, int>, float>, float> state_reward_prob = env.p(edge_state, action);
+        std::map<std::tuple<MDPState *, float>, float> state_reward_prob = env.p(edge_state, action);
         REQUIRE(state_reward_prob.size() == 1);
-        // the next state should be the current state
         REQUIRE(state_reward_prob.begin()->first == edge_state_reward);
+        REQUIRE(state_reward_prob.begin()->second == 1.0);
+    }
+
+    SECTION("edge state (0, 0), action: right") {
+        MDPState *edge_state = env.get_state_by_coordinates(0, 0);
+        std::tuple<MDPState *, float> edge_state_reward(edge_state, env.living_reward);
+        // go up
+        int action = 1;
+        std::map<std::tuple<MDPState *, float>, float> state_reward_prob = env.p(edge_state, action);
+        REQUIRE(state_reward_prob.size() == 1);
+        REQUIRE(state_reward_prob.begin()->first == edge_state_reward);
+        REQUIRE(state_reward_prob.begin()->second == 1.0);
+    }
+
+    SECTION("edge state (1, 1), action: left") {
+        MDPState *edge_state = env.get_state_by_coordinates(1, 1);
+        std::tuple<MDPState *, float> edge_state_reward(edge_state, env.living_reward);
+        // go down
+        int action = 3;
+        std::map<std::tuple<MDPState *, float>, float> state_reward_prob = env.p(edge_state, action);
+        REQUIRE(state_reward_prob.size() == 1);
+        REQUIRE(state_reward_prob.begin()->first == edge_state_reward);
+        REQUIRE(state_reward_prob.begin()->second == 1.0);
+    }
+
+    SECTION("edge state (1, 1), action: down") {
+        MDPState *edge_state = env.get_state_by_coordinates(1, 1);
+        std::tuple<MDPState *, float> edge_state_reward(edge_state, env.living_reward);
+        // go down
+        int action = 2;
+        std::map<std::tuple<MDPState *, float>, float> state_reward_prob = env.p(edge_state, action);
+        REQUIRE(state_reward_prob.size() == 1);
+        REQUIRE(state_reward_prob.begin()->first == edge_state_reward);
+        REQUIRE(state_reward_prob.begin()->second == 1.0);
+    }
+
+    SECTION("edge state (1, 1), action: up") {
+        MDPState *edge_state = env.get_state_by_coordinates(1, 1);
+        std::tuple<MDPState *, float> edge_state_reward(edge_state, env.living_reward);
+        // go down
+        int action = 0;
+        std::map<std::tuple<MDPState *, float>, float> state_reward_prob = env.p(edge_state, action);
+        REQUIRE(state_reward_prob.size() == 1);
+        // next state should be (1, 2) when going up
+        MDPState *next_state = env.get_state_by_coordinates(1, 2);
+        std::tuple<MDPState *, float> next_state_reward(next_state, env.living_reward);
+        REQUIRE(state_reward_prob.begin()->first == next_state_reward);
         REQUIRE(state_reward_prob.begin()->second == 1.0);
     }
 }
 
-TEST_CASE("Randomness"){
+TEST_CASE("Randomness") {
     Random random(420);
     REQUIRE(random.rand() == 1713004723);
     REQUIRE(random.random() == 1606954614);
