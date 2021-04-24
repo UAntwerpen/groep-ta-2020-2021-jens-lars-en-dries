@@ -28,10 +28,10 @@ public:
     Environment(int height, int width, int seed, bool deterministic, float living_reward, float percentage_obstacles);
 
     // accepts: action (int), 0 = UP, 1 = RIGHT, 2 = DOWN, 3 = LEFT
-    // returns: next_state (coordinates, tuple of ints), reward (float), done (bool)
+    // returns: next_state (MDPState), reward (float), done (bool)
     tuple<MDPState *, float, bool> step(int action);
 
-    // returns the start state
+    // returns the start state and resets the environment
     MDPState * reset();
 
     // returns the available actions for the specified state
@@ -44,6 +44,7 @@ public:
 
     // render the environment
     void render();
+    // get a state pointer based on the coordinates
     MDPState * get_state_by_coordinates(int x, int y);
 
 private:
