@@ -20,11 +20,13 @@ Environment::Environment(int height, int width, int seed, bool deterministic, fl
     int start_x = rand() % width;
     int start_y = rand() % height;
     start = get_state_by_coordinates(start_x, start_y);
+    start->type = "S";
     do {
         int end_x = rand() % width;
         int end_y = rand() % height;
         this->end = get_state_by_coordinates(end_x, end_y);
     } while (start == end);
+    end->type = "E";
     current_state = start;
     generate_world();
 }
@@ -136,6 +138,51 @@ MDPState * Environment::get_state_by_coordinates(int x, int y) {
             return &states[i];
         }
     }
+}
+
+MDPState * Environment::reset() {
+    this->current_state = this->start;
+    return this->current_state;
+}
+
+void Environment::render() {
+    string output;
+    for (int y = height-1; y >= 0; y--) {
+        for (int x = 0; x < width; x++) {
+            MDPState * state = get_state_by_coordinates(x, y);
+            string state_r = state->type;
+            if (current_state == state){
+                // current state is designated by an "X" in the gridworld.
+                state_r = "X";
+            }
+            output += state_r + "|";
+        }
+        output += "\n";
+    }
+    cout << output;
+}
+
+tuple<MDPState *, float, bool> Environment::step(int action) {
+    // get distributions according to environment dynamics (current state and action chosen by agent)
+    map<tuple<MDPState *, float>, float> distributions = p(current_state, action);
+    std::vector<tuple<MDPState *, float>> state_rewards;
+    std::vector<float> probabilities;
+    for(auto const& distribution: distributions){
+        state_rewards.push_back(distribution.first);
+        probabilities.push_back(distribution.second);
+    }
+    // sampling according to distributions
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    discrete_distribution<> d(probabilities.begin(), probabilities.end());
+    tuple<MDPState *, float> next_state_reward = state_rewards[d(gen)];
+    // We've chosen a new state according to the probabilities (dynamics)
+    current_state = get<0>(next_state_reward);
+    // checking for terminal state
+    bool done = current_state->terminal;
+    // returns: next_state (MDPState), reward (float), done (bool)
+    tuple<MDPState *, float, bool> state_reward_bool = tuple_cat(next_state_reward, make_tuple(done));
+    return state_reward_bool;
 }
 
 

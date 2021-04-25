@@ -3,9 +3,11 @@
 
 #include <tuple>
 #include <string>
+#include <iostream>
 #include <list>
 #include <vector>
 #include <map>
+#include <random>
 #include "../random/Random.h"
 #include "MDPState.h"
 

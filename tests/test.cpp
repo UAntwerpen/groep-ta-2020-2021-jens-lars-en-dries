@@ -152,6 +152,38 @@ TEST_CASE("Environment Generation: Deterministic with Obstacles") {
     }
 }
 
+TEST_CASE("Environment Stepping: Deterministic with Obstacles") {
+    Environment env = Environment(5, 5, 42, true, -0.01, 0.2);
+    // this seed and configuration leads to (4, 3) as start state
+    SECTION("Stepping Run") {
+        tuple<MDPState *, float, bool> state_reward_bool;
+        // step up once
+        state_reward_bool = env.step(0);
+        REQUIRE(get<1>(state_reward_bool) == env.living_reward);
+        REQUIRE(get<2>(state_reward_bool) == false);
+        MDPState * current_state = env.get_state_by_coordinates(4, 4);
+        REQUIRE(env.current_state == current_state);
+        // step down once
+        state_reward_bool = env.step(2);
+        REQUIRE(get<1>(state_reward_bool) == env.living_reward);
+        REQUIRE(get<2>(state_reward_bool) == false);
+        current_state = env.get_state_by_coordinates(4, 3);
+        REQUIRE(env.current_state == current_state);
+        // go left, up, right
+        state_reward_bool = env.step(3);
+        REQUIRE(get<1>(state_reward_bool) == env.living_reward);
+        REQUIRE(get<2>(state_reward_bool) == false);
+        state_reward_bool = env.step(0);
+        REQUIRE(get<1>(state_reward_bool) == env.living_reward);
+        REQUIRE(get<2>(state_reward_bool) == false);
+        state_reward_bool = env.step(1);
+        REQUIRE(get<1>(state_reward_bool) == env.living_reward);
+        REQUIRE(get<2>(state_reward_bool) == false);
+        current_state = env.get_state_by_coordinates(4, 4);
+        REQUIRE(env.current_state == current_state);
+    }
+}
+
 TEST_CASE("Randomness") {
     Random random(420);
     REQUIRE(random.rand() == 1713004723);
