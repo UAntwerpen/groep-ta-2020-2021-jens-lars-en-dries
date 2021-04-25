@@ -52,6 +52,8 @@ public:
 private:
     // used for populating the world
     void generate_world();
+    void generate_deterministic_world();
+    void generate_obstacles();
     // dynamics of the environment: a map of <(state, action): map<(state, reward), probability>
     map<tuple<MDPState *, int>, map<tuple<MDPState *, float>, float>> dynamics;
 };
