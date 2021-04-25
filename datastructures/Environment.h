@@ -37,9 +37,6 @@ public:
     // returns the start state and resets the environment
     MDPState * reset();
 
-    // returns the available actions for the specified state
-    list<int> available_actions(MDPState *);
-
     // dynamics function of the MDP for this state and action.
     // accepts a state and action
     // returns a map of: <tuple(state, reward), probability>
