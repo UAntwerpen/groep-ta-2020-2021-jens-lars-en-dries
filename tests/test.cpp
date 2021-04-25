@@ -6,7 +6,7 @@
 #include "../random/Random.h"
 
 TEST_CASE("Environment Basics") {
-    Environment env = Environment(10, 5, 42, true, -0.01, 0.2);
+    Environment env = Environment(10, 5, 42, true, -0.01, 10, 0.2);
     REQUIRE(env.height == 10);
     REQUIRE(env.width == 5);
     REQUIRE(env.start != env.end);
@@ -14,7 +14,7 @@ TEST_CASE("Environment Basics") {
 }
 
 TEST_CASE("Environment Generation: Deterministic without Obstacles") {
-    Environment env = Environment(10, 5, 42, true, -0.01, 0.0);
+    Environment env = Environment(10, 5, 42, true, -0.01, 10, 0.0);
     SECTION("edge state (0, 0), action: left") {
         MDPState *edge_state = env.get_state_by_coordinates(0, 0);
         std::tuple<MDPState *, float> edge_state_reward(edge_state, env.living_reward);
@@ -90,7 +90,7 @@ TEST_CASE("Environment Generation: Deterministic without Obstacles") {
 }
 
 TEST_CASE("Environment Generation: Deterministic with Obstacles") {
-    Environment env = Environment(5, 2, 42, true, -0.01, 0.2);
+    Environment env = Environment(5, 2, 42, true, -0.01, 10, 0.2);
     // this seed and configuration leads to (1, 0) and (0, 1) being chosen as obstacles
     // todo this result will change when we implement the path checking!
     SECTION("edge state (0, 0), action: up") {
@@ -153,7 +153,7 @@ TEST_CASE("Environment Generation: Deterministic with Obstacles") {
 }
 
 TEST_CASE("Environment Stepping: Deterministic with Obstacles") {
-    Environment env = Environment(5, 5, 42, true, -0.01, 0.2);
+    Environment env = Environment(5, 5, 42, true, -0.01, 10, 0.2);
     // this seed and configuration leads to (4, 3) as start state
     SECTION("Stepping Run") {
         tuple<MDPState *, float, bool> state_reward_bool;
@@ -181,6 +181,16 @@ TEST_CASE("Environment Stepping: Deterministic with Obstacles") {
         REQUIRE(get<2>(state_reward_bool) == false);
         current_state = env.get_state_by_coordinates(4, 4);
         REQUIRE(env.current_state == current_state);
+        // Stepping sequence to the end state
+        env.step(3);
+        env.step(3);
+        env.step(2);
+        env.step(2);
+        env.step(2);
+        state_reward_bool = env.step(3);
+        // are in end state: done = true and reward = 10
+        REQUIRE(get<1>(state_reward_bool) == env.end_reward);
+        REQUIRE(get<2>(state_reward_bool) == true);
     }
 }
 

@@ -1,13 +1,14 @@
 #include <algorithm>
 #include "Environment.h"
 
-Environment::Environment(int height, int width, int seed, bool deterministic, float living_reward,
+Environment::Environment(int height, int width, int seed, bool deterministic, float living_reward, float end_reward,
                          float percentage_obstacles) {
     this->width = width;
     this->height = height;
     this->seed = seed;
     this->deterministic = deterministic;
     this->living_reward = living_reward;
+    this->end_reward = end_reward;
     this->percentage_obstacles = percentage_obstacles;
     for (int x = 0; x < width; x++) {
         for (int y = 0; y < height; y++) {
@@ -27,6 +28,7 @@ Environment::Environment(int height, int width, int seed, bool deterministic, fl
         this->end = get_state_by_coordinates(end_x, end_y);
     } while (start == end);
     end->type = "E";
+    end->terminal = true;
     current_state = start;
     generate_world();
 }
@@ -42,78 +44,40 @@ void Environment::generate_world() {
 void Environment::generate_deterministic_world() {
     generate_obstacles();
     for (auto &current_state: states) {
-        // todo end state needs special transition -> at end, set end state action to special state
-        // check bounds of environment -> if actions leads outside bounds, stay put
         int x = current_state.x;
         int y = current_state.y;
         MDPState *next_state = get_state_by_coordinates(x, y + 1);
+        // check bounds of environment -> if actions leads outside bounds, stay put
         if (y + 1 >= height || next_state->type == "O") {
             next_state = get_state_by_coordinates(x, y);
-            tuple<MDPState *, float> next_state_reward(next_state, living_reward);
-            map<tuple<MDPState *, float>, float> state_reward_prob = {{next_state_reward, 1.0}};
-
-            tuple<MDPState *, int> current_state_action(&current_state, 0);
-
-            dynamics.insert(make_pair(current_state_action, state_reward_prob));
+            update_deterministic_dynamics(&current_state, 0, next_state);
         } else {
-            tuple<MDPState *, float> next_state_reward(next_state, living_reward);
-            map<tuple<MDPState *, float>, float> state_reward_prob = {{next_state_reward, 1.0}};
-
-            tuple<MDPState *, int> current_state_action(&current_state, 0);
-
-            dynamics.insert(make_pair(current_state_action, state_reward_prob));
+            next_state = get_state_by_coordinates(x, y + 1);
+            update_deterministic_dynamics(&current_state, 0, next_state);
         }
         next_state = get_state_by_coordinates(x, y - 1);
         if (y - 1 < 0 || next_state->type == "O") {
             next_state = get_state_by_coordinates(x, y);
-            tuple<MDPState *, float> next_state_reward(next_state, living_reward);
-            map<tuple<MDPState *, float>, float> state_reward_prob = {{next_state_reward, 1.0}};
-
-            tuple<MDPState *, int> current_state_action(&current_state, 2);
-
-            dynamics.insert(make_pair(current_state_action, state_reward_prob));
+            update_deterministic_dynamics(&current_state, 2, next_state);
         } else {
-            tuple<MDPState *, float> next_state_reward(next_state, living_reward);
-            map<tuple<MDPState *, float>, float> state_reward_prob = {{next_state_reward, 1.0}};
-
-            tuple<MDPState *, int> current_state_action(&current_state, 2);
-
-            dynamics.insert(make_pair(current_state_action, state_reward_prob));
+            next_state = get_state_by_coordinates(x, y - 1);
+            update_deterministic_dynamics(&current_state, 2, next_state);
         }
         next_state = get_state_by_coordinates(x + 1, y);
         if (x + 1 >= width || next_state->type == "O") {
             next_state = get_state_by_coordinates(x, y);
-            tuple<MDPState *, float> next_state_reward(next_state, living_reward);
-            map<tuple<MDPState *, float>, float> state_reward_prob = {{next_state_reward, 1.0}};
-
-            tuple<MDPState *, int> current_state_action(&current_state, 1);
-
-            dynamics.insert(make_pair(current_state_action, state_reward_prob));
+            update_deterministic_dynamics(&current_state, 1, next_state);
         } else {
-            next_state = get_state_by_coordinates(x, y);
-            tuple<MDPState *, float> next_state_reward(next_state, living_reward);
-            map<tuple<MDPState *, float>, float> state_reward_prob = {{next_state_reward, 1.0}};
-
-            tuple<MDPState *, int> current_state_action(&current_state, 1);
-
-            dynamics.insert(make_pair(current_state_action, state_reward_prob));
+            next_state = get_state_by_coordinates(x + 1, y);
+            update_deterministic_dynamics(&current_state, 1, next_state);
         }
         next_state = get_state_by_coordinates(x - 1, y);
         if (x - 1 < 0 || next_state->type == "O") {
             next_state = get_state_by_coordinates(x, y);
-            tuple<MDPState *, float> next_state_reward(next_state, living_reward);
-            map<tuple<MDPState *, float>, float> state_reward_prob = {{next_state_reward, 1.0}};
-
-            tuple<MDPState *, int> current_state_action(&current_state, 3);
-
-            dynamics.insert(make_pair(current_state_action, state_reward_prob));
+            update_deterministic_dynamics(&current_state, 3,next_state);
         } else {
-            tuple<MDPState *, float> next_state_reward(next_state, living_reward);
-            map<tuple<MDPState *, float>, float> state_reward_prob = {{next_state_reward, 1.0}};
-
-            tuple<MDPState *, int> current_state_action(&current_state, 3);
-
-            dynamics.insert(make_pair(current_state_action, state_reward_prob));
+            next_state = get_state_by_coordinates(x - 1, y);
+            update_deterministic_dynamics(&current_state, 3, next_state);
         }
     }
 }
@@ -145,6 +109,17 @@ MDPState *Environment::get_state_by_coordinates(int x, int y) {
             return &states[i];
         }
     }
+}
+
+void Environment::update_deterministic_dynamics(MDPState *current_state, int action, MDPState *next_state) {
+    float reward = living_reward;
+    if (next_state == end) {
+        reward = end_reward;
+    }
+    tuple<MDPState *, float> next_state_reward(next_state, reward);
+    map<tuple<MDPState *, float>, float> state_reward_prob = {{next_state_reward, 1.0}};
+    tuple<MDPState *, int> current_state_action(current_state, action);
+    dynamics.insert(make_pair(current_state_action, state_reward_prob));
 }
 
 MDPState *Environment::reset() {

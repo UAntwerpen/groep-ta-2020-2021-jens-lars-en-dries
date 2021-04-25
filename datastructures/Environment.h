@@ -20,6 +20,7 @@ public:
     int seed;
     bool deterministic;
     float living_reward;
+    float end_reward;
     float percentage_obstacles;
     vector<MDPState> states;
     MDPState* start;
@@ -27,7 +28,7 @@ public:
     MDPState* end;
     MDPState* current_state;
 
-    Environment(int height, int width, int seed, bool deterministic, float living_reward, float percentage_obstacles);
+    Environment(int height, int width, int seed, bool deterministic, float living_reward, float end_reward, float percentage_obstacles);
 
     // accepts: action (int), 0 = UP, 1 = RIGHT, 2 = DOWN, 3 = LEFT
     // returns: next_state (MDPState), reward (float), done (bool)
@@ -56,6 +57,7 @@ private:
     void generate_obstacles();
     // dynamics of the environment: a map of <(state, action): map<(state, reward), probability>
     map<tuple<MDPState *, int>, map<tuple<MDPState *, float>, float>> dynamics;
+    void update_deterministic_dynamics(MDPState *current_state, int action, MDPState* next_state);
 };
 
 
