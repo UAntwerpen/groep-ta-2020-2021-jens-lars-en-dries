@@ -59,6 +59,8 @@ public:
 
     std::pair<int, int> getCoordinates();
 
+    void resetCounter();
+
 };
 
 

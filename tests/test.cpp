@@ -4,6 +4,9 @@
 #include "catch.hpp"
 #include "../datastructures/Environment.h"
 #include "../random/Random.h"
+#include "../datastructures/LA.h"
+#include "../datastructures/State.h"
+#include "../datastructures/Agent.h"
 
 TEST_CASE("Environment Basics") {
     Environment env = Environment(10, 5, 42, true, -0.01, 10, 0.2);
@@ -199,4 +202,16 @@ TEST_CASE("Randomness") {
     REQUIRE(random.rand() == 1713004723);
     REQUIRE(random.random() == 1606954614);
     REQUIRE(random.random() == 1705136989);
+}
+
+TEST_CASE("State getters and setters") {
+    std::vector<int> actions{0, 1, 2, 3};
+    State state(0, 0, actions);
+    REQUIRE(state.getCoordinates() == std::make_pair(0,0));
+    REQUIRE(state.getValue(0)==0);
+    REQUIRE(state.getActionCount(1)==0);
+    state.incrementCounter(1);
+    REQUIRE(state.getActionCount(1)==1);
+    state.resetCounter();
+    REQUIRE(state.getActionCount(1)==0);
 }

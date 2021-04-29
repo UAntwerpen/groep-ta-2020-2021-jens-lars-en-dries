@@ -12,7 +12,6 @@ float State::getValue(int action){
     return Q_value[action];
 }
 
-
 const std::vector<int> &State::getActions() const {
     return actions;
 }
@@ -49,5 +48,15 @@ State::State(const int in_x, const int in_y, std::vector<int> &in_actions) {
     x=in_x;
     y=in_y;
     actions = in_actions;
+    for(auto it:actions){
+        action_to_probability[it]=(float) 1 / (float) actions.size();
+        Q_value[it] = 0;
+    }
+}
+
+void State::resetCounter() {
+    for(auto& J:counter){
+        J.second = 0;
+    }
 }
 

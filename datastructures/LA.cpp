@@ -75,9 +75,6 @@ LA::LA(const int height, const int width, std::pair<int, int> start_coordinates,
             if(std::make_pair(i, j)==start_coordinates) start_state = all_states[all_states.size()-1];
         }
     }
-    for(auto& it:all_states){
-
-    }
 }
 
 LA::~LA() {
