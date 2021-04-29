@@ -215,3 +215,23 @@ TEST_CASE("State getters and setters") {
     state.resetCounter();
     REQUIRE(state.getActionCount(1)==0);
 }
+
+TEST_CASE("Learning automata tests") {
+    std::vector<int> actions{0, 1, 2, 3};
+    std::pair<int,int> start_coordinates{0,0};
+    LA la(2, 2, start_coordinates, actions);
+    SECTION("start state"){
+        REQUIRE(la.getStartState()->getCoordinates() == start_coordinates);
+    }
+    SECTION("argmax"){
+        State* state = la.getStartState();
+        state->setValue(0, 1);
+        REQUIRE(la.pickAction(state)==0);
+        state->setValue(1, 2);
+        REQUIRE(la.pickAction(state)==1);
+    }
+    SECTION("coordinates to state"){
+        REQUIRE(la.coordinatesToState(std::make_tuple(1, 1))->getCoordinates()==std::make_pair(1,1));
+    }
+
+}

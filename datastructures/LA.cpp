@@ -44,11 +44,12 @@ State *LA::G(State *in_state, int in_action) {
 }
 
 int LA::pickAction(State *in_state) {
-    int current_max = std::numeric_limits<int>::min();
+    float current_max = std::numeric_limits<float>::min();
     int current_action;
     for(auto it: in_state->getQValue()){
-        if(it.second<current_max){
+        if(it.second>current_max){
             current_action = it.first;
+            current_max = it.second;
         }
     }
     return current_action;
@@ -73,6 +74,7 @@ LA::LA(const int height, const int width, std::pair<int, int> start_coordinates,
         for (int j = 0; j < height; j++) {
             all_states.emplace_back(new State(i, j, actions));
             if(std::make_pair(i, j)==start_coordinates) start_state = all_states[all_states.size()-1];
+            coordinates_to_state[std::make_pair(i, j)] = all_states[all_states.size()-1];
         }
     }
 }
