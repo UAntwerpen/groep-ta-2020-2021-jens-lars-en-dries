@@ -4,8 +4,8 @@
 
 #include "State.h"
 
-State *State::operator[](int action) const {
-    for(auto it:action_to_state){
+State *State::operator[](const int action) const {
+    for(auto& it:action_to_state){
         if(it.first == action){
             return it.second;
         }
@@ -13,70 +13,57 @@ State *State::operator[](int action) const {
     return nullptr;
 }
 
-float State::operator[](State *state) const {
-    for(auto& it:state_to_probability){
-        if(&it.first == &state){
-            return it.second;
-        }
-    }
-    return 0;
-}
 
 void State::setValue(int action, float in_value) {
-    findActionValuePair(action).second = in_value;
-}
-
-std::pair<int, float > &State::findActionValuePair(int action) {
-    for(auto& it: Q_value){
-        if(it.first == action){
-            return it;
-        }
-    }
+    Q_value[action] = in_value;
 }
 
 float State::getValue(int action){
-    for(auto& it: Q_value){
-        if(it.first == action){
-            return it.second;
-        }
-    }
+    return Q_value[action];
 }
 
-float State::pToState(State *in_state) {
-    for(auto it:state_to_probability){
-        if(it.first == in_state) return it.second;
-    }
-    return 0;
-}
 
 const std::vector<int> &State::getActions() const {
     return actions;
 }
 
-void State::setActions(const std::vector<int> &actions) {
+void State::setActions(std::vector<int> &actions) {
     State::actions = actions;
 }
 
-const std::vector<std::pair<int, float >> &State::getQValue() const {
+const std::map<int, float> &State::getQValue() const {
     return Q_value;
 }
 
-void State::setValue1(const std::vector<std::pair<int, float >> &value) {
-    State::Q_value = value;
-}
-
-const std::vector<std::pair<int, State *>> &State::getActionToState() const {
+const std::map<int, State *> &State::getActionToState() const {
     return action_to_state;
 }
 
-void State::setActionToState(const std::vector<std::pair<int, State *>> &actionToState) {
+void State::setActionToState(std::map<int, State *> &actionToState) {
     action_to_state = actionToState;
 }
 
-const std::vector<std::pair<State *, float >> &State::getStateToProbability() const {
+const std::map<State *, float > &State::getStateToProbability() const {
     return state_to_probability;
 }
 
-void State::setStateToProbability(const std::vector<std::pair<State *, float >> &stateToProbability) {
+void State::setStateToProbability( std::map<State *, float > &stateToProbability) {
     state_to_probability = stateToProbability;
 }
+
+void State::setProbability(State *in_state, float probability) {
+    state_to_probability[in_state] = probability;
+}
+
+void State::setQValue(std::map<int, float> &value) {
+    Q_value = value;
+}
+
+int State::getActionCount(const int action) {
+    return counter[action];
+}
+
+void State::incrementCounter(const int action) {
+    counter[action]+=1;
+}
+

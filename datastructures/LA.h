@@ -20,15 +20,28 @@ class LA {
 public:
     void reset();
 
+    /*
+     * This function will return a
+     */
     State *G(State *in_state, int in_action);
 
+    /*
+     * Argmax of in_state's Q_values.
+     */
     int pickAction(State *in_state);
 
+    /*
+     * This function calculates the corresponding state to the given coordinates.
+     */
     State* coordinatesToState(std::tuple<int,int> in_coords);
 
+    /*
+     * This function returns the start state.
+     */
     State* getStartState() { return start_state; }
 
     std::vector<State*> getAllStates();
+
     std::vector<int> getAllActions();
 };
 
