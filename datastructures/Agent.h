@@ -25,6 +25,8 @@ class Agent {
 
 public:
 
+
+
     // learn for a given amount of episodes in a given environment
     void learn(int nr_episodes, Environment& gridworld);
 

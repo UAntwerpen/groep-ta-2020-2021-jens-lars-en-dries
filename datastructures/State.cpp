@@ -4,16 +4,6 @@
 
 #include "State.h"
 
-State *State::operator[](const int action) const {
-    for(auto& it:action_to_state){
-        if(it.first == action){
-            return it.second;
-        }
-    }
-    return nullptr;
-}
-
-
 void State::setValue(int action, float in_value) {
     Q_value[action] = in_value;
 }
@@ -35,24 +25,8 @@ const std::map<int, float> &State::getQValue() const {
     return Q_value;
 }
 
-const std::map<int, State *> &State::getActionToState() const {
-    return action_to_state;
-}
-
-void State::setActionToState(std::map<int, State *> &actionToState) {
-    action_to_state = actionToState;
-}
-
-const std::map<State *, float > &State::getStateToProbability() const {
-    return state_to_probability;
-}
-
-void State::setStateToProbability( std::map<State *, float > &stateToProbability) {
-    state_to_probability = stateToProbability;
-}
-
-void State::setProbability(State *in_state, float probability) {
-    state_to_probability[in_state] = probability;
+void State::setProbability(int in_action, float probability) {
+    action_to_probability[in_action] = probability;
 }
 
 void State::setQValue(std::map<int, float> &value) {
@@ -65,5 +39,15 @@ int State::getActionCount(const int action) {
 
 void State::incrementCounter(const int action) {
     counter[action]+=1;
+}
+
+std::pair<int, int> State::getCoordinates() {
+    return std::pair<int, int>(x, y);
+}
+
+State::State(const int in_x, const int in_y, std::vector<int> &in_actions) {
+    x=in_x;
+    y=in_y;
+    actions = in_actions;
 }
 

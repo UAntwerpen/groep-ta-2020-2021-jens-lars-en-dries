@@ -62,8 +62,6 @@ std::vector<std::tuple<State*, int, float>>  Agent::play(Environment& gridworld)
 
     // initialize variables
     bool finished = false;
-    float reward;
-    int action_to_do;
 
     // get start positions
     State* current_state = la.getStartState();
@@ -87,10 +85,9 @@ std::vector<std::tuple<State*, int, float>>  Agent::play(Environment& gridworld)
 
 void Agent::epsilon_greedy_policy_improvement() {
      /*
-      * the epsilon_greedy_policy_improvement method will become more greedy over time, this is usefull to encourage exploration.
-      * 5.4 Monte Carlo Control without Exploring Starts p 124, Reinforcement Learning: An Introduction second edition.
+      * the epsilon_greedy_policy_improvement method will become more greedy over time, this is useful to encourage exploration.
+      * Reinforcement Learning: An Introduction second edition, 5.4 Monte Carlo Control without Exploring Starts p 124.
       */
-
 
     // loop over all the states in the learning automata
     for(auto& it:la.getAllStates()){
@@ -98,11 +95,11 @@ void Agent::epsilon_greedy_policy_improvement() {
 
             // if 'action' is the argmax action of the current state, give it a transition probability of 1-e + e/|A(s)|
             if(action == la.pickAction(it)){
-                it->setProbability(&it[action], ((1-epsilon)+(epsilon/(float)la.getAllActions().size())));
+                it->setProbability(action, ((1-epsilon)+(epsilon/(float)la.getAllActions().size())));
             }
             // else give this action a probability of e/|A(s)|.
             else{
-                it->setProbability(&it[action], (epsilon/(float)la.getAllActions().size()));
+                it->setProbability(action, (epsilon/(float)la.getAllActions().size()));
             }
         }
     }

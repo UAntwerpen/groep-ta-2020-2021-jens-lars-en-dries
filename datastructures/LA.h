@@ -11,17 +11,28 @@
 
 
 class LA {
+
+    int height;
+    int width;
+
     std::vector<State*> all_states;
+
     std::vector<int> all_actions;
+
     State* start_state;
 
-    std::vector<std::pair<std::pair<int,int>,State*>> coordinates_to_state;
+    std::map<std::pair<int,int>, State*> coordinates_to_state;
 
 public:
+
+    LA(const int height, const int width, std::pair<int, int> start_coordinates, std::vector<int>& actions);
+
+    ~LA();
+
     void reset();
 
     /*
-     * This function will return a
+     * This function will return the state corresponding with the state-action input.
      */
     State *G(State *in_state, int in_action);
 
