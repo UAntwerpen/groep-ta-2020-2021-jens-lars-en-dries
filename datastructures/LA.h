@@ -31,7 +31,7 @@ public:
     // complex constructor
     LA(const int height, const int width, std::pair<int, int> start_coordinates, std::vector<int>& actions);
     // destructor
-    ~LA();
+//    ~LA();
 
     void reset();
 
@@ -44,6 +44,8 @@ public:
      * Argmax of in_state's Q_values.
      */
     int pickAction(State *in_state);
+
+    int argmax(State *in_state);
 
     /*
      * This function calculates the corresponding state to the given coordinates.

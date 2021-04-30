@@ -60,3 +60,7 @@ void State::resetCounter() {
     }
 }
 
+std::map<int, float> State::getProbabilities() {
+    return action_to_probability;
+}
+

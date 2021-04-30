@@ -61,6 +61,8 @@ public:
 
     void resetCounter();
 
+    std::map<int, float> getProbabilities();
+
 };
 
 

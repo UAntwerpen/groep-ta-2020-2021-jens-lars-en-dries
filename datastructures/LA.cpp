@@ -3,6 +3,7 @@
 //
 
 #include <tuple>
+#include <random>
 #include "LA.h"
 
 void LA::reset() {
@@ -44,15 +45,21 @@ State *LA::G(State *in_state, int in_action) {
 }
 
 int LA::pickAction(State *in_state) {
-    float current_max = std::numeric_limits<float>::min();
-    int current_action;
-    for(auto it: in_state->getQValue()){
-        if(it.second>current_max){
-            current_action = it.first;
-            current_max = it.second;
-        }
+
+    // get distributions according to environment dynamics (current state and action chosen by agent)
+    std::vector<int> state_rewards;
+    std::vector<float> probabilities;
+
+    for (auto const &distribution: in_state->getProbabilities()) {
+        state_rewards.push_back(distribution.first);
+        probabilities.push_back(distribution.second);
     }
-    return current_action;
+    // sampling according to distributions
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::discrete_distribution<> d(probabilities.begin(), probabilities.end());
+
+    return state_rewards[d(gen)];
 }
 
 State *LA::coordinatesToState(std::tuple<int, int> in_coords) {
@@ -80,11 +87,11 @@ LA::LA(const int height, const int width, std::pair<int, int> start_coordinates,
     }
 }
 
-LA::~LA() {
+/*LA::~LA() {
     for (int i = 0; i<all_states.size();i++) {
         delete all_states[all_states.size()-1-i];
     }
-}
+}*/
 
 LA::LA() {
     width = 0;
@@ -93,4 +100,16 @@ LA::LA() {
 
 bool LA::isProperlyInitialized() {
     return properly_init==this;
+}
+
+int LA::argmax(State *in_state) {
+    int action;
+    float max_value = std::numeric_limits<float>::min();
+    for(auto& it: in_state->getQValue()){
+        if(it.second>max_value){
+            max_value = it.second;
+            action = it.first;
+        }
+    }
+    return action;
 }
