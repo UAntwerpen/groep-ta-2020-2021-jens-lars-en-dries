@@ -1,5 +1,6 @@
 #include <algorithm>
 #include "Environment.h"
+#include "../random/Random.h"
 
 Environment::Environment(int height, int width, int seed, bool deterministic, float living_reward, float end_reward,
                          float percentage_obstacles) {
@@ -17,14 +18,15 @@ Environment::Environment(int height, int width, int seed, bool deterministic, fl
         }
     }
     // todo rand -> random
+    Random random(this->seed);
     srand(this->seed);
-    int start_x = rand() % width;
-    int start_y = rand() % height;
+    int start_x = random.rand() % width;
+    int start_y = random.rand() % height;
     start = get_state_by_coordinates(start_x, start_y);
     start->type = "S";
     do {
-        int end_x = rand() % width;
-        int end_y = rand() % height;
+        int end_x = random.rand() % width;
+        int end_y = random.rand() % height;
         this->end = get_state_by_coordinates(end_x, end_y);
     } while (start == end);
     end->type = "E";
@@ -55,7 +57,7 @@ void Environment::generate_deterministic_world() {
             next_state = get_state_by_coordinates(x, y + 1);
             update_deterministic_dynamics(&current_state, 0, next_state);
         }
-        next_state = get_state_by_coordinates(x, y - 1);
+        next_state = get_state_by_coordinates(x, y - 1); // hier loopt iets fout.c
         if (y - 1 < 0 || next_state->type == "O") {
             next_state = get_state_by_coordinates(x, y);
             update_deterministic_dynamics(&current_state, 2, next_state);
@@ -85,9 +87,10 @@ void Environment::generate_deterministic_world() {
 void Environment::generate_obstacles() {
     int n_obstacles = (width * height) * percentage_obstacles;
     int x, y;
+    Random random(this->seed);
     while (n_obstacles > 0) {
-        x = rand() % width;
-        y = rand() % height;
+        x = random.rand() % width;
+        y = random.rand() % height;
         MDPState *state_ = get_state_by_coordinates(x, y);
         // todo need to check if there exists a path between start and end -> otherwise create a new obstacle and check again
         if ((start->x != state_->x || start->y != state_->y) && (end->y != state_->y || end->x != state_->x)) {
@@ -109,6 +112,7 @@ MDPState *Environment::get_state_by_coordinates(int x, int y) {
             return &states[i];
         }
     }
+    return nullptr;
 }
 
 void Environment::update_deterministic_dynamics(MDPState *current_state, int action, MDPState *next_state) {

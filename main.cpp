@@ -27,5 +27,6 @@ int main() {
     env.step(3);
     cout << "\n";
     env.render();
+
     return 0;
 }
