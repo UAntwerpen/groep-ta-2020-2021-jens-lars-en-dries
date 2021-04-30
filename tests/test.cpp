@@ -223,15 +223,31 @@ TEST_CASE("Learning automata tests") {
     SECTION("start state"){
         REQUIRE(la.getStartState()->getCoordinates() == start_coordinates);
     }
-    SECTION("argmax"){
+    SECTION("argmax") {
         State* state = la.getStartState();
         state->setValue(0, 1);
         REQUIRE(la.pickAction(state)==0);
         state->setValue(1, 2);
         REQUIRE(la.pickAction(state)==1);
     }
-    SECTION("coordinates to state"){
+    SECTION("coordinates to state") {
         REQUIRE(la.coordinatesToState(std::make_tuple(1, 1))->getCoordinates()==std::make_pair(1,1));
     }
+    SECTION("default constructor") {
+        LA la2;
+        REQUIRE(la2.isProperlyInitialized()==false);
+        REQUIRE(la.isProperlyInitialized()==true);
+    }
+}
 
+TEST_CASE("Agent tests") {
+    std::vector<int> actions{0, 1, 2, 3};
+
+//    Environment env = Environment(5, 5, 42, true, -0.01, 10, 0.2);
+//    LA la(5, 5, std::make_pair(env.start->x, env.start->y), actions);
+//    Agent agent(la, 0.9);
+    SECTION("episode test") {
+//        auto episode = agent.play(env);
+//        REQUIRE(!episode.empty());
+    }
 }

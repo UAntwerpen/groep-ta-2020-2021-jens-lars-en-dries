@@ -68,6 +68,7 @@ std::vector<int> LA::getAllActions() {
 }
 
 LA::LA(const int height, const int width, std::pair<int, int> start_coordinates, std::vector<int> &actions) {
+    properly_init = this;
     this->height = height;
     this->width = width;
     for(int i = 0; i < width; i++){
@@ -83,4 +84,13 @@ LA::~LA() {
     for (int i = 0; i<all_states.size();i++) {
         delete all_states[all_states.size()-1-i];
     }
+}
+
+LA::LA() {
+    width = 0;
+    height = 0;
+}
+
+bool LA::isProperlyInitialized() {
+    return properly_init==this;
 }

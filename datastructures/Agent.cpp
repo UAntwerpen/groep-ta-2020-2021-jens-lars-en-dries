@@ -104,3 +104,8 @@ void Agent::epsilon_greedy_policy_improvement() {
         }
     }
 }
+
+Agent::Agent(LA &in_la, float in_epsilon) {
+    la = in_la;
+    epsilon = in_epsilon;
+}

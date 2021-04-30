@@ -12,6 +12,8 @@
 
 class LA {
 
+    LA* properly_init;
+
     int height;
     int width;
 
@@ -24,9 +26,11 @@ class LA {
     std::map<std::pair<int,int>, State*> coordinates_to_state;
 
 public:
-
+    // default constructor
+    LA();
+    // complex constructor
     LA(const int height, const int width, std::pair<int, int> start_coordinates, std::vector<int>& actions);
-
+    // destructor
     ~LA();
 
     void reset();
@@ -54,6 +58,9 @@ public:
     std::vector<State*> getAllStates();
 
     std::vector<int> getAllActions();
+
+    // check if the automata is properly initialized
+    bool isProperlyInitialized();
 };
 
 

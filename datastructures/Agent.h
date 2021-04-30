@@ -25,7 +25,7 @@ class Agent {
 
 public:
 
-
+    Agent(LA& in_la, float in_epsilon);
 
     // learn for a given amount of episodes in a given environment
     void learn(int nr_episodes, Environment& gridworld);
