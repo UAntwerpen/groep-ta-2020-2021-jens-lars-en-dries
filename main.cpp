@@ -23,5 +23,7 @@ int main() {
 
     std::cout<<"Average steps = "<<average/(double)50<<std::endl;
 
+    std::cout<<"Optimal route size = "<<agent.getOptimalRoute(env).size()<<std::endl;
+
     return 0;
 }

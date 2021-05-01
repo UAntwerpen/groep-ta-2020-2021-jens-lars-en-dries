@@ -37,7 +37,6 @@ void Agent::learn(int nr_episodes, Environment& gridworld) {
             // get values from tuple.
             auto state = std::get<0>(episode[time_step]);
             int action = std::get<1>(episode[time_step]);
-            float reward = std::get<2>(episode[time_step]);
 
             // increment counter.
             state->incrementCounter(action);
@@ -113,4 +112,19 @@ void Agent::epsilon_greedy_policy_improvement() {
 Agent::Agent(LA &in_la, float in_epsilon) {
     la = in_la;
     epsilon = in_epsilon;
+}
+
+std::vector<int> Agent::getOptimalRoute(Environment &gridworld) {
+
+    gridworld.reset();
+
+    std::vector<int> to_export;
+
+    State* current_state = la.getStartState();
+    while(current_state->getCoordinates()!=std::make_pair(gridworld.end->x, gridworld.end->y) and to_export.size() < 100){
+        int next_action = la.argmax(current_state);
+        current_state = la.G(current_state, next_action);
+        to_export.emplace_back(next_action);
+    }
+    return to_export;
 }

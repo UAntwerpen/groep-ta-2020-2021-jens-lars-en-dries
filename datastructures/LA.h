@@ -64,6 +64,7 @@ public:
     // check if the automata is properly initialized
     bool isProperlyInitialized();
 
+    // reset all counters of all states
     void resetCounter();
 
 };

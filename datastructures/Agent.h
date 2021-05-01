@@ -24,7 +24,7 @@ class Agent {
     LA la;
 
 public:
-
+    // constructor
     Agent(LA& in_la, float in_epsilon);
 
     // learn for a given amount of episodes in a given environment
@@ -37,6 +37,9 @@ public:
     void epsilon_greedy_policy_improvement();
 
     void setEpsilon(float x){ epsilon = x;}
+
+    // get the optimal route
+    std::vector<int> getOptimalRoute(Environment& gridworld);
 };
 
 

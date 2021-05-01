@@ -34,7 +34,7 @@ State *LA::G(State *in_state, int in_action) {
         case(3):{
             if(in_state->getCoordinates().first==0) return in_state;
             else{
-                return coordinates_to_state[std::make_pair(in_state->getCoordinates().first-1, in_state->getCoordinates().second+1)];
+                return coordinates_to_state[std::make_pair(in_state->getCoordinates().first-1, in_state->getCoordinates().second)];
             }
         }
         default:{
