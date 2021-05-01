@@ -1,5 +1,6 @@
 #include "AbstractParser.h"
 #include "tinyxml/tinyxml.h"
+#include "tinyxml/tinystr.h"
 #include <sys/stat.h>
 #include <assert.h>
 
@@ -9,12 +10,12 @@ bool FileExists(const string dirname) {
 }
 
 void AbstractParser::loadFile(string filename) {
-    if(!(FileExists(filename))) _assert ("File to parse does not exist.", __FILE__, __LINE__);
+    if(!(FileExists(filename))) __assert ("File to parse does not exist.", __FILE__, __LINE__);
     fDoc.LoadFile(filename.c_str());
     if(fDoc.Error()){
         // TODO: Better error descriptions.
         string error = string("There has been an error parsing file:" + filename);
-        _assert(error.c_str(), __FILE__, __LINE__);
+        __assert(error.c_str(), __FILE__, __LINE__);
     }
     fRoot = fDoc.FirstChildElement();
 }
