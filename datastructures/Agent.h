@@ -13,28 +13,28 @@
 #include "../random/Random.h"
 
 class Agent {
-    // This agent will use GLIE Monte-Carlo Control to converge to the optimal action-Q_value function Q(s,a) -> q*(s,a)
-    std::vector<std::tuple<std::tuple<State*, int>, int>> state_action_counter;
-    // q*(s,a)
-    std::map<State*, int> policy;
+
     // epsilon is the infinite exploration part of GLIE. It will asymptotically increase the greediness of the policy.
     float epsilon;
 
+    // the discount factor
     const float discountfactor = 0.9;
 
+    // the learning automata
     LA la;
 
 public:
 
-    void onPolicyImprove(int nr_episodes, Environment& gridworld);
+    Agent(LA& in_la, float in_epsilon);
 
-    // Play an episode in the enviroment.
+    // learn for a given amount of episodes in a given environment
+    void learn(int nr_episodes, Environment& gridworld);
+
+    // Play an episode in the enviroment
     std::vector<std::tuple<State*, int, float >> play(Environment& gridworld);
 
-    // find the counter of an state-action pair.
-    std::tuple<std::tuple<State*, int>, int>& findStateActionCounter(std::tuple<State*, int> state_action_pair);
-
-    std::map<State *, int> epsilon_greedy_policy_improvement();
+    // improve the policy of the LA
+    void epsilon_greedy_policy_improvement();
 
 };
 
