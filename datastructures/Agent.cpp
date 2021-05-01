@@ -95,11 +95,11 @@ void Agent::epsilon_greedy_policy_improvement() {
 
             // if 'action' is the argmax action of the current state, give it a transition probability of 1-e + e/|A(s)|
             if(action == la.argmax(it)){
-                it->setProbability(action, ((1-epsilon)+(epsilon/(float)la.getAllActions().size())));
+                it->setProbability(action, ((1-epsilon)+(epsilon/(float)it->getActions().size())));
             }
             // else give this action a probability of e/|A(s)|.
             else{
-                it->setProbability(action, (epsilon/(float)la.getAllActions().size()));
+                it->setProbability(action, (epsilon/(float)it->getActions().size()));
             }
         }
     }
