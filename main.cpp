@@ -1,32 +1,25 @@
 #include "datastructures/Environment.h"
+#include "datastructures/LA.h"
+#include "datastructures/Agent.h"
 
 int main() {
-    Environment env = Environment(5, 5, 42, true, -0.01, 10, 0.2);
+    std::vector<int> actions{0, 1, 2, 3};
+
+    Environment env = Environment(10, 10, 42, true, -0.1, 1, 0.2);
+    LA la(16, 16, std::make_pair(env.start->x, env.start->y), actions);
+    Agent agent(la, 0.1);
+
     env.render();
-    env.step(3);
-    cout << "\n";
-    env.render();
-    env.step(0);
-    cout << "\n";
-    env.render();
-    env.step(3);
-    cout << "\n";
-    env.render();
-    env.step(3);
-    cout << "\n";
-    env.render();
-    env.step(2);
-    cout << "\n";
-    env.render();
-    env.step(2);
-    cout << "\n";
-    env.render();
-    env.step(2);
-    cout << "\n";
-    env.render();
-    env.step(3);
-    cout << "\n";
-    env.render();
+
+    auto tmp = agent.play(env);
+    env.reset();
+
+    agent.learn(100000, env);
+    env.reset();
+    agent.setEpsilon(0);
+    auto tmp2 = agent.play(env);
+
+    std::cout<<tmp.size()<<"  -  "<<tmp2.size()<<std::endl;
 
     return 0;
 }

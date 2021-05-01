@@ -36,6 +36,7 @@ public:
     // improve the policy of the LA
     void epsilon_greedy_policy_improvement();
 
+    void setEpsilon(float x){ epsilon = x;}
 };
 
 
