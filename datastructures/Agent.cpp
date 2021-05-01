@@ -17,14 +17,19 @@ void Agent::learn(int nr_episodes, Environment& gridworld) {
     //init variables
     // TODO: init vars
 
+    std::cout<<"Learning, please wait a moment...\n";
+
     for(int i=0;i<nr_episodes;i++){
+
         // Generate i'th episode
+        la.resetCounter();
+
         gridworld.reset();
         auto episode = play(gridworld);
 
         // Calculate cumulative reward of episode
         float cumulative_reward = 0;
-        for(int i = 0;i<episode.size();i++) cumulative_reward += std::get<1>(episode[i])*std::pow(discountfactor, i);
+        for(int i = 0;i<episode.size();i++) cumulative_reward += std::get<2>(episode[i])*std::pow(discountfactor, i);
 
         // Loop over time steps in the i'th episode
         for(int time_step = 0; time_step<episode.size(); time_step++){
@@ -42,7 +47,7 @@ void Agent::learn(int nr_episodes, Environment& gridworld) {
             int state_action_count = state->getActionCount(action);
 
             // calculate new Q_value for action action in the current state
-            state->setValue(action, value + ((float)1/(float)state_action_count) * (reward - value));
+            state->setValue(action, value + ((float)(cumulative_reward - value)/(float)state_action_count));
 
         }
 
@@ -68,7 +73,7 @@ std::vector<std::tuple<State*, int, float>>  Agent::play(Environment& gridworld)
     MDPState* enviroment_state = gridworld.start;
 
     // while exit not found //TODO: max steps??
-    while(!finished) {
+    while(!finished and to_export.size()<100) {
         // pick action
         int current_action = la.pickAction(current_state);
         // get enviroment result
