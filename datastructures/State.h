@@ -30,6 +30,8 @@ class State {
 
 public:
     // constructor
+    State() = default;
+
     State(int in_x,int in_y, std::vector<int>& in_actions);
 
     // get the action list

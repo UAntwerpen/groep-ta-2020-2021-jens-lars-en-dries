@@ -57,6 +57,8 @@ public:
      */
     State* getStartState() { return start_state; }
 
+    bool addState(State* newState);
+
     std::vector<State*> getAllStates();
 
     std::vector<int> getAllActions();
