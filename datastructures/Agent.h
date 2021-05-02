@@ -18,7 +18,7 @@ class Agent {
     float epsilon;
 
     // the discount factor
-    const float discountfactor = 0.9;
+    const float discountfactor = 1;
 
     // the learning automata
     LA la;

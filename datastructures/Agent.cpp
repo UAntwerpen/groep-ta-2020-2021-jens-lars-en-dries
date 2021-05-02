@@ -22,7 +22,6 @@ void Agent::learn(int nr_episodes, Environment& gridworld) {
     for(int i=0;i<nr_episodes;i++){
 
         // Generate i'th episode
-        la.resetCounter();
 
         gridworld.reset();
         auto episode = play(gridworld);
@@ -72,7 +71,7 @@ std::vector<std::tuple<State*, int, float>>  Agent::play(Environment& gridworld)
     MDPState* enviroment_state = gridworld.start;
 
     // while exit not found //TODO: max steps??
-    while(!finished and to_export.size()<100) {
+    while(!finished and to_export.size()<200) {
         // pick action
         int current_action = la.pickAction(current_state);
         // get enviroment result
