@@ -21,6 +21,11 @@ void Agent::learn(int nr_episodes, Environment& gridworld) {
 
     for(int i=0;i<nr_episodes;i++){
 
+        // Progress bar
+        if(i%(nr_episodes/10)==0) {
+            std::cout <<"Processed: "<< (double) i / (double) nr_episodes << std::endl;
+        }
+
         // Generate i'th episode
 
         gridworld.reset();
