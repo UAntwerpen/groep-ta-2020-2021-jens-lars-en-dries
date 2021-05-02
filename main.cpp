@@ -6,24 +6,24 @@
 int main() {
     LA* parse_test = new LA();
     LAParser Q = LAParser();
-    Q.loadFile("data/LAParserTest.xml");
-//    Q.parseFile(parse_test);
 
     std::vector<int> actions{0, 1, 2, 3};
-//    parse_test->save();
 
     Environment env = Environment(10, 10, 42, true, -0.01, 10, 0.2);
     LA la(10, 10, std::make_pair(env.start->x, env.start->y), actions);
-    la.save("beepboop.xml");
-    Q.loadFile("data/beepboop.xml");
-    Q.parseFile(parse_test);
-    Agent agent(*parse_test, 0.01);
+    Agent agent(la, 0.01);
     env.render();
 
     agent.learn(1000, env);
     env.reset();
 
     std::cout<<"Finished learning.\n";
+    // Save the LA
+    la.save("beepboop.xml");
+    // Load savefile into Parser, then parse file.
+    Q.loadFile("data/beepboop.xml");
+    Q.parseFile(parse_test);
+    // Result should be that both parse_test and
 
     double average=0;
     for(int i=0;i<50;i++){

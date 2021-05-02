@@ -183,10 +183,11 @@ bool LA::save(std::string outputFileName) {
         TiXmlElement* actions = new TiXmlElement( "ACTIONS" );
         state->LinkEndChild(actions);
 
+        //Loops over all the actions of the state.
         for(unsigned int j = 0; j < getAllActions().size(); j++){
             TiXmlElement* action = new TiXmlElement( "ACTION" );
             actions->LinkEndChild(action);
-
+            // a_Value gets saved
             std::stringstream s;
             s << getAllActions()[j];
 
@@ -194,12 +195,20 @@ bool LA::save(std::string outputFileName) {
             action->LinkEndChild(a_value);
             TiXmlText* action_txt = new TiXmlText(s.str().c_str());
             a_value->LinkEndChild(action_txt);
+            // Q_Value gets saved
             s.str("");
             TiXmlElement* q_value = new TiXmlElement( "q_value" );
             action->LinkEndChild(q_value);
             s << (float)all_states[i]->getValue(getAllActions()[j]);
             TiXmlText* q_txt = new TiXmlText(s.str().c_str());
             q_value->LinkEndChild(q_txt);
+            // Probability gets saved
+            s.str("");
+            TiXmlElement* probability = new TiXmlElement( "probability" );
+            action->LinkEndChild(probability);
+            s << (float)all_states[i]->getProbabilities()[getAllActions()[j]];
+            TiXmlText* probability_txt = new TiXmlText(s.str().c_str());
+            probability->LinkEndChild(probability_txt);
         }
 
 

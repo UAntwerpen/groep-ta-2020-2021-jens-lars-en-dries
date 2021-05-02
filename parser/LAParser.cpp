@@ -65,6 +65,7 @@ bool LAParser::parseFile(LA *parsing_LA) {
     parsing_LA->setAllActions(fAllowed_actions);
     parsing_LA->setHeight(heigth);
     parsing_LA->setWidth(width);
+    parsing_LA->setCoordMap(coordsmap);
     return true;
 }
 
@@ -76,6 +77,8 @@ void LAParser::parseState(TiXmlElement *state_element, State *parsing_state) {
         for (TiXmlElement *action = elem->FirstChildElement(); action != NULL; action = action->NextSiblingElement()) {
             parsing_state->setValue(stoi(action->FirstChildElement("a_value")->FirstChild()->ToText()->Value()),
                                     stof(action->FirstChildElement("q_value")->FirstChild()->ToText()->Value()));
+            parsing_state->setProbability(stoi(action->FirstChildElement("a_value")->FirstChild()->ToText()->Value()),
+                                    stof(action->FirstChildElement("probability")->FirstChild()->ToText()->Value()));
         }
     }
     parsing_state->setX(stoi(state_element->FirstChildElement("x_coord")->FirstChild()->ToText()->Value()));
@@ -84,6 +87,7 @@ void LAParser::parseState(TiXmlElement *state_element, State *parsing_state) {
     parsing_state->setY(stoi(state_element->FirstChildElement("y_coord")->FirstChild()->ToText()->Value()));
     if (stoi(state_element->FirstChildElement("y_coord")->FirstChild()->ToText()->Value()) + 1 > heigth)
         heigth = stoi(state_element->FirstChildElement("y_coord")->FirstChild()->ToText()->Value()) + 1;
+    coordsmap[parsing_state->getCoordinates()] = parsing_state;
 }
 
 tuple<string, map<string, float>> LAParser::parseAction(TiXmlElement *action_element) {

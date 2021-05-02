@@ -1,7 +1,3 @@
-//
-// Created by driesdemaeseneer on 4/15/21.
-//
-
 #ifndef TO_GROEP_LA_H
 #define TO_GROEP_LA_H
 
@@ -82,6 +78,7 @@ public:
     // reset all counters of all states
     void resetCounter();
 
+    void setCoordMap(std::map<std::pair<int, int>, State*> inputMap){ coordinates_to_state = inputMap;}
 };
 
 

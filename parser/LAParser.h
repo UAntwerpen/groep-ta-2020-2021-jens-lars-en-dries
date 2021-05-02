@@ -26,6 +26,7 @@ private:
     vector<int> fAllowed_actions;
     int width;
     int heigth;
+    std::map<pair<int, int>, State*> coordsmap;
 };
 
 
