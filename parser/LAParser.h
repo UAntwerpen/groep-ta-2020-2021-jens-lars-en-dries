@@ -15,7 +15,7 @@ using namespace std;
 
 class LAParser : public AbstractParser {
 public:
-    bool parseFile(string inputFile, LA* parsing_LA);
+    bool parseFile(LA* parsing_LA);
 
     void parseState(TiXmlElement* state_element,State* parsing_state);
 
@@ -23,7 +23,10 @@ public:
 
     void parseEnvironment(TiXmlElement* environment_element, Environment* parsing_environment);
 private:
-
+    vector<int> fAllowed_actions;
+    int width;
+    int heigth;
+    std::map<pair<int, int>, State*> coordsmap;
 };
 
 

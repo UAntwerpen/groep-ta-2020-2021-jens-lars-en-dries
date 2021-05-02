@@ -30,6 +30,8 @@ class State {
 
 public:
     // constructor
+    State() = default;
+
     State(int in_x,int in_y, std::vector<int>& in_actions);
 
     // get the action list
@@ -66,6 +68,8 @@ public:
     // get probability map
     std::map<int, float> getProbabilities();
 
+    void setX(int i){ x = i;}
+    void setY(int i){ y = i;}
 };
 
 

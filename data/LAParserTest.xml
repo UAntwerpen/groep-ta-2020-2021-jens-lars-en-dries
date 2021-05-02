@@ -5,11 +5,19 @@
         <defstate>state_2</defstate>
         <defstate>state_3</defstate>
     </DEFSTATES>
+    <POSACTIONS>
+        <posaction>0</posaction>
+        <posaction>1</posaction>
+        <posaction>2</posaction>
+        <posaction>3</posaction>
+    </POSACTIONS>
     <STATES>
         <STATE>
             <name>
                 state_0
             </name>
+            <x_coord>0</x_coord>
+            <y_coord>0</y_coord>
             <ACTIONS>
                 <ACTION>
 <!--                   UP-->
@@ -77,6 +85,8 @@
             <name>
                 state_1
             </name>
+            <x_coord>1</x_coord>
+            <y_coord>0</y_coord>
             <ACTIONS>
                 <ACTION>
                     <!--                   UP-->
@@ -144,6 +154,8 @@
             <name>
                 state_2
             </name>
+            <x_coord>0</x_coord>
+            <y_coord>1</y_coord>
             <ACTIONS>
                 <ACTION>
                     <!--                   UP-->
@@ -211,6 +223,8 @@
             <name>
                 state_3
             </name>
+            <x_coord>0</x_coord>
+            <y_coord>1</y_coord>
             <ACTIONS>
                 <ACTION>
                     <!--                   UP-->
