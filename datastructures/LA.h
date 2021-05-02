@@ -57,14 +57,27 @@ public:
      */
     State* getStartState() { return start_state; }
 
+    /*
+     *
+     */
+    void setStartState(State* startState){start_state = startState;}
+
     bool addState(State* newState);
 
     std::vector<State*> getAllStates();
 
     std::vector<int> getAllActions();
 
+    void setAllActions(std::vector<int> new_AllActions){all_actions = new_AllActions;}
+
+    void setWidth(int x){width = x;}
+
+    void setHeight(int y){height = y;}
+
     // check if the automata is properly initialized
     bool isProperlyInitialized();
+
+    bool save(std::string outputFileName);
 
     // reset all counters of all states
     void resetCounter();

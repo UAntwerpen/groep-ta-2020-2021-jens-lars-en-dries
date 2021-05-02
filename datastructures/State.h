@@ -68,6 +68,8 @@ public:
     // get probability map
     std::map<int, float> getProbabilities();
 
+    void setX(int i){ x = i;}
+    void setY(int i){ y = i;}
 };
 
 

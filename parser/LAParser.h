@@ -23,7 +23,9 @@ public:
 
     void parseEnvironment(TiXmlElement* environment_element, Environment* parsing_environment);
 private:
-
+    vector<int> fAllowed_actions;
+    int width;
+    int heigth;
 };
 
 
