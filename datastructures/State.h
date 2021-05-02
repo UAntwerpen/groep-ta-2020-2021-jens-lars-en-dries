@@ -59,10 +59,13 @@ public:
     // increment the counter for a given action
     void incrementCounter(const int action);
 
+    // get coordinates of this state
     std::pair<int, int> getCoordinates();
 
+    // reset action counter
     void resetCounter();
 
+    // get probability map
     std::map<int, float> getProbabilities();
 
 };

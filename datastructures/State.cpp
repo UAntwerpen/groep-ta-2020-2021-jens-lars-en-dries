@@ -51,6 +51,7 @@ State::State(const int in_x, const int in_y, std::vector<int> &in_actions) {
     for(auto it:actions){
         action_to_probability[it]=(float) 1 / (float) actions.size();
         Q_value[it] = 0;
+        counter[it] = 0;
     }
 }
 
