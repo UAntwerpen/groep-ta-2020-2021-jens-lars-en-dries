@@ -9,6 +9,7 @@
 #include <tuple>
 #include "State.h"
 #include "Environment.h"
+#include <stdio.h>
 #include "LA.h"
 #include "../random/Random.h"
 
@@ -28,10 +29,10 @@ public:
     Agent(LA& in_la, float in_epsilon);
 
     // learn for a given amount of episodes in a given environment
-    void learn(int nr_episodes, Environment& gridworld);
+    void learn(int nr_episodes, Environment& gridworld, int max_steps, int prints_every_epoch);
 
     // Play an episode in the enviroment
-    std::vector<std::tuple<State*, int, float >> play(Environment& gridworld);
+    std::vector<std::tuple<State*, int, float >> play(Environment& gridworld, int max_steps);
 
     // improve the policy of the LA
     void epsilon_greedy_policy_improvement();

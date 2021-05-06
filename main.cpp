@@ -17,10 +17,10 @@ int main() {
     double average=0;
     for(int i=0;i<50;i++){
         env.reset();
-        average+=agent.play(env).size();
+        average+=agent.play(env, 200).size();
     }
 
-    agent.learn(1000, env);
+    agent.learn(1000, env, 200, 100);
     env.reset();
 
     std::cout<<"Finished learning.\n";
@@ -30,13 +30,12 @@ int main() {
     Q.loadFile("data/beepboop.xml");
     Q.parseFile(parse_test);
     // Result should be that both parse_test and
-
     std::cout<<"Average steps random = "<<average/(double)50<<std::endl;
 
     average=0;
     for(int i=0;i<50;i++){
         env.reset();
-        average+=agent.play(env).size();
+        average+=agent.play(env, 200).size();
     }
 
     std::cout<<"Average steps = "<<average/(double)50<<std::endl;

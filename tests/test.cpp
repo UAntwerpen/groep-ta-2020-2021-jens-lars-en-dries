@@ -8,6 +8,8 @@
 #include "../datastructures/State.h"
 #include "../datastructures/Agent.h"
 
+//Todo: Saving en Loading Test (Lars),
+
 TEST_CASE("Environment Basics") {
     Environment env = Environment(10, 5, 42, true, -0.01, 10, 0.2);
     REQUIRE(env.height == 10);
@@ -257,9 +259,9 @@ TEST_CASE("Agent tests") {
     Environment env = Environment(5, 5, 42, true, -0.01, 10, 0.2);
     LA la(5, 5, std::make_pair(env.start->x, env.start->y), actions);
     Agent agent(la, 0.9);
-    agent.play(env);
+    agent.play(env, 200);
     SECTION("episode test") {
-        auto episode = agent.play(env);
+        auto episode = agent.play(env, 200);
         REQUIRE(episode.empty()==false);
     }
 }
