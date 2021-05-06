@@ -7,7 +7,7 @@
 #include "Environment.h"
 
 
-void Agent::learn(int nr_episodes, Environment& gridworld) {
+void Agent::learn(int nr_episodes, Environment& gridworld, int max_steps, int prints_every_epoch) {
     /*
      *  the onPolicyImprove method will improve the agent's policy over nr_episodes episodes.
      *  we use the GLIE Monte-Carlo Control to converge to the optimal action-Q_value function Q(s,a) -> q*(s,a).
@@ -21,15 +21,18 @@ void Agent::learn(int nr_episodes, Environment& gridworld) {
 
     for(int i=0;i<nr_episodes;i++){
 
-        // Progress bar
-        if(i%(nr_episodes/10)==0) {
-            std::cout <<"Processed: "<< (double) i / (double) nr_episodes << std::endl;
-        }
+
 
         // Generate i'th episode
 
         gridworld.reset();
-        auto episode = play(gridworld);
+        auto episode = play(gridworld, max_steps);
+
+        // Progress bar
+        if(i%prints_every_epoch==0) {
+//            std::cout <<""<< (double) i / (double) nr_episodes << std::endl;
+            printf("Processed episode (%02d/%02d) in %zu steps\n", i, nr_episodes, episode.size());
+        }
 
         // Calculate cumulative reward of episode
         float cumulative_reward = 0;
@@ -59,7 +62,7 @@ void Agent::learn(int nr_episodes, Environment& gridworld) {
     }
 }
 
-std::vector<std::tuple<State*, int, float>>  Agent::play(Environment& gridworld) {
+std::vector<std::tuple<State*, int, float>>  Agent::play(Environment& gridworld, int max_steps) {
      /*
       * the play method will use polocy[time_step] to generate an episode.
       */
@@ -75,8 +78,8 @@ std::vector<std::tuple<State*, int, float>>  Agent::play(Environment& gridworld)
     State* current_state = la.getStartState();
     MDPState* enviroment_state = gridworld.start;
 
-    // while exit not found //TODO: max steps??
-    while(!finished and to_export.size()<200) {
+    // while exit not found
+    while(!finished and to_export.size()<max_steps) {
         // pick action
         int current_action = la.pickAction(current_state);
         // get enviroment result
