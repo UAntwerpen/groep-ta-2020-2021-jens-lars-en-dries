@@ -216,6 +216,6 @@ bool LA::save(std::string outputFileName) {
     }
 
 
-    doc.SaveFile( ("data/" + outputFileName).c_str() );
+    doc.SaveFile(("data/" + outputFileName).c_str());
     return true;
 }
