@@ -293,7 +293,7 @@
         state_0
     </startstate>
     <ENVIRONMENT>
-        <width>2</width>
+        <fWidth>2</fWidth>
         <heigth>2</heigth>
         <seed>12345</seed>
         <deterministic>1</deterministic>

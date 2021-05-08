@@ -8772,7 +8772,7 @@ namespace Catch {
 
                 void calcLength();
 
-                // Returns current indention width
+                // Returns current indention fWidth
                 size_t indent() const;
 
                 // Creates an indented and (optionally) suffixed string from
@@ -8829,7 +8829,7 @@ namespace Catch {
             Columns operator+( Column const& other );
         };
 
-        //! Creates a column that serves as an empty space of specific width
+        //! Creates a column that serves as an empty space of specific fWidth
         Column Spacer( size_t spaceWidth );
 
         class Columns {

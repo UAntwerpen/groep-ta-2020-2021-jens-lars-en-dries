@@ -264,7 +264,7 @@ void TiXmlParsingData::Stamp( const char* now, TiXmlEncoding encoding )
 					if ( *(p+1) && *(p+2) )
 					{
 						// In these cases, don't advance the column. These are
-						// 0-width spaces.
+						// 0-fWidth spaces.
 						if ( *(pU+1)==TIXML_UTF_LEAD_1 && *(pU+2)==TIXML_UTF_LEAD_2 )
 							p += 3;	
 						else if ( *(pU+1)==0xbfU && *(pU+2)==0xbeU )
