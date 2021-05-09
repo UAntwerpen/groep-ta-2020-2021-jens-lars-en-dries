@@ -2,6 +2,7 @@
 #include "datastructures/LA.h"
 #include "datastructures/Agent.h"
 #include "parser/LAParser.h"
+#include "parser/EnvironmentParser.h"
 
 int main() {
     LA* parse_test = new LA();
@@ -29,9 +30,15 @@ int main() {
     // Load savefile into Parser, then parse file.
     Q.loadFile("data/beepboop.xml");
     Q.parseFile(parse_test);
-    // Result should be that both parse_test and
+    // Result should be that both parse_test and la are identical
     std::cout<<"Average steps random = "<<average/(double)50<<std::endl;
 
+    // Save the environment.
+    env.save("boopbeep.xml");
+    // Create EnvironmentParser, load inputfile, parseFile returns a pointer to Environment.
+    EnvironmentParser W;
+    W.loadFile("data/boopbeep.xml");
+    Environment* loadENVTest = W.parseFile();
     average=0;
     for(int i=0;i<50;i++){
         env.reset();
@@ -40,7 +47,7 @@ int main() {
 
     std::cout<<"Average steps = "<<average/(double)50<<std::endl;
 
-    std::cout<<"Optimal route size = "<<agent.getOptimalRoute(env).size()<<std::endl;
+//    std::cout<<"Optimal route size = "<<agent.getOptimalRoute(env).size()<<std::endl;
 
     return 0;
 }

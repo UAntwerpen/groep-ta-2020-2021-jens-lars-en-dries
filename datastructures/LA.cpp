@@ -3,7 +3,6 @@
 #include <sstream>
 #include "LA.h"
 #include "../parser/tinyxml/tinyxml.h"
-#include "../parser/tinyxml/tinystr.h"
 
 void LA::reset() {
 

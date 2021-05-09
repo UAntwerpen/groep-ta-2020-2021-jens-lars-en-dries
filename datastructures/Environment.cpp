@@ -1,6 +1,8 @@
 #include <algorithm>
 #include "Environment.h"
 #include "../random/Random.h"
+#include "../parser/tinyxml/tinyxml.h"
+#include <sstream>
 
 Environment::Environment(int height, int width, int seed, bool deterministic, float living_reward, float end_reward,
                          float percentage_obstacles) {
@@ -169,6 +171,66 @@ tuple<MDPState *, float, bool> Environment::step(int action) {
     // returns: next_state (MDPState), reward (float), done (bool)
     tuple<MDPState *, float, bool> state_reward_bool = tuple_cat(next_state_reward, make_tuple(done));
     return state_reward_bool;
+}
+
+bool Environment::save(std::string outputFileName) {
+    stringstream s;
+    // Create root.
+    TiXmlDocument doc;
+    TiXmlElement* root = new TiXmlElement("Environment");
+    doc.LinkEndChild(root);
+
+    TiXmlElement* width_segment = new TiXmlElement("width");
+    root->LinkEndChild(width_segment);
+    s << width;
+    TiXmlText* width_txt = new TiXmlText(s.str().c_str());
+    width_segment->LinkEndChild(width_txt);
+    s.str("");
+
+    TiXmlElement* height_segment = new TiXmlElement("height");
+    root->LinkEndChild(height_segment);
+    s << height;
+    TiXmlText* height_txt = new TiXmlText(s.str().c_str());
+    height_segment->LinkEndChild(height_txt);
+    s.str("");
+
+    TiXmlElement* seed_segment = new TiXmlElement("seed");
+    root->LinkEndChild(seed_segment);
+    s << seed;
+    TiXmlText* seed_txt = new TiXmlText(s.str().c_str());
+    seed_segment->LinkEndChild(seed_txt);
+    s.str("");
+
+    TiXmlElement* deterministic_segment = new TiXmlElement("deterministic");
+    root->LinkEndChild(deterministic_segment);
+    s << deterministic;
+    TiXmlText* deterministic_txt = new TiXmlText(s.str().c_str());
+    deterministic_segment->LinkEndChild(deterministic_txt);
+    s.str("");
+
+    TiXmlElement* livingreward_segment = new TiXmlElement("livingreward");
+    root->LinkEndChild(livingreward_segment);
+    s << living_reward;
+    TiXmlText* livingreward_txt = new TiXmlText(s.str().c_str());
+    livingreward_segment->LinkEndChild(livingreward_txt);
+    s.str("");
+
+    TiXmlElement* endreward_segment = new TiXmlElement("endreward");
+    root->LinkEndChild(endreward_segment);
+    s << end_reward;
+    TiXmlText* endreward_txt = new TiXmlText(s.str().c_str());
+    endreward_segment->LinkEndChild(endreward_txt);
+    s.str("");
+
+    TiXmlElement* percentageobstacles_segment = new TiXmlElement("percentageobstacles");
+    root->LinkEndChild(percentageobstacles_segment);
+    s << percentage_obstacles;
+    TiXmlText* percentageobstacles_txt = new TiXmlText(s.str().c_str());
+    percentageobstacles_segment->LinkEndChild(percentageobstacles_txt);
+    s.str("");
+
+    doc.SaveFile(("data/" + outputFileName).c_str());
+    return true;
 }
 
 
