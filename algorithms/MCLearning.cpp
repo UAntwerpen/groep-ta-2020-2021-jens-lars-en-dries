@@ -1,13 +1,9 @@
-//
-// Created by driesdemaeseneer on 4/15/21.
-//
-
 #include <complex>
-#include "Agent.h"
-#include "Environment.h"
+#include "MCLearning.h"
+#include "../datastructures/Environment.h"
 
 
-void Agent::learn(int nr_episodes, Environment& gridworld, int max_steps, int prints_every_epoch) {
+void MCLearning::learn(int nr_episodes, Environment& gridworld, int max_steps, int prints_every_epoch) {
     /*
      *  the onPolicyImprove method will improve the agent's policy over nr_episodes episodes.
      *  we use the GLIE Monte-Carlo Control to converge to the optimal action-Q_value function Q(s,a) -> q*(s,a).
@@ -20,51 +16,38 @@ void Agent::learn(int nr_episodes, Environment& gridworld, int max_steps, int pr
     std::cout<<"Learning, please wait a moment...\n";
 
     for(int i=0;i<nr_episodes;i++){
-
-
-
         // Generate i'th episode
-
         gridworld.reset();
         auto episode = play(gridworld, max_steps);
-
         // Progress bar
         if(i%prints_every_epoch==0) {
-//            std::cout <<""<< (double) i / (double) nr_episodes << std::endl;
             printf("Processed episode (%02d/%02d) in %zu steps\n", i, nr_episodes, episode.size());
         }
-
         // Calculate cumulative reward of episode
         float cumulative_reward = 0;
         for(int i = 0;i<episode.size();i++) cumulative_reward += std::get<2>(episode[i])*std::pow(discountfactor, i);
-
         // Loop over time steps in the i'th episode
         for(int time_step = 0; time_step<episode.size(); time_step++){
-
             // get values from tuple.
             auto state = std::get<0>(episode[time_step]);
             int action = std::get<1>(episode[time_step]);
-
             // increment counter.
             state->incrementCounter(action);
             // get current action value
             float value = state->getValue(action);
             // get action counter.
             int state_action_count = state->getActionCount(action);
-
             // calculate new Q_value for action action in the current state
             state->setValue(action, value + ((float)(cumulative_reward - value)/(float)state_action_count));
-
         }
-
         // policy improvement
         epsilon_greedy_policy_improvement();
     }
 }
 
-std::vector<std::tuple<State*, int, float>>  Agent::play(Environment& gridworld, int max_steps) {
+std::vector<std::tuple<State*, int, float>>  MCLearning::play(Environment& gridworld, int max_steps) {
      /*
-      * the play method will use polocy[time_step] to generate an episode.
+      * the play method will use policy[time_step] to generate an episode.
       */
 
 
@@ -82,7 +65,7 @@ std::vector<std::tuple<State*, int, float>>  Agent::play(Environment& gridworld,
     while(!finished and to_export.size()<max_steps) {
         // pick action
         int current_action = la.pickAction(current_state);
-        // get enviroment result
+        // get environment result
         auto result = gridworld.step(current_action);
 
         finished = std::get<2> (result);
@@ -94,7 +77,7 @@ std::vector<std::tuple<State*, int, float>>  Agent::play(Environment& gridworld,
     return to_export;
 }
 
-void Agent::epsilon_greedy_policy_improvement() {
+void MCLearning::epsilon_greedy_policy_improvement() {
      /*
       * the epsilon_greedy_policy_improvement method will become more greedy over time, this is useful to encourage exploration.
       * Reinforcement Learning: An Introduction second edition, 5.4 Monte Carlo Control without Exploring Starts p 124.
@@ -116,12 +99,12 @@ void Agent::epsilon_greedy_policy_improvement() {
     }
 }
 
-Agent::Agent(LA &in_la, float in_epsilon) {
+MCLearning::MCLearning(LA &in_la, float in_epsilon) {
     la = in_la;
     epsilon = in_epsilon;
 }
 
-std::vector<int> Agent::getOptimalRoute(Environment &gridworld) {
+std::vector<int> MCLearning::getOptimalRoute(Environment &gridworld) {
 
     gridworld.reset();
 

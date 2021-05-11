@@ -1,6 +1,6 @@
 #include "datastructures/Environment.h"
 #include "datastructures/LA.h"
-#include "datastructures/Agent.h"
+#include "algorithms/MCLearning.h"
 #include "parser/LAParser.h"
 #include "parser/EnvironmentParser.h"
 
@@ -12,7 +12,7 @@ int main() {
 
     Environment env = Environment(10, 10, 42, true, -0.01, 10, 0.2);
     LA la(10, 10, std::make_pair(env.start->x, env.start->y), actions);
-    Agent agent(la, 0.01);
+    MCLearning agent(la, 0.01);
     env.render();
 
     double average=0;
@@ -46,8 +46,6 @@ int main() {
     }
 
     std::cout<<"Average steps = "<<average/(double)50<<std::endl;
-
-//    std::cout<<"Optimal route size = "<<agent.getOptimalRoute(env).size()<<std::endl;
 
     return 0;
 }

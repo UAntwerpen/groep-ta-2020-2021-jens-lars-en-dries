@@ -56,7 +56,7 @@ bool LAParser::parseFile(LA *parsing_LA) {
     if(error){
         cout << "No POSACTIONS segment in inputfile to parse.";
     }
-    if(states_to_parse.size() == 0) _assert ("No states found in STATES segment.", __FILE__, __LINE__);
+//    if(states_to_parse.size() == 0) _assert ("No states found in STATES segment.", __FILE__, __LINE__);
     // Parse every state.
     for(unsigned int i = 0; i < states_to_parse.size(); i++){
         string name = states_to_parse[i]->FirstChildElement("name")->FirstChild()->ToText()->Value();

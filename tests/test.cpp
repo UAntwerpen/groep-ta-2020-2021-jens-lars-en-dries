@@ -6,7 +6,8 @@
 #include "../random/Random.h"
 #include "../datastructures/LA.h"
 #include "../datastructures/State.h"
-#include "../datastructures/Agent.h"
+#include "../algorithms/MCLearning.h"
+#include "../algorithms/QLearning.h"
 
 //Todo: Saving en Loading Test (Lars),
 
@@ -253,12 +254,19 @@ TEST_CASE("Learning automata tests") {
     }
 }
 
-TEST_CASE("Agent tests") {
+TEST_CASE("QLearning Tests") {
+    Environment env = Environment(10, 10, 42, true, -0.01, 10, 0.2);
+    QLearning ql = QLearning(&env,0.1, 0.01, 0.9);
+    ql.train(&env, 2000, 50, 10);
+    // todo write a test once we have an optimal path algorithm
+}
+
+TEST_CASE("MCLearning tests") {
     std::vector<int> actions{0, 1, 2, 3};
 
     Environment env = Environment(5, 5, 42, true, -0.01, 10, 0.2);
     LA la(5, 5, std::make_pair(env.start->x, env.start->y), actions);
-    Agent agent(la, 0.9);
+    MCLearning agent(la, 0.9);
     agent.play(env, 200);
     SECTION("episode test") {
         auto episode = agent.play(env, 200);

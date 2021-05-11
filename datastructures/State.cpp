@@ -1,7 +1,3 @@
-//
-// Created by driesdemaeseneer on 4/15/21.
-//
-
 #include "State.h"
 
 void State::setValue(int action, float in_value) {

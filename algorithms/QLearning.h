@@ -3,10 +3,10 @@
 
 #include <vector>
 #include <tuple>
-#include "State.h"
-#include "Environment.h"
+#include "../datastructures/State.h"
+#include "../datastructures/Environment.h"
 #include <stdio.h>
-#include "LA.h"
+#include "../datastructures/LA.h"
 #include "../random/Random.h"
 
 class QLearning {

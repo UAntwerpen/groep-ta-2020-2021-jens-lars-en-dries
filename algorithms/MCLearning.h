@@ -1,19 +1,15 @@
-//
-// Created by driesdemaeseneer on 4/15/21.
-//
-
-#ifndef TO_GROEP_AGENT_H
-#define TO_GROEP_AGENT_H
+#ifndef TO_GROEP_MCLEARNING_H
+#define TO_GROEP_MCLEARNING_H
 
 #include <vector>
 #include <tuple>
-#include "State.h"
-#include "Environment.h"
+#include "../datastructures/State.h"
+#include "../datastructures/Environment.h"
 #include <stdio.h>
-#include "LA.h"
+#include "../datastructures/LA.h"
 #include "../random/Random.h"
 
-class Agent {
+class MCLearning {
 
     // epsilon is the infinite exploration part of GLIE. It will asymptotically increase the greediness of the policy.
     float epsilon;
@@ -26,9 +22,9 @@ class Agent {
 
 public:
     // constructor
-    Agent(LA& in_la, float in_epsilon);
+    MCLearning(LA& in_la, float in_epsilon);
 
-    // learn for a given amount of episodes in a given environment
+    // learn for a given amount of episodes in a given environment using MC control
     void learn(int nr_episodes, Environment& gridworld, int max_steps, int prints_every_epoch);
 
     // Play an episode in the enviroment
@@ -44,4 +40,4 @@ public:
 };
 
 
-#endif //TO_GROEP_AGENT_H
+#endif //TO_GROEP_MCLEARNING_H
