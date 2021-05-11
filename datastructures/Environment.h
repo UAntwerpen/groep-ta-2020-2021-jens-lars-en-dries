@@ -24,7 +24,6 @@ public:
     float percentage_obstacles;
     vector<MDPState> states;
     MDPState* start;
-    // need the near_terminal for the final action -> terminal action is a loop outside of the gridworld (there's reasons for this).
     MDPState* end;
     MDPState* current_state;
 
@@ -54,7 +53,7 @@ private:
     void generate_obstacles();
     // dynamics of the environment: a map of <(state, action): map<(state, reward), probability>
     map<tuple<MDPState *, int>, map<tuple<MDPState *, float>, float>> dynamics;
-    void update_deterministic_dynamics(MDPState *current_state, int action, MDPState* next_state);
+    void insert_deterministic_dynamics(MDPState *current_state, int action, MDPState* next_state);
 };
 
 

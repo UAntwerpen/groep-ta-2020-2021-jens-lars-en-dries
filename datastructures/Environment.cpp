@@ -17,19 +17,18 @@ Environment::Environment(int height, int width, int seed, bool deterministic, fl
             states.push_back(state_);
         }
     }
-    // todo rand -> random
     Random random(this->seed);
     srand(this->seed);
     int start_x = random.rand() % width;
     int start_y = random.rand() % height;
     start = get_state_by_coordinates(start_x, start_y);
-    start->type = "S";
+    start->symbol = "S";
     do {
         int end_x = random.rand() % width;
         int end_y = random.rand() % height;
         this->end = get_state_by_coordinates(end_x, end_y);
     } while (start == end);
-    end->type = "E";
+    end->symbol = "E";
     end->terminal = true;
     current_state = start;
     generate_world();
@@ -50,36 +49,36 @@ void Environment::generate_deterministic_world() {
         int y = current_state.y;
         MDPState *next_state = get_state_by_coordinates(x, y + 1);
         // check bounds of environment -> if actions leads outside bounds, stay put
-        if (y + 1 >= height || next_state->type == "O") {
+        if (y + 1 >= height || next_state->symbol == "O") {
             next_state = get_state_by_coordinates(x, y);
-            update_deterministic_dynamics(&current_state, 0, next_state);
+            insert_deterministic_dynamics(&current_state, 0, next_state);
         } else {
             next_state = get_state_by_coordinates(x, y + 1);
-            update_deterministic_dynamics(&current_state, 0, next_state);
+            insert_deterministic_dynamics(&current_state, 0, next_state);
         }
-        next_state = get_state_by_coordinates(x, y - 1); // hier loopt iets fout.c
-        if (y - 1 < 0 || next_state->type == "O") {
+        next_state = get_state_by_coordinates(x, y - 1);
+        if (y - 1 < 0 || next_state->symbol == "O") {
             next_state = get_state_by_coordinates(x, y);
-            update_deterministic_dynamics(&current_state, 2, next_state);
+            insert_deterministic_dynamics(&current_state, 2, next_state);
         } else {
             next_state = get_state_by_coordinates(x, y - 1);
-            update_deterministic_dynamics(&current_state, 2, next_state);
+            insert_deterministic_dynamics(&current_state, 2, next_state);
         }
         next_state = get_state_by_coordinates(x + 1, y);
-        if (x + 1 >= width || next_state->type == "O") {
+        if (x + 1 >= width || next_state->symbol == "O") {
             next_state = get_state_by_coordinates(x, y);
-            update_deterministic_dynamics(&current_state, 1, next_state);
+            insert_deterministic_dynamics(&current_state, 1, next_state);
         } else {
             next_state = get_state_by_coordinates(x + 1, y);
-            update_deterministic_dynamics(&current_state, 1, next_state);
+            insert_deterministic_dynamics(&current_state, 1, next_state);
         }
         next_state = get_state_by_coordinates(x - 1, y);
-        if (x - 1 < 0 || next_state->type == "O") {
+        if (x - 1 < 0 || next_state->symbol == "O") {
             next_state = get_state_by_coordinates(x, y);
-            update_deterministic_dynamics(&current_state, 3,next_state);
+            insert_deterministic_dynamics(&current_state, 3, next_state);
         } else {
             next_state = get_state_by_coordinates(x - 1, y);
-            update_deterministic_dynamics(&current_state, 3, next_state);
+            insert_deterministic_dynamics(&current_state, 3, next_state);
         }
     }
 }
@@ -94,8 +93,8 @@ void Environment::generate_obstacles() {
         MDPState *state_ = get_state_by_coordinates(x, y);
         // todo need to check if there exists a path between start and end -> otherwise create a new obstacle and check again
         if ((start->x != state_->x || start->y != state_->y) && (end->y != state_->y || end->x != state_->x)) {
-            // set the state type to obstacle (O)
-            state_->type = "O";
+            // set the state symbol to obstacle (O)
+            state_->symbol = "O";
             n_obstacles -= 1;
         }
     }
@@ -115,7 +114,7 @@ MDPState *Environment::get_state_by_coordinates(int x, int y) {
     return nullptr;
 }
 
-void Environment::update_deterministic_dynamics(MDPState *current_state, int action, MDPState *next_state) {
+void Environment::insert_deterministic_dynamics(MDPState *current_state, int action, MDPState *next_state) {
     float reward = living_reward;
     if (next_state == end) {
         reward = end_reward;
@@ -136,7 +135,7 @@ void Environment::render() {
     for (int y = height - 1; y >= 0; y--) {
         for (int x = 0; x < width; x++) {
             MDPState *state = get_state_by_coordinates(x, y);
-            string state_r = state->type;
+            string state_r = state->symbol;
             if (current_state == state) {
                 // current state is designated by an "X" in the gridworld.
                 state_r = "X";

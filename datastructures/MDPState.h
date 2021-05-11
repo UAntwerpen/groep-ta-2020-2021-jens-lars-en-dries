@@ -8,9 +8,9 @@ class MDPState {
 public:
     int x;
     int y;
-    string type;
+    string symbol;
     bool terminal;
-    MDPState(int x, int y, string type, bool terminal);
+    MDPState(int x, int y, string symbol, bool terminal);
 };
 
 
