@@ -146,7 +146,7 @@ void Environment::render() {
         }
         output += "\n";
     }
-    cout << output;
+    cout << output << "\n";
 }
 
 tuple<MDPState *, float, bool> Environment::step(int action) {

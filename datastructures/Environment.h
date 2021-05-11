@@ -26,10 +26,11 @@ public:
     MDPState* start;
     MDPState* end;
     MDPState* current_state;
+    // a gridworld accepts following actions (int): 0 = UP, 1 = RIGHT, 2 = DOWN, 3 = LEFT
+    std::vector<int> actions = {0, 1, 2, 3};
 
     Environment(int height, int width, int seed, bool deterministic, float living_reward, float end_reward, float percentage_obstacles);
 
-    // accepts: action (int), 0 = UP, 1 = RIGHT, 2 = DOWN, 3 = LEFT
     // returns: next_state (MDPState), reward (float), done (bool)
     tuple<MDPState *, float, bool> step(int action);
 
