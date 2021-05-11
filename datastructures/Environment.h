@@ -46,6 +46,8 @@ public:
     // get a state pointer based on the coordinates
     MDPState * get_state_by_coordinates(int x, int y);
 
+    bool save(std::string outputFileName);
+
 private:
     // used for populating the world
     void generate_world();

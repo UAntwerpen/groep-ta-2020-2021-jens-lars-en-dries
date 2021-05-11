@@ -14,6 +14,6 @@ set(SOURCE_FILES
         tinyxml/tinyxml.cpp
         tinyxml/tinyxmlerror.cpp
         tinyxml/tinyxmlparser.cpp
-        )
+        EnvironmentParser.cpp EnvironmentParser.h)
 
 add_library(parser_lib STATIC ${SOURCE_FILES} ${HEADER_FILES})
