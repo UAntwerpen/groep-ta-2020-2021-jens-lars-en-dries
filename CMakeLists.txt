@@ -10,7 +10,7 @@ set(SOURCE_FILES main.cpp datastructures/Environment.cpp datastructures/Environm
         datastructures/MDPState.cpp datastructures/MDPState.h algorithms/QLearning.cpp algorithms/QLearning.h)
 add_executable(TO_Groep ${SOURCE_FILES})
 
-target_link_libraries(TO_Groep parser_lib)
+target_link_libraries(TO_Groep parser_lib procedural_generation_lib)
 
 add_executable(TESTS tests/test.cpp datastructures/Environment.cpp datastructures/Environment.h algorithms/QLearning.h algorithms/QLearning.cpp datastructures/LA.cpp
         datastructures/LA.h datastructures/State.cpp datastructures/State.h algorithms/MCLearning.cpp algorithms/MCLearning.h tests/catch.hpp
@@ -19,3 +19,5 @@ add_executable(TESTS tests/test.cpp datastructures/Environment.cpp datastructure
 target_link_libraries(TESTS parser_lib)
 
 add_subdirectory(parser)
+
+add_subdirectory(procederual-generation)

@@ -52,8 +52,8 @@ int LA::pickAction(State *in_state) {
     std::vector<float> probabilities;
 
     for (auto const &distribution: in_state->getProbabilities()) {
-        state_rewards.push_back(distribution.first);
-        probabilities.push_back(distribution.second);
+        state_rewards.emplace_back(distribution.first);
+        probabilities.emplace_back(distribution.second);
     }
     // sampling according to distributions
     std::random_device rd;
@@ -122,7 +122,7 @@ void LA::resetCounter() {
 }
 
 bool LA::addState(State *newState) {
-    all_states.push_back(newState);
+    all_states.emplace_back(newState);
     return true;
 }
 
