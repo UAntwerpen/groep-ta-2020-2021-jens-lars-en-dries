@@ -2,6 +2,8 @@
 #include "Environment.h"
 #include "../random/Random.h"
 #include "../parser/tinyxml/tinyxml.h"
+#include "../procederual-generation/RiverBezier.h"
+#include "../procederual-generation/LavaPools.h"
 #include <sstream>
 
 Environment::Environment(int height, int width, int seed, bool deterministic, float living_reward, float end_reward,
@@ -19,8 +21,8 @@ Environment::Environment(int height, int width, int seed, bool deterministic, fl
             states.push_back(state_);
         }
     }
-    Random random(this->seed);
-    srand(this->seed);
+    Random random;
+    if (this->seed != -1) random.setSeed(this->seed);
     int start_x = random.rand() % width;
     int start_y = random.rand() % height;
     start = get_state_by_coordinates(start_x, start_y);
@@ -40,7 +42,7 @@ void Environment::generate_world() {
     if (deterministic) {
         generate_deterministic_world();
     } else {
-        // Nondeterministic world generation
+        generate_non_deterministic_world();
     }
 }
 
@@ -176,60 +178,229 @@ bool Environment::save(std::string outputFileName) {
     stringstream s;
     // Create root.
     TiXmlDocument doc;
-    TiXmlElement* root = new TiXmlElement("Environment");
+    TiXmlElement *root = new TiXmlElement("Environment");
     doc.LinkEndChild(root);
 
-    TiXmlElement* width_segment = new TiXmlElement("width");
+    TiXmlElement *width_segment = new TiXmlElement("width");
     root->LinkEndChild(width_segment);
     s << width;
-    TiXmlText* width_txt = new TiXmlText(s.str().c_str());
+    TiXmlText *width_txt = new TiXmlText(s.str().c_str());
     width_segment->LinkEndChild(width_txt);
     s.str("");
 
-    TiXmlElement* height_segment = new TiXmlElement("height");
+    TiXmlElement *height_segment = new TiXmlElement("height");
     root->LinkEndChild(height_segment);
     s << height;
-    TiXmlText* height_txt = new TiXmlText(s.str().c_str());
+    TiXmlText *height_txt = new TiXmlText(s.str().c_str());
     height_segment->LinkEndChild(height_txt);
     s.str("");
 
-    TiXmlElement* seed_segment = new TiXmlElement("seed");
+    TiXmlElement *seed_segment = new TiXmlElement("seed");
     root->LinkEndChild(seed_segment);
     s << seed;
-    TiXmlText* seed_txt = new TiXmlText(s.str().c_str());
+    TiXmlText *seed_txt = new TiXmlText(s.str().c_str());
     seed_segment->LinkEndChild(seed_txt);
     s.str("");
 
-    TiXmlElement* deterministic_segment = new TiXmlElement("deterministic");
+    TiXmlElement *deterministic_segment = new TiXmlElement("deterministic");
     root->LinkEndChild(deterministic_segment);
     s << deterministic;
-    TiXmlText* deterministic_txt = new TiXmlText(s.str().c_str());
+    TiXmlText *deterministic_txt = new TiXmlText(s.str().c_str());
     deterministic_segment->LinkEndChild(deterministic_txt);
     s.str("");
 
-    TiXmlElement* livingreward_segment = new TiXmlElement("livingreward");
+    TiXmlElement *livingreward_segment = new TiXmlElement("livingreward");
     root->LinkEndChild(livingreward_segment);
     s << living_reward;
-    TiXmlText* livingreward_txt = new TiXmlText(s.str().c_str());
+    TiXmlText *livingreward_txt = new TiXmlText(s.str().c_str());
     livingreward_segment->LinkEndChild(livingreward_txt);
     s.str("");
 
-    TiXmlElement* endreward_segment = new TiXmlElement("endreward");
+    TiXmlElement *endreward_segment = new TiXmlElement("endreward");
     root->LinkEndChild(endreward_segment);
     s << end_reward;
-    TiXmlText* endreward_txt = new TiXmlText(s.str().c_str());
+    TiXmlText *endreward_txt = new TiXmlText(s.str().c_str());
     endreward_segment->LinkEndChild(endreward_txt);
     s.str("");
 
-    TiXmlElement* percentageobstacles_segment = new TiXmlElement("percentageobstacles");
+    TiXmlElement *percentageobstacles_segment = new TiXmlElement("percentageobstacles");
     root->LinkEndChild(percentageobstacles_segment);
     s << percentage_obstacles;
-    TiXmlText* percentageobstacles_txt = new TiXmlText(s.str().c_str());
+    TiXmlText *percentageobstacles_txt = new TiXmlText(s.str().c_str());
     percentageobstacles_segment->LinkEndChild(percentageobstacles_txt);
     s.str("");
 
     doc.SaveFile(("data/" + outputFileName).c_str());
     return true;
+}
+
+void Environment::generate_non_deterministic_world() {
+    Random random(seed);
+    this->percentage_obstacles /= 8.0;
+    generate_non_deterministic_obstacles();
+    generate_obstacles();
+    for (auto &current_state: states) {
+        int x = current_state.x;
+        int y = current_state.y;
+        MDPState *next_state = get_state_by_coordinates(x, y + 1);
+        // check bounds of environment -> if actions leads outside bounds, stay put
+        if (y + 1 >= height) {
+            next_state = get_state_by_coordinates(x, y);
+        } else {
+            next_state = get_state_by_coordinates(x, y + 1);
+        }
+        if (next_state->symbol == "w") {
+            int drifting_amount = random.rand() % 4;
+            for (int i = 0; i < drifting_amount; i++) {
+                int dx = ((random.rand() % 2) * 2) - 1;
+                int dy = ((random.rand() % 2) * 2) - 1;
+                MDPState *displacement_state = get_state_by_coordinates(x + dx, y + dy);
+                if (displacement_state == nullptr) displacement_state = next_state;
+                insert_non_deterministic_dynamics(&current_state, 0, living_reward,
+                                                  (drifting_away_chance / (float) drifting_amount), displacement_state);
+            }
+            insert_non_deterministic_dynamics(&current_state, 0, living_reward, ((1 - drifting_away_chance) +
+                                                                                 (drifting_away_chance /
+                                                                                  (float) drifting_amount)),
+                                              next_state);
+        } else if (next_state->symbol == "L") {
+            insert_non_deterministic_dynamics(&current_state, 0, lava_reward, 1, next_state);
+        } else {
+            insert_non_deterministic_dynamics(&current_state, 0, living_reward, 1, next_state);
+        }
+        next_state = get_state_by_coordinates(x, y - 1);
+        if (y - 1 < 0) {
+            next_state = get_state_by_coordinates(x, y);
+        } else {
+            next_state = get_state_by_coordinates(x, y - 1);
+        }
+        if (next_state->symbol == "w") {
+            int drifting_amount = random.rand() % 4;
+            for (int i = 0; i < drifting_amount; i++) {
+                int dx = ((random.rand() % 2) * 2) - 1;
+                int dy = ((random.rand() % 2) * 2) - 1;
+                MDPState *displacement_state = get_state_by_coordinates(x + dx, y + dy);
+                if (displacement_state == nullptr) displacement_state = next_state;
+                insert_non_deterministic_dynamics(&current_state, 2, living_reward,
+                                                  (drifting_away_chance / (float) drifting_amount), displacement_state);
+            }
+            insert_non_deterministic_dynamics(&current_state, 2, living_reward, ((1 - drifting_away_chance) +
+                                                                                 (drifting_away_chance /
+                                                                                  (float) drifting_amount)),
+                                              next_state);
+        } else if (next_state->symbol == "L") {
+            insert_non_deterministic_dynamics(&current_state, 2, lava_reward, 1, next_state);
+        } else {
+            insert_non_deterministic_dynamics(&current_state, 2, living_reward, 1, next_state);
+        }
+
+        next_state = get_state_by_coordinates(x + 1, y);
+        if (x + 1 >= width || next_state->symbol == "L") {
+            next_state = get_state_by_coordinates(x, y);
+        } else {
+            next_state = get_state_by_coordinates(x + 1, y);
+        }
+
+        if (next_state->symbol == "w") {
+            int drifting_amount = random.rand() % 4;
+            for (int i = 0; i < drifting_amount; i++) {
+                int dx = ((random.rand() % 2) * 2) - 1;
+                int dy = ((random.rand() % 2) * 2) - 1;
+                MDPState *displacement_state = get_state_by_coordinates(x + dx, y + dy);
+                if (displacement_state == nullptr) displacement_state = next_state;
+                insert_non_deterministic_dynamics(&current_state, 1, living_reward,
+                                                  (drifting_away_chance / (float) drifting_amount), displacement_state);
+            }
+            insert_non_deterministic_dynamics(&current_state, 1, living_reward, ((1 - drifting_away_chance) +
+                                                                                 (drifting_away_chance /
+                                                                                  (float) drifting_amount)),
+                                              next_state);
+        } else if (next_state->symbol == "L") {
+            insert_non_deterministic_dynamics(&current_state, 1, lava_reward, 1, next_state);
+        } else {
+            insert_non_deterministic_dynamics(&current_state, 1, living_reward, 1, next_state);
+        }
+
+        next_state = get_state_by_coordinates(x - 1, y);
+        if (x - 1 < 0 || next_state->symbol == "L") {
+            next_state = get_state_by_coordinates(x, y);
+        } else {
+            next_state = get_state_by_coordinates(x - 1, y);
+        }
+        if (next_state->symbol == "w") {
+            int drifting_amount = random.rand() % 4;
+            for (int i = 0; i < drifting_amount; i++) {
+                int dx = ((random.rand() % 2) * 2) - 1;
+                int dy = ((random.rand() % 2) * 2) - 1;
+                MDPState *displacement_state = get_state_by_coordinates(x + dx, y + dy);
+                if (displacement_state == nullptr) displacement_state = next_state;
+                insert_non_deterministic_dynamics(&current_state, 3, living_reward,
+                                                  (drifting_away_chance / (float) drifting_amount), displacement_state);
+            }
+            insert_non_deterministic_dynamics(&current_state, 3, living_reward, ((1 - drifting_away_chance) +
+                                                                                 (drifting_away_chance /
+                                                                                  (float) drifting_amount)),
+                                              next_state);
+        } else if (next_state->symbol == "L") {
+            insert_non_deterministic_dynamics(&current_state, 3, lava_reward, 1, next_state);
+        } else {
+            insert_non_deterministic_dynamics(&current_state, 3, living_reward, 1, next_state);
+        }
+    }
+}
+
+void Environment::generate_non_deterministic_obstacles() {
+    Random random(seed);
+    std::vector<std::vector<char>> lava_map;
+    std::vector<std::vector<char>> river_map;
+    int index = -1;
+    // generate lava_pools until the start and end are not lava-objects
+    do {
+        lava_map.clear();
+        std::vector<char> tmp;
+        tmp.resize(width, '-');
+        lava_map.resize(height, tmp);
+        index += 1;
+        LavaPools::Lava(lava_map, random.rand() % 3, seed + index);
+        // in the wile loop we have to check for sudden death
+    } while (lava_map[start->y][start->x] != '-' and lava_map[end->y][end->x] != '-');
+
+    index = -1;
+    // generate rivers until the start and end are not river or bridge objects
+    do {
+        river_map.clear();
+        std::vector<char> tmp;
+        tmp.resize(width, '-');
+        river_map.resize(height, tmp);
+        index += 1;
+        RiverBezier::River(river_map, random.rand() % 3, seed + index);
+    } while (river_map[start->y][start->x] != '-' and river_map[end->y][end->x] != '-');
+
+    // filling the environment with river and lavapits
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+            MDPState *current_state = get_state_by_coordinates(x, y);
+            if (current_state->symbol != "X" and current_state->symbol != "E") {
+                if (lava_map[y][x] == 'L') {
+                    current_state->symbol = 'L';
+                }
+                if (river_map[y][x] == 'w') current_state->symbol = 'w';
+                if (river_map[y][x] == 'b') current_state->symbol = 'b';
+            }
+        }
+    }
+}
+
+void
+Environment::insert_non_deterministic_dynamics(MDPState *current_state, int action, float reward, float probability,
+                                               MDPState *next_state) {
+    if (next_state == end) {
+        reward = end_reward;
+    }
+    tuple<MDPState *, float> next_state_reward(next_state, reward);
+    tuple<MDPState *, int> current_state_action(current_state, action);
+
+    dynamics[current_state_action].insert({next_state_reward, probability});
 }
 
 

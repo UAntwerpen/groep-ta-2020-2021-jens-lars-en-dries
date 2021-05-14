@@ -16,7 +16,7 @@ add_executable(TESTS tests/test.cpp datastructures/Environment.cpp datastructure
         datastructures/LA.h datastructures/State.cpp datastructures/State.h algorithms/MCLearning.cpp algorithms/MCLearning.h tests/catch.hpp
         tests/catch.cpp random/Random.cpp random/Random.h datastructures/MDPState.cpp datastructures/MDPState.h)
 
-target_link_libraries(TESTS parser_lib)
+target_link_libraries(TESTS parser_lib procedural_generation_lib)
 
 add_subdirectory(parser)
 

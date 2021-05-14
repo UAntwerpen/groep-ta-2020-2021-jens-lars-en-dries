@@ -273,3 +273,14 @@ TEST_CASE("MCLearning tests") {
         REQUIRE(episode.empty()==false);
     }
 }
+
+TEST_CASE("Non deterministic enviroment") {
+    Environment env = Environment(5, 5, 42, false, -0.01, 10, 0.2);
+    env.render();
+    REQUIRE(env.deterministic == false);
+    REQUIRE(env.get_state_by_coordinates(2,2)->symbol == "w");
+    // test if there is a non-1 probability
+    REQUIRE((env.p(env.get_state_by_coordinates(2,2), 0).begin()->second)!=1);
+    // test if there are more that one resulting state in the dynamics
+    REQUIRE((env.p(env.get_state_by_coordinates(4,2), 2).size())!=1);
+}
