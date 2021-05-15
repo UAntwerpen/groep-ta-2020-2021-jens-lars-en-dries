@@ -28,7 +28,7 @@ int main(int argc, char *argv[]) {
 
     std::cout<<"Finished learning.\n";
     // Save the LA
-//    agent.la.save("beepboop.xml");
+
     // Load savefile into Parser, then parse file.
     Q.loadFile("data/beepboop.xml");
     Q.parseFile(parse_test);

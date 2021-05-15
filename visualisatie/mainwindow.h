@@ -12,7 +12,7 @@ class QSettings;
 
 class MainWindow : public QMainWindow
 {
-    Q_OBJECT
+Q_OBJECT
 
 public:
     MainWindow(QWidget *parent = 0);
@@ -34,7 +34,7 @@ private:
     bool lockmoves = false;
 
 private slots:
-            void clicked(int x, int y);
+    void clicked(int x, int y);
     void newGame();
     void open();
     void save();

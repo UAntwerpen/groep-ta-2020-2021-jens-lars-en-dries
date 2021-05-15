@@ -1,9 +1,18 @@
 #include "mainwindow.h"
 #include "world.h"
 #include <iostream>
+#include "../datastructures/Environment.h"
+#include "../parser/EnvironmentParser.h"
 
 #include <QMessageBox>
 #include <QtWidgets>
+#include <QTextStream>
+
+QTextStream& qStdOut()
+{
+    static QTextStream ts( stdout );
+    return ts;
+}
 
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
@@ -11,13 +20,19 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     scene = new World;
     QGraphicsView *view = new QGraphicsView(scene);
     setCentralWidget(view);
+    EnvironmentParser S;
+    S.loadFile("data/boopbeep.xml");
+    Environment* env = S.parseFile();
+    scene->setEnv(*env);
 
-//    connect(scene,SIGNAL(clicked(int,int)),this,SLOT(clicked(int,int)));
+
+    connect(scene,SIGNAL(clicked(int,int)),this,SLOT(clicked(int,int)));
     createActions();
     createMenus();
 //    scene->removeAllMarking();  // Alle markeringen weg
 //    scene->clearBoard(    );        // Alle stukken weg
 //    g.setStartBord();
+    scene->drawWorld();
     this->update();
 }
 
@@ -26,6 +41,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 // geklikt wordt. x,y geeft de positie aan waar er geklikt
 // werd; r is de 0-based rij, k de 0-based kolom
 void MainWindow::clicked(int r, int k) {
+    QTextStream out(stdout);
+    out << "Clicked: " << r << ", " << k << endl;
 //    if(lockmoves){
 //        // Zorgt ervoor dat men niet meer verder kan spelen na een gelijkspel of schaakmat.
 //        return;
@@ -243,7 +260,7 @@ void MainWindow::visualizationChange() {
 // Update de inhoud van de grafische weergave van het schaakbord (scene)
 // en maak het consistent met de game state in variabele g.
 void MainWindow::update() {
-    scene->drawTile();
+
 }
 
 

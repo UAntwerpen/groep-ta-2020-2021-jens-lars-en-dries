@@ -20,10 +20,10 @@ public:
     int seed;
     bool deterministic;
     float living_reward;
-    const float lava_reward = -100.0;
+    float lava_reward = -100.0;
     float end_reward;
     float percentage_obstacles;
-    const float drifting_away_chance = 0.3;
+    float drifting_away_chance = 0.3;
     vector<MDPState> states;
     MDPState* start;
     MDPState* end;
