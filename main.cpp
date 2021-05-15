@@ -3,8 +3,11 @@
 #include "algorithms/MCLearning.h"
 #include "parser/LAParser.h"
 #include "parser/EnvironmentParser.h"
+#include "visualisatie/mainwindow.h"
 
-int main() {
+#include <QApplication>
+
+int main(int argc, char *argv[]) {
     LA* parse_test = new LA();
     LAParser Q = LAParser();
 
@@ -47,5 +50,9 @@ int main() {
 
     std::cout<<"Average steps = "<<average/(double)50<<std::endl;
 
-    return 0;
+    QApplication a(argc, argv);
+    MainWindow w;
+    w.show();
+
+    return a.exec();
 }
