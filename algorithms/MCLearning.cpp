@@ -3,7 +3,7 @@
 #include "../datastructures/Environment.h"
 
 
-void MCLearning::learn(int nr_episodes, Environment& gridworld, int max_steps, int prints_every_epoch) {
+void MCLearning::train(Environment& gridworld, int nr_episodes, int max_steps, int prints_every_epoch) {
     /*
      *  the onPolicyImprove method will improve the agent's policy over nr_episodes episodes.
      *  we use the GLIE Monte-Carlo Control to converge to the optimal action-Q_value function Q(s,a) -> q*(s,a).
@@ -25,9 +25,9 @@ void MCLearning::learn(int nr_episodes, Environment& gridworld, int max_steps, i
         }
         // Calculate cumulative reward of episode
         float cumulative_reward = 0;
-        for(int i = 0;i<episode.size();i++) cumulative_reward += std::get<2>(episode[i])*std::pow(discountfactor, i);
+        for(long unsigned int i = 0;i<episode.size();i++) cumulative_reward += std::get<2>(episode[i])*std::pow(discountfactor, i);
         // Loop over time steps in the i'th episode
-        for(int time_step = 0; time_step<episode.size(); time_step++){
+        for(long unsigned int time_step = 0; time_step<episode.size(); time_step++){
             // get values from tuple.
             auto state = std::get<0>(episode[time_step]);
             int action = std::get<1>(episode[time_step]);
@@ -41,7 +41,7 @@ void MCLearning::learn(int nr_episodes, Environment& gridworld, int max_steps, i
             state->setValue(action, value + ((float)(cumulative_reward - value)/(float)state_action_count));
         }
         // policy improvement
-        epsilon_greedy_policy_improvement();
+        learn();
     }
 }
 
@@ -59,7 +59,6 @@ std::vector<std::tuple<State*, int, float>>  MCLearning::play(Environment& gridw
 
     // get start positions
     State* current_state = la.getStartState();
-    MDPState* enviroment_state = gridworld.start;
 
     // while exit not found
     while(!finished and to_export.size()<max_steps) {
@@ -77,9 +76,9 @@ std::vector<std::tuple<State*, int, float>>  MCLearning::play(Environment& gridw
     return to_export;
 }
 
-void MCLearning::epsilon_greedy_policy_improvement() {
+void MCLearning::learn() {
      /*
-      * the epsilon_greedy_policy_improvement method will become more greedy over time, this is useful to encourage exploration.
+      * the learn method will become more greedy over time, this is useful to encourage exploration.
       * Reinforcement Learning: An Introduction second edition, 5.4 Monte Carlo Control without Exploring Starts p 124.
       */
 
@@ -99,8 +98,8 @@ void MCLearning::epsilon_greedy_policy_improvement() {
     }
 }
 
-MCLearning::MCLearning(LA &in_la, float in_epsilon) {
-    la = in_la;
+MCLearning::MCLearning(Environment &env, float in_epsilon) {
+    la = this->la = LA(env.height, env.width, std::make_pair(env.start->x, env.start->y), env.actions);;
     epsilon = in_epsilon;
 }
 

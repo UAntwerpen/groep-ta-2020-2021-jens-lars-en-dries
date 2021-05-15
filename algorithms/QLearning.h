@@ -19,7 +19,7 @@ class QLearning {
 public:
     // constructor
     QLearning(Environment * env, float epsilon, float alpha, float gamma);
-    // learn for a given amount of episodes in a given environment using Q-learning
+    // train for a given amount of episodes in a given environment using Q-learning
     void train(Environment * env, int nr_episodes, int max_steps, int prints_every_epoch);
     void setEpsilon(float x){ epsilon = x;}
 private:

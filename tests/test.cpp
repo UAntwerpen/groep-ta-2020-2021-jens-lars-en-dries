@@ -265,8 +265,7 @@ TEST_CASE("MCLearning tests") {
     std::vector<int> actions{0, 1, 2, 3};
 
     Environment env = Environment(5, 5, 42, true, -0.01, 10, 0.2);
-    LA la(5, 5, std::make_pair(env.start->x, env.start->y), actions);
-    MCLearning agent(la, 0.9);
+    MCLearning agent(env, 0.9);
     agent.play(env, 200);
     SECTION("episode test") {
         auto episode = agent.play(env, 200);
@@ -276,7 +275,6 @@ TEST_CASE("MCLearning tests") {
 
 TEST_CASE("Non deterministic enviroment") {
     Environment env = Environment(5, 5, 42, false, -0.01, 10, 0.2);
-    env.render();
     REQUIRE(env.deterministic == false);
     REQUIRE(env.get_state_by_coordinates(2,2)->symbol == "w");
     // test if there is a non-1 probability

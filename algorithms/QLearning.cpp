@@ -41,7 +41,7 @@ void QLearning::train(Environment * env, int nr_episodes, int max_steps, int pri
             // get next state
             State * next_state = la.coordinatesToState(std::make_pair(std::get<0>(state_reward_bool)->x, std::get<0>(state_reward_bool)->y));
             float reward = std::get<1>(state_reward_bool);
-            // learn from state, reward, action
+            // train from state, reward, action
             learn(current_state, current_action, next_state, reward);
             // update new state
             current_state = next_state;

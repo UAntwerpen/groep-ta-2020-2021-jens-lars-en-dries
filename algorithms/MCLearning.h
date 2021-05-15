@@ -22,16 +22,16 @@ class MCLearning {
 
 public:
     // constructor
-    MCLearning(LA& in_la, float in_epsilon);
+    MCLearning(Environment &env, float in_epsilon);
 
-    // learn for a given amount of episodes in a given environment using MC control
-    void learn(int nr_episodes, Environment& gridworld, int max_steps, int prints_every_epoch);
+    // train for a given amount of episodes in a given environment using MC control
+    void train(Environment& gridworld, int nr_episodes, int max_steps, int prints_every_epoch);
 
     // Play an episode in the enviroment
     std::vector<std::tuple<State*, int, float >> play(Environment& gridworld, int max_steps);
 
     // improve the policy of the LA
-    void epsilon_greedy_policy_improvement();
+    void learn();
 
     void setEpsilon(float x){ epsilon = x;}
 

@@ -5,10 +5,10 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(CMAKE_AUTOMOC ON)
 
-set( Qt5Core_DIR  "/home/lars/Qt5.12.10/5.12.10/gcc_64/lib/cmake/Qt5Core")
-set( Qt5Widgets_DIR  "/home/lars/Qt5.12.10/5.12.10/gcc_64/lib/cmake/Qt5Widgets")
-set( Qt5Gui_DIR  "/home/lars/Qt5.12.10/5.12.10/gcc_64/lib/cmake/Qt5Gui")
-set( Qt5Multimedia_DIR  "/home/lars/Qt5.12.10/5.12.10/gcc_64/lib/cmake/Qt5Multimedia")
+set( Qt5Core_DIR  "/home/syntaxnoob/Qt5.12.10/5.12.10/gcc_64/lib/cmake/Qt5Core")
+set( Qt5Widgets_DIR  "/home/syntaxnoob/Qt5.12.10/5.12.10/gcc_64/lib/cmake/Qt5Widgets")
+set( Qt5Gui_DIR  "/home/syntaxnoob/Qt5.12.10/5.12.10/gcc_64/lib/cmake/Qt5Gui")
+set( Qt5Multimedia_DIR  "/home/syntaxnoob/Qt5.12.10/5.12.10/gcc_64/lib/cmake/Qt5Multimedia")
 
 find_package( Qt5Core REQUIRED )
 find_package( Qt5Widgets REQUIRED )

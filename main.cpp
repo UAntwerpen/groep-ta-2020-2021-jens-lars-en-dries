@@ -14,8 +14,7 @@ int main(int argc, char *argv[]) {
     std::vector<int> actions{0, 1, 2, 3};
 
     Environment env = Environment(10, 10, 42, true, -0.01, 10, 0.2);
-    LA la(10, 10, std::make_pair(env.start->x, env.start->y), actions);
-    MCLearning agent(la, 0.01);
+    MCLearning agent(env, 0.01);
     env.render();
 
     double average=0;
@@ -24,12 +23,12 @@ int main(int argc, char *argv[]) {
         average+=agent.play(env, 200).size();
     }
 
-    agent.learn(1000, env, 200, 100);
+    agent.train(env, 1000, 200, 100);
     env.reset();
 
     std::cout<<"Finished learning.\n";
     // Save the LA
-    la.save("beepboop.xml");
+//    agent.la.save("beepboop.xml");
     // Load savefile into Parser, then parse file.
     Q.loadFile("data/beepboop.xml");
     Q.parseFile(parse_test);

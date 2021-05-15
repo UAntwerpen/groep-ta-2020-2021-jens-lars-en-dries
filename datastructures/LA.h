@@ -41,7 +41,7 @@ public:
      */
     int pickAction(State *in_state);
 
-    int argmax(State *in_state);
+    int argmax(State *in_state) const;
 
     /*
      * This function calculates the corresponding state to the given coordinates.
