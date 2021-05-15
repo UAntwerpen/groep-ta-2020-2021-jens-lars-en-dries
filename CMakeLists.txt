@@ -7,7 +7,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -O3 -Wall")
 
 set(SOURCE_FILES main.cpp datastructures/Environment.cpp datastructures/Environment.h algorithms/QLearning.h algorithms/QLearning.cpp datastructures/LA.cpp datastructures/LA.h
         datastructures/State.cpp datastructures/State.h algorithms/MCLearning.cpp algorithms/MCLearning.h random/Random.cpp random/Random.h
-        datastructures/MDPState.cpp datastructures/MDPState.h algorithms/QLearning.cpp algorithms/QLearning.h visualisatie/mainwindow.cpp visualisatie/mainwindow.h visualisatie/world.cpp visualisatie/world.h)
+        datastructures/MDPState.cpp datastructures/MDPState.h algorithms/QLearning.cpp algorithms/QLearning.h)
 add_executable(TO_Groep ${SOURCE_FILES})
 
 target_link_libraries(TO_Groep parser_lib procedural_generation_lib)
@@ -19,5 +19,4 @@ add_executable(TESTS tests/test.cpp datastructures/Environment.cpp datastructure
 target_link_libraries(TESTS parser_lib procedural_generation_lib)
 
 add_subdirectory(parser)
-
 add_subdirectory(procederual-generation)
