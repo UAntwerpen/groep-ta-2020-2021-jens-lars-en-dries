@@ -51,6 +51,21 @@ void World::drawTile(int x, int y, char type){
             rect->setCacheMode(QGraphicsItem::NoCache);
             addItem(rect);
             break;
+        case 'b':
+            rect->setBrush(QBrush(QPixmap("visualisatie/bridge.png").scaled(cBlockSize,cBlockSize, Qt::IgnoreAspectRatio, Qt::FastTransformation)));
+            rect->setCacheMode(QGraphicsItem::NoCache);
+            addItem(rect);
+            break;
+        case 'w':
+            rect->setBrush(QBrush(QPixmap("visualisatie/water.png").scaled(cBlockSize,cBlockSize, Qt::IgnoreAspectRatio, Qt::FastTransformation)));
+            rect->setCacheMode(QGraphicsItem::NoCache);
+            addItem(rect);
+            break;
+        case 'L':
+            rect->setBrush(QBrush(QPixmap("visualisatie/lava.png").scaled(cBlockSize,cBlockSize, Qt::IgnoreAspectRatio, Qt::FastTransformation)));
+            rect->setCacheMode(QGraphicsItem::NoCache);
+            addItem(rect);
+            break;
     }
 }
 
@@ -58,8 +73,13 @@ void World::drawWorld() {
     for (int x = 0; x < env.height; x++) {
         for (int y = 0; y < env.width; y++) {
             MDPState *state = env.get_state_by_coordinates(x, y);
-            drawTile(state->x, state->y, state->symbol[0]);
+            if(*(env.current_state) == *state){
+                drawTile(state->x, state->y, 'S');
+            }
+            else{
+                drawTile(state->x, state->y, state->symbol[0]);
 
+            }
         }
     }
 

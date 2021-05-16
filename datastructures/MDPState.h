@@ -11,6 +11,11 @@ public:
     string symbol;
     bool terminal;
     MDPState(int x, int y, string symbol, bool terminal);
+    bool operator== (const MDPState &c1)
+    {
+        return (c1.x == x &&
+                c1.y == y);
+    }
 };
 
 

@@ -13,7 +13,7 @@ int main(int argc, char *argv[]) {
 
     std::vector<int> actions{0, 1, 2, 3};
 
-    Environment env = Environment(10, 10, 42, true, -0.01, 10, 0.2);
+    Environment env = Environment(10, 10, 69, false, -0.01, 10, 0.2);
     MCLearning agent(env, 0.01);
     env.render();
 
