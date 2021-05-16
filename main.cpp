@@ -30,8 +30,8 @@ int main(int argc, char *argv[]) {
     // Save the LA
 
     // Load savefile into Parser, then parse file.
-    Q.loadFile("data/beepboop.xml");
-    Q.parseFile(parse_test);
+//    Q.loadFile("data/beepboop.xml");
+//    Q.parseFile(parse_test);
     // Result should be that both parse_test and la are identical
     std::cout<<"Average steps random = "<<average/(double)50<<std::endl;
 
@@ -40,7 +40,7 @@ int main(int argc, char *argv[]) {
     // Create EnvironmentParser, load inputfile, parseFile returns a pointer to Environment.
     EnvironmentParser W;
     W.loadFile("data/boopbeep.xml");
-    Environment* loadENVTest = W.parseFile();
+    Environment loadENVTest = W.parseFile();
     average=0;
     for(int i=0;i<50;i++){
         env.reset();

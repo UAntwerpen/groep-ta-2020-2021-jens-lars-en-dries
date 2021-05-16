@@ -11,15 +11,15 @@ public:
      * Function handles the parsing of an Environment. All the data gets added to the Environment object provided by user.
      * @return Environment* Pointer to object of type Environment which is created with the data in inputfile.
      */
-    Environment* parseFile();
+    Environment parseFile();
 private:
-    int fWidth;
-    int fHeight;
-    int fSeed;
-    bool fDeterministic;
-    float fLivingReward;
-    float fEndReward;
-    float fPercentageObstacles;
+    int fWidth = 1;
+    int fHeight = 1;
+    int fSeed = 1;
+    bool fDeterministic = 1;
+    float fLivingReward = 1;
+    float fEndReward = 1;
+    float fPercentageObstacles = 1;
 };
 
 

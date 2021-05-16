@@ -5,10 +5,10 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(CMAKE_AUTOMOC ON)
 
-set( Qt5Core_DIR  "/home/syntaxnoob/Qt5.12.10/5.12.10/gcc_64/lib/cmake/Qt5Core")
-set( Qt5Widgets_DIR  "/home/syntaxnoob/Qt5.12.10/5.12.10/gcc_64/lib/cmake/Qt5Widgets")
-set( Qt5Gui_DIR  "/home/syntaxnoob/Qt5.12.10/5.12.10/gcc_64/lib/cmake/Qt5Gui")
-set( Qt5Multimedia_DIR  "/home/syntaxnoob/Qt5.12.10/5.12.10/gcc_64/lib/cmake/Qt5Multimedia")
+set( Qt5Core_DIR  "/home/lars/Qt5.12.10/5.12.10/gcc_64/lib/cmake/Qt5Core")
+set( Qt5Widgets_DIR  "/home/lars/Qt5.12.10/5.12.10/gcc_64/lib/cmake/Qt5Widgets")
+set( Qt5Gui_DIR  "/home/lars/Qt5.12.10/5.12.10/gcc_64/lib/cmake/Qt5Gui")
+set( Qt5Multimedia_DIR  "/home/lars/Qt5.12.10/5.12.10/gcc_64/lib/cmake/Qt5Multimedia")
 
 find_package( Qt5Core REQUIRED )
 find_package( Qt5Widgets REQUIRED )
@@ -16,7 +16,7 @@ find_package( Qt5Gui REQUIRED )
 
 set(CMAKE_CXX_STANDARD 17)
 # Compiler flags for performance improvements and warnings
-set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -O3 -Wall")
+set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS}  -Wall")
 
 set(SOURCE_FILES main.cpp datastructures/Environment.cpp datastructures/Environment.h algorithms/QLearning.h algorithms/QLearning.cpp datastructures/LA.cpp datastructures/LA.h
         datastructures/State.cpp datastructures/State.h algorithms/MCLearning.cpp algorithms/MCLearning.h random/Random.cpp random/Random.h

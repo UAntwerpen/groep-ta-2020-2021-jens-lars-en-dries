@@ -37,7 +37,7 @@ void World::drawTile(int x, int y, char type){
             addItem(rect);
             break;
         case 'O':
-            rect->setBrush(QBrush(cRockColor, Qt::SolidPattern));
+            rect->setBrush(QBrush(cRockColor, Qt::Dense1Pattern));
             rect->setCacheMode(QGraphicsItem::NoCache);
             addItem(rect);
             break;

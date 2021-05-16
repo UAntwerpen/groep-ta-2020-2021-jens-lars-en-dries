@@ -22,8 +22,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     setCentralWidget(view);
     EnvironmentParser S;
     S.loadFile("data/boopbeep.xml");
-    Environment* env = S.parseFile();
-    scene->setEnv(*env);
+    Environment env = S.parseFile();
+    scene->setEnv(env);
 
 
     connect(scene,SIGNAL(clicked(int,int)),this,SLOT(clicked(int,int)));

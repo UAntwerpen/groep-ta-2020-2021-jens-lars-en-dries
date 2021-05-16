@@ -1,6 +1,7 @@
 #include "EnvironmentParser.h"
+#include <sstream>
 
-Environment* EnvironmentParser::parseFile() {
+Environment EnvironmentParser::parseFile() {
     fWidth = stoi(getRoot()->FirstChildElement("width")->FirstChild()->ToText()->Value());
     fHeight = stoi(getRoot()->FirstChildElement("height")->FirstChild()->ToText()->Value());
     fSeed = stoi(getRoot()->FirstChildElement("seed")->FirstChild()->ToText()->Value());
@@ -10,10 +11,15 @@ Environment* EnvironmentParser::parseFile() {
     else{
         fDeterministic = false;
     }
-    fLivingReward = stof(getRoot()->FirstChildElement("livingreward")->FirstChild()->ToText()->Value());
-    fEndReward = stof(getRoot()->FirstChildElement("endreward")->FirstChild()->ToText()->Value());
-    fPercentageObstacles = stof(getRoot()->FirstChildElement("percentageobstacles")->FirstChild()->ToText()->Value());
-
-    Environment* returnENV = new Environment(fWidth, fHeight, fSeed, fDeterministic, fLivingReward, fEndReward, fPercentageObstacles);
+    std::stringstream s;
+    s << getRoot()->FirstChildElement("livingreward")->FirstChild()->ToText()->Value();
+    s >> fLivingReward;
+    std::stringstream x;
+    x << getRoot()->FirstChildElement("endreward")->FirstChild()->ToText()->Value();
+    x >> fEndReward;
+    std::stringstream q;
+    q << getRoot()->FirstChildElement("percentageobstacles")->FirstChild()->ToText()->Value();
+    q >> fPercentageObstacles;
+    Environment returnENV = Environment(fWidth, fHeight, fSeed, fDeterministic, fLivingReward, fEndReward, fPercentageObstacles);
     return returnENV;
 }

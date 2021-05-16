@@ -4,10 +4,10 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(CMAKE_AUTOMOC ON)
 
-set( Qt5Core_DIR  "/home/syntaxnoob/Qt5.12.10/5.12.10/gcc_64/lib/cmake/Qt5Core")
-set( Qt5Widgets_DIR  "/home/syntaxnoob/Qt5.12.10/5.12.10/gcc_64/lib/cmake/Qt5Widgets")
-set( Qt5Gui_DIR  "/home/syntaxnoob/Qt5.12.10/5.12.10/gcc_64/lib/cmake/Qt5Gui")
-set( Qt5Multimedia_DIR  "/home/syntaxnoob/Qt5.12.10/5.12.10/gcc_64/lib/cmake/Qt5Multimedia")
+set( Qt5Core_DIR  "/home/lars/Qt5.12.10/5.12.10/gcc_64/lib/cmake/Qt5Core")
+set( Qt5Widgets_DIR  "/home/lars/Qt5.12.10/5.12.10/gcc_64/lib/cmake/Qt5Widgets")
+set( Qt5Gui_DIR  "/home/lars/Qt5.12.10/5.12.10/gcc_64/lib/cmake/Qt5Gui")
+set( Qt5Multimedia_DIR  "/home/lars/Qt5.12.10/5.12.10/gcc_64/lib/cmake/Qt5Multimedia")
 
 find_package( Qt5Core REQUIRED )
 find_package( Qt5Widgets REQUIRED )
@@ -22,7 +22,7 @@ set(SOURCE_FILES
         world.cpp)
 
 # Optimizer compiler flag
-set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -O3 -Wall")
+set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -Wall")
 
 add_library(vis_lib STATIC ${SOURCE_FILES} ${HEADER_FILES})
 qt5_use_modules(vis_lib Core Widgets Gui)
