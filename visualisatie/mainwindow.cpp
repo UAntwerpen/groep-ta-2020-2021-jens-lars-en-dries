@@ -21,7 +21,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     QGraphicsView *view = new QGraphicsView(scene);
     setCentralWidget(view);
     EnvironmentParser S;
-    S.loadFile("data/boopbeep.xml");
+    S.loadFile("data/testEnv.xml");
     Environment env = S.parseFile();
     scene->setEnv(env);
 

@@ -7,7 +7,7 @@ World::World(QObject* parent ): QGraphicsScene(parent){
     cGrassColor = Qt::green;
     cRockColor = Qt::gray;
     cWaterColor = Qt::blue;
-    cBlockSize = 30;
+    cBlockSize = 60;
 }
 
 void World::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent){
@@ -32,12 +32,22 @@ void World::drawTile(int x, int y, char type){
     QGraphicsRectItem *rect = new QGraphicsRectItem( x*cBlockSize, y*cBlockSize, cBlockSize , cBlockSize);
     switch (type) {
         case '.':
-            rect->setBrush(QBrush(cGrassColor, Qt::SolidPattern));
+            rect->setBrush(QBrush(QPixmap("visualisatie/grass.png").scaled(cBlockSize,cBlockSize, Qt::IgnoreAspectRatio, Qt::FastTransformation)));
             rect->setCacheMode(QGraphicsItem::NoCache);
             addItem(rect);
             break;
         case 'O':
-            rect->setBrush(QBrush(cRockColor, Qt::Dense1Pattern));
+            rect->setBrush(QBrush(QPixmap("visualisatie/rock.png").scaled(cBlockSize,cBlockSize, Qt::IgnoreAspectRatio, Qt::FastTransformation)));
+            rect->setCacheMode(QGraphicsItem::NoCache);
+            addItem(rect);
+            break;
+        case 'E':
+            rect->setBrush(QBrush(QPixmap("visualisatie/house.png").scaled(cBlockSize,cBlockSize, Qt::IgnoreAspectRatio, Qt::FastTransformation)));
+            rect->setCacheMode(QGraphicsItem::NoCache);
+            addItem(rect);
+            break;
+        case 'S':
+            rect->setBrush(QBrush(QPixmap("visualisatie/pierre.png").scaled(cBlockSize,cBlockSize, Qt::IgnoreAspectRatio, Qt::FastTransformation)));
             rect->setCacheMode(QGraphicsItem::NoCache);
             addItem(rect);
             break;
@@ -49,6 +59,7 @@ void World::drawWorld() {
         for (int y = 0; y < env.width; y++) {
             MDPState *state = env.get_state_by_coordinates(x, y);
             drawTile(state->x, state->y, state->symbol[0]);
+
         }
     }
 

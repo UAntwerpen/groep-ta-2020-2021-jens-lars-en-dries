@@ -11,6 +11,9 @@ Environment EnvironmentParser::parseFile() {
     else{
         fDeterministic = false;
     }
+    // Dit werd eerst ook gedaan als hierboven maar dan met stof(), maar deze code bleek niet altijd correct te werken op mijn hardware.
+    // Maar wel op de hardware van de andere, het aanmaken van nieuwe stringstreams per attribuut is essentieel om het op mijn hardware consistent te
+    // laten werken.
     std::stringstream s;
     s << getRoot()->FirstChildElement("livingreward")->FirstChild()->ToText()->Value();
     s >> fLivingReward;

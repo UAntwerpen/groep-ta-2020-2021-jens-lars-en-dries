@@ -36,10 +36,10 @@ int main(int argc, char *argv[]) {
     std::cout<<"Average steps random = "<<average/(double)50<<std::endl;
 
     // Save the environment.
-    env.save("boopbeep.xml");
+    env.save("testEnv.xml");
     // Create EnvironmentParser, load inputfile, parseFile returns a pointer to Environment.
     EnvironmentParser W;
-    W.loadFile("data/boopbeep.xml");
+    W.loadFile("data/testEnv.xml");
     Environment loadENVTest = W.parseFile();
     average=0;
     for(int i=0;i<50;i++){
