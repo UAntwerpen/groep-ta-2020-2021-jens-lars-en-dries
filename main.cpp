@@ -13,9 +13,12 @@ int main(int argc, char *argv[]) {
 
     std::vector<int> actions{0, 1, 2, 3};
 
-    Environment env = Environment(10, 10, 69, false, -0.01, 10, 0.2);
+    Environment env = Environment(10, 10, 42, true, -0.01, 10, 0.2);
     MCLearning agent(env, 0.01);
     env.render();
+    agent.train(env, 1000, 200, 100);
+    env.reset();
+    agent.save();
 
     double average=0;
     for(int i=0;i<50;i++){
@@ -23,21 +26,21 @@ int main(int argc, char *argv[]) {
         average+=agent.play(env, 200).size();
     }
 
-    agent.train(env, 1000, 200, 100);
-    env.reset();
+//    agent.train(env, 1000, 200, 100);
+//    env.reset();
 
     std::cout<<"Finished learning.\n";
     // Save the LA
 
     // Load savefile into Parser, then parse file.
-//    Q.loadFile("data/beepboop.xml");
+//    Q.loadFile("data/testLA.xml");
 //    Q.parseFile(parse_test);
     // Result should be that both parse_test and la are identical
     std::cout<<"Average steps random = "<<average/(double)50<<std::endl;
 
     // Save the environment.
     env.save("testEnv.xml");
-    // Create EnvironmentParser, load inputfile, parseFile returns a pointer to Environment.
+//     Create EnvironmentParser, load inputfile, parseFile returns a pointer to Environment.
     EnvironmentParser W;
     W.loadFile("data/testEnv.xml");
     Environment loadENVTest = W.parseFile();

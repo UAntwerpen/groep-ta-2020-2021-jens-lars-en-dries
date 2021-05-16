@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "../parser/LAParser.h"
 #include "world.h"
 #include <iostream>
 #include "../datastructures/Environment.h"
@@ -24,14 +25,16 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     S.loadFile("data/testEnv.xml");
     Environment env = S.parseFile();
     scene->setEnv(env);
+    LA* parse_test = new LA();
+    LAParser Q;
+    Q.loadFile("data/testLA.xml");
+    Q.parseFile(parse_test);
+    scene->updateAgent(parse_test);
 
 
     connect(scene,SIGNAL(clicked(int,int)),this,SLOT(clicked(int,int)));
     createActions();
     createMenus();
-//    scene->removeAllMarking();  // Alle markeringen weg
-//    scene->clearBoard(    );        // Alle stukken weg
-//    g.setStartBord();
     scene->drawWorld();
     this->update();
 }
@@ -43,73 +46,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 void MainWindow::clicked(int r, int k) {
     QTextStream out(stdout);
     out << "Clicked: " << r << ", " << k << endl;
-//    if(lockmoves){
-//        // Zorgt ervoor dat men niet meer verder kan spelen na een gelijkspel of schaakmat.
-//        return;
-//    }
-//    if(this->selectFase()){
-//        if(g.getMove_count() % 2 == 0 and g.getPiece(r, k)->getKleur() == wit){
-//            scene->setTileSelect(r, k, true);
-//            this->setSelectedPiece(g.getPiece(r, k));
-//            if (display_moves->isChecked()) {
-//                for(std::pair<int, int> move: g.getPiece(r, k)->geldige_zetten(g)){
-//                    scene->setTileFocus(move.first, move.second, true);
-//                }
-//            }
-//            if (display_kills->isChecked()) {
-//                for(std::pair<int, int> move:  g.getPiece(r, k)->kwetsbare_zetten(g)){
-//                    scene->setTileThreat(move.first, move.second, true);
-//                }
-//            }
-//            this->selectToggle();
-//            return;
-//        } else if (g.getMove_count() % 2 == 1 and g.getPiece(r, k)->getKleur() == zwart){
-//            scene->setTileSelect(r, k, true);
-//            this->setSelectedPiece(g.getPiece(r, k));
-//            if (display_moves->isChecked()) {
-//                for(std::pair<int, int> move: g.getPiece(r, k)->geldige_zetten(g)){
-//                    scene->setTileFocus(move.first, move.second, true);
-//                }
-//            }
-//            if (display_kills->isChecked()) {
-//                for(std::pair<int, int> move:  g.getPiece(r, k)->kwetsbare_zetten(g)){
-//                    scene->setTileThreat(move.first, move.second, true);
-//                }
-//            }
-//            this->selectToggle();
-//            return;
-//        }
-//        return;
-//    }
-//    zw kleur = g.getMove_count()%2 == 0? zwart:wit;
-//    this->selectToggle();
-//    scene->removeAllTileSelection();
-//    scene->removeAllTileFocus();
-//    scene->removeAllTileDanger();
-//    if(g.move(this->getSelectedPiece(), r, k)){
-//        if(g.schaak(kleur)){
-//            schaakPopup(kleur);
-//        }
-//        if(g.schaakmat(kleur)){
-//            schaakmatPopup(kleur);
-//            lockmoves = true;
-//        }
-//        if(g.pat(kleur)){
-//            patPopup(kleur);
-//            lockmoves = true;
-//        }
-//        if(g.getPromote()){
-//            selectPromotion();
-//        }
-//        g.increaseMove_count();
-//        scene->removeAllPieceThreats();
-//        if (display_threats->isChecked()) {
-//            for(std::pair<int, int> move: g.kwetsbare_schaakstukken(kleur)){
-//                scene->setPieceThreat(move.first, move.second, true);
-//            }
-//        }
-//    }
-//    update();
 }
 
 void MainWindow::newGame()
@@ -225,7 +161,12 @@ void MainWindow::undo() {
     box.exec();
 }
 
-void MainWindow::redo() {}
+void MainWindow::train() {
+    for(int i = 0; i < 10; i++){
+        scene->agent.train(scene->env, 1000, 200, 10);
+        scene->refreshWorld();
+    }
+}
 
 void MainWindow::selectPromotion() {
 //    QMessageBox box;
@@ -250,10 +191,8 @@ void MainWindow::selectPromotion() {
 }
 
 void MainWindow::visualizationChange() {
-    QMessageBox box;
-    QString visstring = QString(display_moves->isChecked()?"T":"F")+(display_kills->isChecked()?"T":"F")+(display_threats->isChecked()?"T":"F");
-    box.setText(QString("Visualization changed : ")+visstring);
-    box.exec();
+    scene->togglePolicy();
+    scene->refreshWorld();
 }
 
 
@@ -300,28 +239,16 @@ void MainWindow::createActions() {
     undoAct->setStatusTip(tr("Undo last move"));
     connect(undoAct, &QAction::triggered, this, &MainWindow::undo);
 
-    redoAct = new QAction(tr("&redo"), this);
-    redoAct->setShortcuts(QKeySequence::Redo);
-    redoAct->setStatusTip(tr("Redo last undone move"));
-    connect(redoAct, &QAction::triggered, this, &MainWindow::redo);
+    trainAgent = new QAction(tr("&train"), this);
+    trainAgent->setStatusTip(tr("start a training"));
+    connect(trainAgent, &QAction::triggered, this, &MainWindow::train);
 
-    display_moves= new QAction(tr("&valid moves"), this);
-    display_moves->setStatusTip(tr("Show valid moves"));
-    display_moves->setCheckable(true);
-    display_moves->setChecked(true);
-    connect(display_moves, &QAction::triggered, this, &MainWindow::visualizationChange);
+    display_policy= new QAction(tr("&policy"), this);
+    display_policy->setStatusTip(tr("Show policy"));
+    display_policy->setCheckable(true);
+    display_policy->setChecked(false);
+    connect(display_policy, &QAction::triggered, this, &MainWindow::visualizationChange);
 
-    display_kills= new QAction(tr("threathed &enemy"), this);
-    display_kills->setStatusTip(tr("Highlight threathened pieces (enemy)"));
-    display_kills->setCheckable(true);
-    display_kills->setChecked(true);
-    connect(display_kills, &QAction::triggered, this, &MainWindow::visualizationChange);
-
-    display_threats= new QAction(tr("threathed &player"), this);
-    display_threats->setStatusTip(tr("Highlight threathened pieces (player)"));
-    display_threats->setCheckable(true);
-    display_threats->setChecked(true);
-    connect(display_threats, &QAction::triggered, this, &MainWindow::visualizationChange);
 }
 
 void MainWindow::createMenus() {
@@ -333,12 +260,10 @@ void MainWindow::createMenus() {
 
     gameMenu = menuBar()->addMenu(tr("&Game"));
     gameMenu->addAction(undoAct);
-    gameMenu->addAction(redoAct);
+    gameMenu->addAction(trainAgent);
 
     visualizeMenu = menuBar()->addMenu(tr("&Visualize"));
-    visualizeMenu->addAction(display_moves);
-    visualizeMenu->addAction(display_kills);
-    visualizeMenu->addAction(display_threats);
+    visualizeMenu->addAction(display_policy);
 }
 
 void MainWindow::on_actionExit_triggered() {

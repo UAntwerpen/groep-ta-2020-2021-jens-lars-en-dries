@@ -1,3 +1,4 @@
+#include <sstream>
 #include "LAParser.h"
 
 bool LAParser::parseFile(LA *parsing_LA) {
@@ -81,20 +82,36 @@ void LAParser::parseState(TiXmlElement *state_element, State *parsing_state) {
     for (TiXmlElement *elem = state_element->FirstChildElement("ACTIONS");
          elem != NULL; elem = elem->NextSiblingElement()) {
         for (TiXmlElement *action = elem->FirstChildElement(); action != NULL; action = action->NextSiblingElement()) {
+            stringstream s;
+            s << action->FirstChildElement("q_value")->FirstChild()->ToText()->Value();
+            float q_value;
+            s >> q_value;
             parsing_state->setValue(stoi(action->FirstChildElement("a_value")->FirstChild()->ToText()->Value()),
-                                    stof(action->FirstChildElement("q_value")->FirstChild()->ToText()->Value()));
+                                    q_value);
+            stringstream  p;
+            p << action->FirstChildElement("probability")->FirstChild()->ToText()->Value();
+            float prob;
+            p >> prob;
             parsing_state->setProbability(stoi(action->FirstChildElement("a_value")->FirstChild()->ToText()->Value()),
-                                    stof(action->FirstChildElement("probability")->FirstChild()->ToText()->Value()));
+                                    prob);
         }
     }
     // Add the x, y coordinates. After adding checks if the coords were larger than the largest recorded one.
     // If so then fWidth or fHeight get updated respectively.
     parsing_state->setX(stoi(state_element->FirstChildElement("x_coord")->FirstChild()->ToText()->Value()));
-    if (stoi(state_element->FirstChildElement("x_coord")->FirstChild()->ToText()->Value()) + 1 > fWidth)
-        fWidth = stoi(state_element->FirstChildElement("x_coord")->FirstChild()->ToText()->Value()) + 1;
+    stringstream s;
+    int x;
+    s << state_element->FirstChildElement("x_coord")->FirstChild()->ToText()->Value();
+    s >> x;
+    if (x + 1 > fWidth)
+        fWidth = x + 1;
     parsing_state->setY(stoi(state_element->FirstChildElement("y_coord")->FirstChild()->ToText()->Value()));
-    if (stoi(state_element->FirstChildElement("y_coord")->FirstChild()->ToText()->Value()) + 1 > fHeight)
-        fHeight = stoi(state_element->FirstChildElement("y_coord")->FirstChild()->ToText()->Value()) + 1;
+    stringstream p;
+    int y;
+    p << state_element->FirstChildElement("y_coord")->FirstChild()->ToText()->Value();
+    p >> y;
+    if (y + 1 > fHeight)
+        fHeight = y + 1;
     // Update the coordsmap.
     fCoordsmap[parsing_state->getCoordinates()] = parsing_state;
 }

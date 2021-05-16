@@ -169,13 +169,13 @@ TEST_CASE("Environment Stepping: Deterministic with Obstacles") {
         REQUIRE(get<1>(state_reward_bool) == env.living_reward);
         REQUIRE(get<2>(state_reward_bool) == false);
         MDPState * current_state = env.get_state_by_coordinates(4, 4);
-        REQUIRE(env.current_state == current_state);
+        REQUIRE(env.curr_state == current_state);
         // step down once
         state_reward_bool = env.step(2);
         REQUIRE(get<1>(state_reward_bool) == env.living_reward);
         REQUIRE(get<2>(state_reward_bool) == false);
         current_state = env.get_state_by_coordinates(4, 3);
-        REQUIRE(env.current_state == current_state);
+        REQUIRE(env.curr_state == current_state);
         // go left, up, right
         state_reward_bool = env.step(3);
         REQUIRE(get<1>(state_reward_bool) == env.living_reward);
@@ -187,7 +187,7 @@ TEST_CASE("Environment Stepping: Deterministic with Obstacles") {
         REQUIRE(get<1>(state_reward_bool) == env.living_reward);
         REQUIRE(get<2>(state_reward_bool) == false);
         current_state = env.get_state_by_coordinates(4, 4);
-        REQUIRE(env.current_state == current_state);
+        REQUIRE(env.curr_state == current_state);
         // Stepping sequence to the end state
         env.step(3);
         env.step(3);

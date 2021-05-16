@@ -15,7 +15,7 @@ class MCLearning {
     float epsilon;
 
     // the discount factor
-    const float discountfactor = 1;
+    float discountfactor = 1;
 
     // the learning automata
     LA la;
@@ -34,6 +34,12 @@ public:
     void learn();
 
     void setEpsilon(float x){ epsilon = x;}
+
+    void save();
+
+    void load(LA* savedLA);
+
+    LA getLA();
 
     // get the optimal route
     std::vector<int> getOptimalRoute(Environment& gridworld);

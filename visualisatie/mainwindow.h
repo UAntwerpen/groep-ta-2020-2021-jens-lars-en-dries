@@ -39,7 +39,7 @@ private slots:
     void open();
     void save();
     void undo();
-    void redo();
+    void train();
     void visualizationChange();
 
     // De volgende lijnen kunnen genegeerd worden voor de opdracht
@@ -62,12 +62,10 @@ private:
     QAction *openAct;
     QAction *saveAct;
     QAction *undoAct;
-    QAction *redoAct;
+    QAction *trainAgent;
     QAction *exitAct;
 
-    QAction* display_moves;
-    QAction* display_kills;
-    QAction* display_threats;
+    QAction* display_policy;
 };
 
 

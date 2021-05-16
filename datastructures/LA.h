@@ -8,10 +8,10 @@
 
 class LA {
 
-    LA* properly_init;
+    LA* properly_init = nullptr;
 
-    int height;
-    int width;
+    int height = 0;
+    int width = 0;
 
     std::vector<State*> all_states;
 

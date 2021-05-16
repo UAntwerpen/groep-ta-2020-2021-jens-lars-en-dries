@@ -31,8 +31,8 @@ public:
 
 private:
     vector<int> fAllowed_actions;
-    int fWidth;
-    int fHeight;
+    int fWidth = 0;
+    int fHeight = 0;
     std::map<pair<int, int>, State*> fCoordsmap;
 };
 

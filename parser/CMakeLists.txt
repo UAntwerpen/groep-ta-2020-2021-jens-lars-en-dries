@@ -5,6 +5,7 @@ set(HEADER_FILES
         LAParser.h
         tinyxml/tinyxml.h
         tinyxml/tinystr.h
+        EnvironmentParser.h
         )
 
 set(SOURCE_FILES
@@ -14,7 +15,7 @@ set(SOURCE_FILES
         tinyxml/tinyxml.cpp
         tinyxml/tinyxmlerror.cpp
         tinyxml/tinyxmlparser.cpp
-        EnvironmentParser.cpp EnvironmentParser.h)
+        EnvironmentParser.cpp)
 
 # Optimizer compiler flag
 set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -O3 -Wall")

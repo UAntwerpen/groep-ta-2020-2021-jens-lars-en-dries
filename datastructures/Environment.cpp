@@ -25,6 +25,7 @@ Environment::Environment(int height, int width, int seed, bool deterministic, fl
     if (this->seed != -1) random.setSeed(this->seed);
     int start_x = random.rand() % width;
     int start_y = random.rand() % height;
+    startcoords = tuple(start_x, start_y);
     start = get_state_by_coordinates(start_x, start_y);
     start->symbol = "S";
     do {
@@ -34,7 +35,7 @@ Environment::Environment(int height, int width, int seed, bool deterministic, fl
     } while (start == end);
     end->symbol = "E";
     end->terminal = true;
-    current_state = start;
+    curr_state = start;
     generate_world();
 }
 
@@ -130,8 +131,8 @@ void Environment::insert_deterministic_dynamics(MDPState *current_state, int act
 }
 
 MDPState *Environment::reset() {
-    this->current_state = this->start;
-    return this->current_state;
+    this->curr_state = this->start;
+    return this->curr_state;
 }
 
 void Environment::render() {
@@ -140,7 +141,7 @@ void Environment::render() {
         for (int x = 0; x < width; x++) {
             MDPState *state = get_state_by_coordinates(x, y);
             string state_r = state->symbol;
-            if (current_state == state) {
+            if (curr_state == state) {
                 // current state is designated by an "X" in the gridworld.
                 state_r = "X";
             }
@@ -153,7 +154,7 @@ void Environment::render() {
 
 tuple<MDPState *, float, bool> Environment::step(int action) {
     // get distributions according to environment dynamics (current state and action chosen by agent)
-    map<tuple<MDPState *, float>, float> distributions = p(current_state, action);
+    map<tuple<MDPState *, float>, float> distributions = p(curr_state, action);
     std::vector<tuple<MDPState *, float>> state_rewards;
     std::vector<float> probabilities;
     for (auto const &distribution: distributions) {
@@ -166,9 +167,9 @@ tuple<MDPState *, float, bool> Environment::step(int action) {
     discrete_distribution<> d(probabilities.begin(), probabilities.end());
     tuple<MDPState *, float> next_state_reward = state_rewards[d(gen)];
     // We've chosen a new state according to the probabilities (dynamics)
-    current_state = get<0>(next_state_reward);
+    curr_state = get<0>(next_state_reward);
     // checking for terminal state
-    bool done = current_state->terminal;
+    bool done = curr_state->terminal;
     // returns: next_state (MDPState), reward (float), done (bool)
     tuple<MDPState *, float, bool> state_reward_bool = tuple_cat(next_state_reward, make_tuple(done));
     return state_reward_bool;

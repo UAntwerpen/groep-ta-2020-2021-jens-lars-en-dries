@@ -7,7 +7,7 @@ World::World(QObject* parent ): QGraphicsScene(parent){
     cGrassColor = Qt::green;
     cRockColor = Qt::gray;
     cWaterColor = Qt::blue;
-    cBlockSize = 60;
+    cBlockSize = 40;
 }
 
 void World::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent){
@@ -29,12 +29,40 @@ void World::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent){
 }
 
 void World::drawTile(int x, int y, char type){
-    QGraphicsRectItem *rect = new QGraphicsRectItem( x*cBlockSize, y*cBlockSize, cBlockSize , cBlockSize);
+    QGraphicsRectItem *rect = new QGraphicsRectItem( (x)*cBlockSize, (env.height - y)*cBlockSize, cBlockSize , cBlockSize);
+
+    QGraphicsRectItem *policy = new QGraphicsRectItem( x*cBlockSize, (env.height - y)*cBlockSize, cBlockSize , cBlockSize);
+
     switch (type) {
         case '.':
             rect->setBrush(QBrush(QPixmap("visualisatie/grass.png").scaled(cBlockSize,cBlockSize, Qt::IgnoreAspectRatio, Qt::FastTransformation)));
             rect->setCacheMode(QGraphicsItem::NoCache);
             addItem(rect);
+            if(fShowPolicy){
+                int action = agent.getLA().argmax(agent.getLA().coordinatesToState(tuple(x, y)));
+                switch (action) {
+                    case 0:
+                        policy->setBrush(QBrush(QPixmap("visualisatie/aUp.png").scaled(cBlockSize,cBlockSize, Qt::IgnoreAspectRatio, Qt::FastTransformation)));
+                        policy->setCacheMode(QGraphicsItem::NoCache);
+                        addItem(policy);
+                        break;
+                    case 1:
+                        policy->setBrush(QBrush(QPixmap("visualisatie/aRight.png").scaled(cBlockSize,cBlockSize, Qt::IgnoreAspectRatio, Qt::FastTransformation)));
+                        policy->setCacheMode(QGraphicsItem::NoCache);
+                        addItem(policy);
+                        break;
+                    case 2:
+                        policy->setBrush(QBrush(QPixmap("visualisatie/aDown.png").scaled(cBlockSize,cBlockSize, Qt::IgnoreAspectRatio, Qt::FastTransformation)));
+                        policy->setCacheMode(QGraphicsItem::NoCache);
+                        addItem(policy);
+                        break;
+                    case 3:
+                        policy->setBrush(QBrush(QPixmap("visualisatie/aLeft.png").scaled(cBlockSize,cBlockSize, Qt::IgnoreAspectRatio, Qt::FastTransformation)));
+                        policy->setCacheMode(QGraphicsItem::NoCache);
+                        addItem(policy);
+                        break;
+                }
+            }
             break;
         case 'O':
             rect->setBrush(QBrush(QPixmap("visualisatie/rock.png").scaled(cBlockSize,cBlockSize, Qt::IgnoreAspectRatio, Qt::FastTransformation)));
@@ -50,16 +78,91 @@ void World::drawTile(int x, int y, char type){
             rect->setBrush(QBrush(QPixmap("visualisatie/pierre.png").scaled(cBlockSize,cBlockSize, Qt::IgnoreAspectRatio, Qt::FastTransformation)));
             rect->setCacheMode(QGraphicsItem::NoCache);
             addItem(rect);
+            if(fShowPolicy){
+                int action = agent.getLA().argmax(agent.getLA().coordinatesToState(tuple(x, y)));
+                switch (action) {
+                    case 0:
+                        policy->setBrush(QBrush(QPixmap("visualisatie/aUp.png").scaled(cBlockSize,cBlockSize, Qt::IgnoreAspectRatio, Qt::FastTransformation)));
+                        policy->setCacheMode(QGraphicsItem::NoCache);
+                        addItem(policy);
+                        break;
+                    case 1:
+                        policy->setBrush(QBrush(QPixmap("visualisatie/aRight.png").scaled(cBlockSize,cBlockSize, Qt::IgnoreAspectRatio, Qt::FastTransformation)));
+                        policy->setCacheMode(QGraphicsItem::NoCache);
+                        addItem(policy);
+                        break;
+                    case 2:
+                        policy->setBrush(QBrush(QPixmap("visualisatie/aDown.png").scaled(cBlockSize,cBlockSize, Qt::IgnoreAspectRatio, Qt::FastTransformation)));
+                        policy->setCacheMode(QGraphicsItem::NoCache);
+                        addItem(policy);
+                        break;
+                    case 3:
+                        policy->setBrush(QBrush(QPixmap("visualisatie/aLeft.png").scaled(cBlockSize,cBlockSize, Qt::IgnoreAspectRatio, Qt::FastTransformation)));
+                        policy->setCacheMode(QGraphicsItem::NoCache);
+                        addItem(policy);
+                        break;
+                }
+            }
             break;
         case 'b':
             rect->setBrush(QBrush(QPixmap("visualisatie/bridge.png").scaled(cBlockSize,cBlockSize, Qt::IgnoreAspectRatio, Qt::FastTransformation)));
             rect->setCacheMode(QGraphicsItem::NoCache);
             addItem(rect);
+            if(fShowPolicy){
+                int action = agent.getLA().argmax(agent.getLA().coordinatesToState(tuple(x, y)));
+                switch (action) {
+                    case 0:
+                        policy->setBrush(QBrush(QPixmap("visualisatie/aUp.png").scaled(cBlockSize,cBlockSize, Qt::IgnoreAspectRatio, Qt::FastTransformation)));
+                        policy->setCacheMode(QGraphicsItem::NoCache);
+                        addItem(policy);
+                        break;
+                    case 1:
+                        policy->setBrush(QBrush(QPixmap("visualisatie/aRight.png").scaled(cBlockSize,cBlockSize, Qt::IgnoreAspectRatio, Qt::FastTransformation)));
+                        policy->setCacheMode(QGraphicsItem::NoCache);
+                        addItem(policy);
+                        break;
+                    case 2:
+                        policy->setBrush(QBrush(QPixmap("visualisatie/aDown.png").scaled(cBlockSize,cBlockSize, Qt::IgnoreAspectRatio, Qt::FastTransformation)));
+                        policy->setCacheMode(QGraphicsItem::NoCache);
+                        addItem(policy);
+                        break;
+                    case 3:
+                        policy->setBrush(QBrush(QPixmap("visualisatie/aLeft.png").scaled(cBlockSize,cBlockSize, Qt::IgnoreAspectRatio, Qt::FastTransformation)));
+                        policy->setCacheMode(QGraphicsItem::NoCache);
+                        addItem(policy);
+                        break;
+                }
+            }
             break;
         case 'w':
             rect->setBrush(QBrush(QPixmap("visualisatie/water.png").scaled(cBlockSize,cBlockSize, Qt::IgnoreAspectRatio, Qt::FastTransformation)));
             rect->setCacheMode(QGraphicsItem::NoCache);
             addItem(rect);
+            if(fShowPolicy){
+                int action = agent.getLA().argmax(agent.getLA().coordinatesToState(tuple(x, y)));
+                switch (action) {
+                    case 0:
+                        policy->setBrush(QBrush(QPixmap("visualisatie/aUp.png").scaled(cBlockSize,cBlockSize, Qt::IgnoreAspectRatio, Qt::FastTransformation)));
+                        policy->setCacheMode(QGraphicsItem::NoCache);
+                        addItem(policy);
+                        break;
+                    case 1:
+                        policy->setBrush(QBrush(QPixmap("visualisatie/aRight.png").scaled(cBlockSize,cBlockSize, Qt::IgnoreAspectRatio, Qt::FastTransformation)));
+                        policy->setCacheMode(QGraphicsItem::NoCache);
+                        addItem(policy);
+                        break;
+                    case 2:
+                        policy->setBrush(QBrush(QPixmap("visualisatie/aDown.png").scaled(cBlockSize,cBlockSize, Qt::IgnoreAspectRatio, Qt::FastTransformation)));
+                        policy->setCacheMode(QGraphicsItem::NoCache);
+                        addItem(policy);
+                        break;
+                    case 3:
+                        policy->setBrush(QBrush(QPixmap("visualisatie/aLeft.png").scaled(cBlockSize,cBlockSize, Qt::IgnoreAspectRatio, Qt::FastTransformation)));
+                        policy->setCacheMode(QGraphicsItem::NoCache);
+                        addItem(policy);
+                        break;
+                }
+            }
             break;
         case 'L':
             rect->setBrush(QBrush(QPixmap("visualisatie/lava.png").scaled(cBlockSize,cBlockSize, Qt::IgnoreAspectRatio, Qt::FastTransformation)));
@@ -67,18 +170,20 @@ void World::drawTile(int x, int y, char type){
             addItem(rect);
             break;
     }
+    if(!fShowPolicy){
+        delete policy;
+    }
 }
 
 void World::drawWorld() {
     for (int x = 0; x < env.height; x++) {
         for (int y = 0; y < env.width; y++) {
             MDPState *state = env.get_state_by_coordinates(x, y);
-            if(*(env.current_state) == *state){
+            if(env.startcoords == tuple(x, y)){
                 drawTile(state->x, state->y, 'S');
             }
             else{
                 drawTile(state->x, state->y, state->symbol[0]);
-
             }
         }
     }
@@ -87,4 +192,14 @@ void World::drawWorld() {
 
 void World::setEnv(Environment newEnv) {
     env = newEnv;
+}
+
+void World::refreshWorld() {
+    qDeleteAll( items() );
+    drawWorld();
+}
+
+void World::updateAgent(LA *savedLA) {
+    agent = MCLearning(env, 0.01);
+    agent.load(savedLA);
 }

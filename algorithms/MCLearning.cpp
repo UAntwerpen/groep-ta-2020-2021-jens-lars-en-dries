@@ -117,3 +117,15 @@ std::vector<int> MCLearning::getOptimalRoute(Environment &gridworld) {
     }
     return to_export;
 }
+
+void MCLearning::save() {
+    la.save("testLA.xml");
+}
+
+void MCLearning::load(LA *savedLA) {
+    la = *savedLA;
+}
+
+LA MCLearning::getLA() {
+    return la;
+}

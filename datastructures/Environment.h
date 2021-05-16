@@ -27,7 +27,8 @@ public:
     vector<MDPState> states;
     MDPState* start;
     MDPState* end;
-    MDPState* current_state;
+    MDPState* curr_state;
+    tuple<int, int > startcoords;
     // a gridworld accepts following actions (int): 0 = UP, 1 = RIGHT, 2 = DOWN, 3 = LEFT
     std::vector<int> actions = {0, 1, 2, 3};
 
