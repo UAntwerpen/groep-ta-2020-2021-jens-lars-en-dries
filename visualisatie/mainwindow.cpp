@@ -4,6 +4,11 @@
 #include <iostream>
 #include "../datastructures/Environment.h"
 #include "../parser/EnvironmentParser.h"
+#ifdef _WIN32
+#include <Windows.h>
+#else
+#include <unistd.h>
+#endif
 
 #include <QMessageBox>
 #include <QtWidgets>
@@ -23,8 +28,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     setCentralWidget(view);
     EnvironmentParser S;
     S.loadFile("data/testEnv.xml");
-    Environment env = S.parseFile();
-    scene->setEnv(env);
+    Environment* env = S.parseFile();
+    scene->setEnv(*env);
     LA* parse_test = new LA();
     LAParser Q;
     Q.loadFile("data/testLA.xml");
@@ -162,10 +167,8 @@ void MainWindow::undo() {
 }
 
 void MainWindow::train() {
-    for(int i = 0; i < 10; i++){
-        scene->agent.train(scene->env, 1000, 200, 10);
-        scene->refreshWorld();
-    }
+    scene->agent.train(scene->env, 1000, 200, 200);
+    scene->refreshWorld();
 }
 
 void MainWindow::selectPromotion() {

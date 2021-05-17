@@ -11,7 +11,7 @@ public:
      * Function handles the parsing of an Environment. All the data gets added to the Environment object provided by user.
      * @return Environment* Pointer to object of type Environment which is created with the data in inputfile.
      */
-    Environment parseFile();
+    Environment* parseFile();
 private:
     int fWidth = 1;
     int fHeight = 1;
