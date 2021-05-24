@@ -3,6 +3,8 @@
 #include <QtWidgets>
 #include <QPixmap>
 
+// TODO : Fix ghost policy door argmax funcie.
+
 World::World(QObject* parent ): QGraphicsScene(parent){
     cGrassColor = Qt::green;
     cRockColor = Qt::gray;
@@ -183,6 +185,9 @@ void World::drawWorld() {
                 drawTile(state->x, state->y, 'S');
             }
             else{
+                if(x == 19 && y == 19){
+                    cout << "stop right there criminal scum";
+                }
                 drawTile(state->x, state->y, state->symbol[0]);
             }
         }

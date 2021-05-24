@@ -167,30 +167,27 @@ void MainWindow::undo() {
 }
 
 void MainWindow::train() {
+    QMessageBox box;
+    QPushButton Koningin;
+    Koningin.setText(QString("Koningin"));
+//    connect(&Koningin, SIGNAL(clicked()), this, SLOT(pressKoningin()));
+    QPushButton Toren;
+    Toren.setText(QString("Toren"));
+//    connect(&Toren, SIGNAL(clicked()), this, SLOT(pressToren()));
+    QPushButton Loper;
+    Loper.setText(QString("Loper"));
+//    connect(&Loper, SIGNAL(clicked()), this, SLOT(pressLoper()));
+    QPushButton Paard;
+    Paard.setText(QString("Paard"));
+//    connect(&Paard, SIGNAL(clicked()), this, SLOT(pressPaard()));
+    box.addButton(&Koningin, QMessageBox::YesRole);
+    box.addButton(&Toren, QMessageBox::YesRole);
+    box.addButton(&Loper, QMessageBox::YesRole);
+    box.addButton(&Paard, QMessageBox::YesRole);
+    box.setText(QString("Gelieve het schaakstuk aan te duiden naar waar u uw pion wilt promoveren: "));
+    box.exec();
     scene->agent.train(scene->env, 1000, 200, 200);
     scene->refreshWorld();
-}
-
-void MainWindow::selectPromotion() {
-//    QMessageBox box;
-//    QPushButton Koningin;
-//    Koningin.setText(QString("Koningin"));
-//    connect(&Koningin, SIGNAL(clicked()), this, SLOT(pressKoningin()));
-//    QPushButton Toren;
-//    Toren.setText(QString("Toren"));
-//    connect(&Toren, SIGNAL(clicked()), this, SLOT(pressToren()));
-//    QPushButton Loper;
-//    Loper.setText(QString("Loper"));
-//    connect(&Loper, SIGNAL(clicked()), this, SLOT(pressLoper()));
-//    QPushButton Paard;
-//    Paard.setText(QString("Paard"));
-//    connect(&Paard, SIGNAL(clicked()), this, SLOT(pressPaard()));
-//    box.addButton(&Koningin, QMessageBox::YesRole);
-//    box.addButton(&Toren, QMessageBox::YesRole);
-//    box.addButton(&Loper, QMessageBox::YesRole);
-//    box.addButton(&Paard, QMessageBox::YesRole);
-//    box.setText(QString("Gelieve het schaakstuk aan te duiden naar waar u uw pion wilt promoveren: "));
-//    box.exec();
 }
 
 void MainWindow::visualizationChange() {
