@@ -61,3 +61,11 @@ std::map<int, float> State::getProbabilities() {
     return action_to_probability;
 }
 
+int State::getPreviousArgmax() const {
+    return previous_argmax;
+}
+
+void State::setPreviousArgmax(int previousArgmax) {
+    previous_argmax = previousArgmax;
+}
+

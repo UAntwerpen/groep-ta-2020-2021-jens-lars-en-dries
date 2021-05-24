@@ -13,6 +13,8 @@ set(HEADER_FILES
         ../parser/EnvironmentParser.h
         ../parser/LAParser.h
         ../parser/AbstractParser.h
+        trainagentwindow.ui
+        trainagentwindow.h
         mainwindow.h
         world.h)
 
@@ -21,10 +23,12 @@ set(SOURCE_FILES
         ../parser/LAParser.cpp
         ../parser/AbstractParser.cpp
         mainwindow.cpp
-        world.cpp)
+        world.cpp
+        trainagentwindow.cpp)
 
 # Optimizer compiler flag
 set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -Wall")
 
 add_library(vis_lib STATIC ${SOURCE_FILES} ${HEADER_FILES})
+target_link_libraries(vis_lib PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 qt5_use_modules(vis_lib Core Widgets Gui)

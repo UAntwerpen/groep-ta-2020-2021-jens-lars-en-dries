@@ -48,7 +48,7 @@ void Environment::generate_world() {
 }
 
 void Environment::generate_deterministic_world() {
-    generate_obstacles();
+    generate_obstacles(percentage_obstacles);
     for (auto &current_state: states) {
         int x = current_state.x;
         int y = current_state.y;
@@ -88,8 +88,8 @@ void Environment::generate_deterministic_world() {
     }
 }
 
-void Environment::generate_obstacles() {
-    int n_obstacles = (width * height) * percentage_obstacles;
+void Environment::generate_obstacles(float obst_percentage) {
+    int n_obstacles = (width * height) * obst_percentage;
     int x, y;
     Random random(this->seed);
     while (n_obstacles > 0) {
@@ -237,9 +237,9 @@ bool Environment::save(std::string outputFileName) {
 
 void Environment::generate_non_deterministic_world() {
     Random random(seed);
-    this->percentage_obstacles /= 8.0;
+    float obst_percentage = this->percentage_obstacles / 8.0;
     generate_non_deterministic_obstacles();
-    generate_obstacles();
+    generate_obstacles(obst_percentage);
     for (auto &current_state: states) {
         int x = current_state.x;
         int y = current_state.y;

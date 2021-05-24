@@ -16,6 +16,15 @@ class State {
     int x;
     int y;
 
+    int previous_argmax;
+public:
+    void setPreviousArgmax(int previousArgmax);
+
+public:
+    int getPreviousArgmax() const;
+
+private:
+
     // list of all actions
     std::vector<int> actions;
 

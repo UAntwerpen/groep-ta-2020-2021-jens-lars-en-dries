@@ -5,10 +5,9 @@
 #include <QCloseEvent>
 #include <iostream>
 #include "world.h"
+#include "trainagentwindow.h"
 
 class QSettings;
-
-// Toevoeging methodes ivm bepalen of we moeten selecteren of niet, toevoeging methodes ivm de verscheidene QuestionBoxes
 
 class MainWindow : public QMainWindow
 {
@@ -16,22 +15,15 @@ Q_OBJECT
 
 public:
     MainWindow(QWidget *parent = 0);
+
     void update();
-    bool selectFase() {return select_flag;}
-    void selectToggle() {select_flag = !select_flag && true;}
-//    void setSelectedPiece(SchaakStuk* s){selected_piece = s;}
-//    SchaakStuk* getSelectedPiece(){return selected_piece;}
-    void selectPromotion();
-//    void schaakPopup(zw kleur);
-//    void schaakmatPopup(zw kleur);
-//    void patPopup(zw kleur);
+    bool selectFase() {return policy_flag;}
+    void selectToggle() { policy_flag = !policy_flag && true;}
+
 
 private:
     World *scene;
-//    Game g;
-//    SchaakStuk* selected_piece;
-    bool select_flag = true;
-    bool lockmoves = false;
+    bool policy_flag = true;
 
 private slots:
     void clicked(int x, int y);

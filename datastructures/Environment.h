@@ -57,7 +57,7 @@ private:
     void generate_world();
     void generate_deterministic_world();
     void generate_non_deterministic_world();
-    void generate_obstacles();
+    void generate_obstacles(float obst_percentage);
     void generate_non_deterministic_obstacles();
     // dynamics of the environment: a map of <(state, action): map<(state, reward), probability>
     map<tuple<MDPState *, int>, map<tuple<MDPState *, float>, float>> dynamics;
