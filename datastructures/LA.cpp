@@ -106,7 +106,7 @@ bool LA::isProperlyInitialized() {
 }
 
 int LA::argmax(State *in_state) const{
-    int action;
+    int action = -1;
     float max_value = -1 * std::numeric_limits<float>::min();
     for (auto &it: in_state->getQValue()) {
         if (it.second > max_value) {
@@ -114,7 +114,10 @@ int LA::argmax(State *in_state) const{
             action = it.first;
         }
     }
-    return action;
+    if(action != -1){
+        in_state->setPreviousArgmax(action);
+    }
+    return in_state->getPreviousArgmax();
 }
 
 void LA::resetCounter() {
