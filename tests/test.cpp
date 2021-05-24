@@ -11,6 +11,32 @@
 
 //Todo: Saving en Loading Test (Lars),
 
+TEST_CASE("Deterministic Automaton") {
+    std::vector<int> actions{0, 1, 2, 3};
+    std::pair<int,int> start_coordinates{0,0};
+    LA la(2, 2, start_coordinates, actions);
+    LA deterministic_LA = la.toDeterministic();
+    SECTION("Deterministic LA Construction"){
+        REQUIRE(deterministic_LA.isProperlyInitialized());
+        REQUIRE(deterministic_LA.getAllStates().size() == 4);
+        REQUIRE(deterministic_LA.getAllActions().size() == 4);
+        REQUIRE(deterministic_LA.getStartState()->getX() == 0);
+        REQUIRE(deterministic_LA.getStartState()->getY() == 0);
+        for (auto &state: deterministic_LA.getAllStates()) {
+            REQUIRE(state->getProbabilities().size() == 1);
+        }
+    }
+    SECTION("Deterministic LA with Environment"){
+        Environment env = Environment(5, 5, 42, true, -0.01, 10, 0.2);
+        QLearning ql = QLearning(&env,0.1, 0.01, 0.9);
+        ql.train(&env, 200, 50, 10);
+        deterministic_LA = ql.getLA().toDeterministic();
+        for (auto &state: deterministic_LA.getAllStates()) {
+            REQUIRE(state->getProbabilities().size() == 1);
+        }
+    }
+}
+
 TEST_CASE("Environment Basics") {
     Environment env = Environment(10, 5, 42, true, -0.01, 10, 0.2);
     REQUIRE(env.height == 10);

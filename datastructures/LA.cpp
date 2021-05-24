@@ -8,6 +8,18 @@ void LA::reset() {
 
 }
 
+LA LA::toDeterministic(){
+    std::vector<int> new_actions = this->getAllActions();
+    LA deterministic_LA = LA(this->getHeight(), this->getWidth(), std::pair<int, int> {start_state->getX(), start_state->getY()}, new_actions);
+    for (auto &state: all_states) {
+        State * deterministic_state = deterministic_LA.coordinatesToState(std::pair<int, int> {state->getX(), state->getY()});
+        int action = argmax(state);
+        deterministic_state->resetProbabilities();
+        deterministic_state->setProbability(action, 1.0);
+    }
+    return deterministic_LA;
+}
+
 State *LA::G(State *in_state, int in_action) {
     // action (int), 0 = UP, 1 = RIGHT, 2 = DOWN, 3 = LEFT
     switch (in_action) {
@@ -212,8 +224,6 @@ bool LA::save(std::string outputFileName) {
             TiXmlText *probability_txt = new TiXmlText(s.str().c_str());
             probability->LinkEndChild(probability_txt);
         }
-
-
     }
 
 

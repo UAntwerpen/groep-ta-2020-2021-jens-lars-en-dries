@@ -36,6 +36,7 @@ public:
 
     // get the action list
     const std::vector<int> &getActions() const;
+    std::vector<int> getActions() {return actions;}
 
     // set the action list
     void setActions(std::vector<int> &actions);
@@ -68,8 +69,13 @@ public:
     // get probability map
     std::map<int, float> getProbabilities();
 
+    // reset probability map
+    void resetProbabilities(){action_to_probability.clear();};
+
     void setX(int i){ x = i;}
     void setY(int i){ y = i;}
+    int getX(){ return x;}
+    int getY(){ return y;}
 };
 
 

@@ -31,6 +31,8 @@ public:
 
     void reset();
 
+    LA toDeterministic();
+
     /*
      * This function will return the state corresponding with the state-action input.
      */
@@ -79,6 +81,9 @@ public:
     void resetCounter();
 
     void setCoordMap(std::map<std::pair<int, int>, State*> inputMap){ coordinates_to_state = inputMap;}
+
+    int getHeight(){return height;}
+    int getWidth(){return width;}
 };
 
 
