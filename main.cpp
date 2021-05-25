@@ -14,9 +14,9 @@ int main(int argc, char *argv[]) {
     std::vector<int> actions{0, 1, 2, 3};
 
     Environment env = Environment(20, 20, 3, false, -0.01, 10, 0.2);
-    MCLearning agent(env, 0.01);
+    MCLearning agent(env, 0.1);
     env.render();
-//    agent.train(env, 1000, 200, 100);
+//    agent.train(env, 100000, 200, 10000);
 //    env.reset();
     agent.save();
 

@@ -3,6 +3,7 @@
 
 #include <QGraphicsScene>
 #include "../datastructures/Environment.h"
+#include "../algorithms/QLearning.h"
 #include "../algorithms/MCLearning.h"
 
 class QAction;
@@ -20,6 +21,7 @@ public:
     void togglePolicy(){fShowPolicy = !fShowPolicy;}
     void toggleTraining(){fTraining = !fTraining;}
     void updateAgent(LA* savedLA);
+    void drawPierePath();
 protected:
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent);
 signals:
@@ -34,8 +36,9 @@ private:
     quint32 cBlockSize;
     qint32 focusRow, focusCol;
 public:
-    Environment env = Environment(10, 10, 42, true, -0.01, 10, 0.2);
-    MCLearning agent = MCLearning(env, 0.01);
+    Environment env = Environment(20, 20, 42, true, -0.01, 100, 0.2);
+//    MCLearning agent = MCLearning(env, 0.1);
+    QLearning agent = QLearning(&env, 0.1, 1, 0.9);
 
 };
 

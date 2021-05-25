@@ -198,8 +198,9 @@ void MainWindow::train() {
 //    box.exec();
     TrainAgentWindow x;
     x.exec();
-    scene->agent.train(scene->env, 1000, 200, 200);
+    scene->agent.train(&scene->env, 1000, 200, 200);
     scene->refreshWorld();
+    scene->drawPierePath();
 }
 
 void MainWindow::visualizationChange() {
