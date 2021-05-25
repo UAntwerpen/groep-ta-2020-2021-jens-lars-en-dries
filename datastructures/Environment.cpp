@@ -245,7 +245,7 @@ void Environment::generate_non_deterministic_world() {
         int y = current_state.y;
         MDPState *next_state = get_state_by_coordinates(x, y + 1);
         // check bounds of environment -> if actions leads outside bounds, stay put
-        if (y + 1 >= height) {
+        if (y + 1 >= height || next_state->symbol == "O") {
             next_state = get_state_by_coordinates(x, y);
         } else {
             next_state = get_state_by_coordinates(x, y + 1);
@@ -270,11 +270,12 @@ void Environment::generate_non_deterministic_world() {
             insert_non_deterministic_dynamics(&current_state, 0, living_reward, 1, next_state);
         }
         next_state = get_state_by_coordinates(x, y - 1);
-        if (y - 1 < 0) {
+        if (y - 1 < 0 || next_state->symbol == "O") {
             next_state = get_state_by_coordinates(x, y);
         } else {
             next_state = get_state_by_coordinates(x, y - 1);
         }
+
         if (next_state->symbol == "w") {
             int drifting_amount = random.rand() % 4;
             for (int i = 0; i < drifting_amount; i++) {
@@ -296,7 +297,7 @@ void Environment::generate_non_deterministic_world() {
         }
 
         next_state = get_state_by_coordinates(x + 1, y);
-        if (x + 1 >= width || next_state->symbol == "L") {
+        if (x + 1 >= width || next_state->symbol == "O") {
             next_state = get_state_by_coordinates(x, y);
         } else {
             next_state = get_state_by_coordinates(x + 1, y);
@@ -316,14 +317,15 @@ void Environment::generate_non_deterministic_world() {
                                                                                  (drifting_away_chance /
                                                                                   (float) drifting_amount)),
                                               next_state);
-        } else if (next_state->symbol == "L") {
+        } else if (next_state->symbol == "O") {
             insert_non_deterministic_dynamics(&current_state, 1, lava_reward, 1, next_state);
         } else {
             insert_non_deterministic_dynamics(&current_state, 1, living_reward, 1, next_state);
         }
 
+
         next_state = get_state_by_coordinates(x - 1, y);
-        if (x - 1 < 0 || next_state->symbol == "L") {
+        if (x - 1 < 0 || next_state->symbol == "O") {
             next_state = get_state_by_coordinates(x, y);
         } else {
             next_state = get_state_by_coordinates(x - 1, y);
