@@ -195,7 +195,7 @@ void World::refreshWorld() {
 
 void World::updateAgent(LA *savedLA) {
 //    agent = MCLearning(env, 0.01);
-//    agent.load(savedLA);
+    agent.load(savedLA);
 }
 
 void World::drawPierePath() {

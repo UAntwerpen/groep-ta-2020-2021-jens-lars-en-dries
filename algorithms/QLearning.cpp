@@ -51,3 +51,7 @@ void QLearning::train(Environment * env, int nr_episodes, int max_steps, int pri
         episode += 1;
     }
 }
+
+void QLearning::load(LA *savedLA) {
+    la = *savedLA;
+}
