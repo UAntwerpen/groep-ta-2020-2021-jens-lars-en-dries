@@ -91,20 +91,39 @@ void Environment::generate_deterministic_world() {
 }
 
 void Environment::generate_obstacles(float obst_percentage) {
+    if(obst_percentage > 0.31){
+        cerr << "Cannot generate environment with obstacle percentage > 0.3.";
+        return;
+    }
     int n_obstacles = (width * height) * obst_percentage;
+    int temp = n_obstacles;
     int x, y;
     Random random(this->seed);
-    while (n_obstacles > 0) {
-        x = random.rand() % width;
-        y = random.rand() % height;
-        MDPState *state_ = get_state_by_coordinates(x, y);
-        // todo need to check if there exists a path between start and end -> otherwise create a new obstacle and check again
-        if ((start->x != state_->x || start->y != state_->y) && (end->y != state_->y || end->x != state_->x)) {
-            // set the state symbol to obstacle (O)
-            state_->symbol = "O";
-            n_obstacles -= 1;
+    while(true){
+        n_obstacles = temp;
+        while (n_obstacles > 0) {
+            x = random.rand() % width;
+            y = random.rand() % height;
+            MDPState *state_ = get_state_by_coordinates(x, y);
+            if ((start->x != state_->x || start->y != state_->y) && (end->y != state_->y || end->x != state_->x)) {
+                // set the state symbol to obstacle (O)
+                state_->symbol = "O";
+                n_obstacles -= 1;
+            }
         }
+        auto pathstack = runDijkstra();
+        if(pathstack.size() == 0){
+            for(auto state : states){
+                if(state.symbol == "O"){
+                    state.symbol = ".";
+                }
+            }
+            cout << "Redoing obstacle generation..." << std::endl;
+            continue;
+        }
+        break;
     }
+
 }
 
 map<tuple<MDPState *, float>, float> Environment::p(MDPState *state, int action) {

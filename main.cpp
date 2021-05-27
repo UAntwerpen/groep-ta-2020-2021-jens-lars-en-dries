@@ -14,7 +14,8 @@ int main(int argc, char *argv[]) {
 
     std::vector<int> actions{0, 1, 2, 3};
 
-    Environment env = Environment(20, 20, 3, true, -0.01, 10, 0.8);
+    // 0.22 lukt prima 0.23 precies niet.
+    Environment env = Environment(20, 20, 1, true, -0.01, 10, 0.23);
     MCLearning agent(env, 0.1);
     env.render();
 //    agent.train(env, 100000, 200, 10000);

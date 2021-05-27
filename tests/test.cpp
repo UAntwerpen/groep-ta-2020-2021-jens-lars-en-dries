@@ -308,3 +308,8 @@ TEST_CASE("Non deterministic enviroment") {
     // test if there are more that one resulting state in the dynamics
     REQUIRE((env.p(env.get_state_by_coordinates(4,2), 2).size())!=1);
 }
+
+TEST_CASE("Optimal Path (Dijkstra)") {
+    Environment env = Environment(5, 5, 42, false, -0.01, 10, 0.2);
+
+}

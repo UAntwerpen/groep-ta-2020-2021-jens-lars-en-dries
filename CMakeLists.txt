@@ -17,7 +17,7 @@ find_package( Qt5Gui REQUIRED )
 
 set(CMAKE_CXX_STANDARD 17)
 # Compiler flags for performance improvements and warnings
-set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS}  -Wall")
+set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -O3 -Wall")
 
 set(SOURCE_FILES main.cpp datastructures/Environment.cpp datastructures/Environment.h algorithms/QLearning.h algorithms/QLearning.cpp datastructures/LA.cpp datastructures/LA.h
         datastructures/State.cpp datastructures/State.h algorithms/MCLearning.cpp algorithms/MCLearning.h random/Random.cpp random/Random.h
