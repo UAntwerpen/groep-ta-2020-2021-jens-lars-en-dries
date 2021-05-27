@@ -415,8 +415,10 @@ inline int manhattanLenght(MDPState u, MDPState v){
 std::stack<MDPState> Environment::runDijkstra() {
 
     vector<tuple<int, int>> Q;
-    previousMap.clear();
-    distanceMap.clear();
+    std::map<tuple<int, int>, int> distanceMap;
+    std::map<tuple<int, int>, tuple<int, int>> previousMap;
+
+    bool possible = true;
 
     for(MDPState state : states){
         if(state.symbol != "O"){
@@ -438,6 +440,10 @@ std::stack<MDPState> Environment::runDijkstra() {
                 u = *get_state_by_coordinates(get<0>(state), get<1>(state));
                 smallestD = distanceMap[state];
             }
+        }
+        if(smallestD == std::numeric_limits<int>::max()){
+            possible = false;
+            break;
         }
 
         Q.erase(find(Q.begin(), Q.end(), make_tuple(u.x, u.y)));
@@ -483,15 +489,21 @@ std::stack<MDPState> Environment::runDijkstra() {
             }
         }
     }
-    std::stack<MDPState> s;
-    MDPState u = *end;
-    while(!(u == *start)){
+    if(possible){
+        std::stack<MDPState> s;
+        MDPState u = *end;
+        while(!(u == *start)){
+            s.push(u);
+            std::tuple<int , int > temp = previousMap[tuple(u.x, u.y)];
+            u = *get_state_by_coordinates(get<0>(temp), get<1>(temp));
+        }
         s.push(u);
-        std::tuple<int , int > temp = previousMap[tuple(u.x, u.y)];
-        u = *get_state_by_coordinates(get<0>(temp), get<1>(temp));
+        return s;
     }
-    s.push(u);
-    return s;
+    else{
+        return stack<MDPState>();
+    }
+
 }
 
 
