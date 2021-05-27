@@ -10,12 +10,15 @@ public:
     int y;
     string symbol;
     bool terminal;
+    MDPState() = default;
     MDPState(int x, int y, string symbol, bool terminal);
     bool operator== (const MDPState &c1)
     {
         return (c1.x == x &&
                 c1.y == y);
     }
+    bool operator< (const MDPState& c1) const { return (c1.x < x); }
+
 };
 
 

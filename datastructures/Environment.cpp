@@ -5,6 +5,8 @@
 #include "../procederual-generation/RiverBezier.h"
 #include "../procederual-generation/LavaPools.h"
 #include <sstream>
+#include <limits>
+#include <stack>
 
 Environment::Environment(int height, int width, int seed, bool deterministic, float living_reward, float end_reward,
                          float percentage_obstacles) {
@@ -404,6 +406,92 @@ Environment::insert_non_deterministic_dynamics(MDPState *current_state, int acti
     tuple<MDPState *, int> current_state_action(current_state, action);
 
     dynamics[current_state_action].insert({next_state_reward, probability});
+}
+
+inline int manhattanLenght(MDPState u, MDPState v){
+    return abs(u.x - v.x) + abs(u.y - v.y);
+}
+
+std::stack<MDPState> Environment::runDijkstra() {
+
+    vector<tuple<int, int>> Q;
+    previousMap.clear();
+    distanceMap.clear();
+
+    for(MDPState state : states){
+        if(state.symbol != "O"){
+            distanceMap[tuple(state.x, state.y)] = std::numeric_limits<int>::max();
+            previousMap[tuple(state.x, state.y)];
+            Q.push_back(make_tuple(state.x, state.y));
+            if(state == *start){
+                distanceMap[tuple(state.x, state.y)] = 0;
+            }
+        }
+    }
+
+    while(!Q.empty()){
+        MDPState u;
+        // Get vertex with minimum distance
+        int smallestD = std::numeric_limits<int>::max();
+        for(tuple<int, int> state : Q){
+            if(distanceMap[state] < smallestD){
+                u = *get_state_by_coordinates(get<0>(state), get<1>(state));
+                smallestD = distanceMap[state];
+            }
+        }
+
+        Q.erase(find(Q.begin(), Q.end(), make_tuple(u.x, u.y)));
+        if(u == *end){
+            break;
+        }
+
+        // Get all valid neighbors that are still in Q.
+        vector<tuple<int, int>> friendlyNeighbors;
+        if(u.x - 1 >= 0){
+            for(tuple<int, int> state : Q){
+                if(*get_state_by_coordinates(get<0>(state), get<1>(state)) == *get_state_by_coordinates(u.x - 1, u.y)){
+                    friendlyNeighbors.push_back(make_tuple(u.x - 1, u.y));
+                }
+            }
+        }
+        if(u.x + 1 < width){
+            for(tuple<int, int> state : Q){
+                if(*get_state_by_coordinates(get<0>(state), get<1>(state)) == *get_state_by_coordinates(u.x + 1, u.y)){
+                    friendlyNeighbors.push_back(make_tuple(u.x + 1, u.y));
+                }
+            }
+        }
+        if(u.y - 1 >= 0){
+            for(tuple<int, int> state : Q){
+                if(*get_state_by_coordinates(get<0>(state), get<1>(state)) == *get_state_by_coordinates(u.x, u.y - 1)){
+                    friendlyNeighbors.push_back(make_tuple(u.x, u.y - 1));
+                }
+            }
+        }
+        if(u.y + 1 < height){
+            for(tuple<int, int> state : Q){
+                if(*get_state_by_coordinates(get<0>(state), get<1>(state)) == *get_state_by_coordinates(u.x, u.y + 1)){
+                    friendlyNeighbors.push_back(make_tuple(u.x, u.y + 1));
+                }
+            }
+        }
+        for(tuple<int, int> v : friendlyNeighbors){
+            int alt = distanceMap[tuple(u.x, u.y)] + manhattanLenght(u, *get_state_by_coordinates(get<0>(v), get<1>(v)));
+            if(alt < distanceMap[v]){
+                distanceMap[v] = alt;
+                previousMap[v] = tuple(u.x, u.y);
+            }
+        }
+    }
+    std::stack<MDPState> s;
+    MDPState u = *end;
+    while(!(u == *start)){
+        s.push(u);
+        std::tuple<int , int > temp = previousMap[tuple(u.x, u.y)];
+        u = *get_state_by_coordinates(get<0>(temp), get<1>(temp));
+    }
+    s.push(u);
+    return s;
 }
 
 

@@ -8,6 +8,7 @@
 #include <vector>
 #include <map>
 #include <random>
+#include <stack>
 #include "../random/Random.h"
 #include "MDPState.h"
 
@@ -32,6 +33,9 @@ public:
     // a gridworld accepts following actions (int): 0 = UP, 1 = RIGHT, 2 = DOWN, 3 = LEFT
     std::vector<int> actions = {0, 1, 2, 3};
 
+    std::map<tuple<int, int>, int> distanceMap;
+    std::map<tuple<int, int>, tuple<int, int>> previousMap;
+
     Environment(int height, int width, int seed, bool deterministic, float living_reward, float end_reward, float percentage_obstacles);
 
     // returns: next_state (MDPState), reward (float), done (bool)
@@ -51,6 +55,8 @@ public:
     MDPState * get_state_by_coordinates(int x, int y);
 
     bool save(std::string outputFileName);
+
+    std::stack<MDPState> runDijkstra();
 
 private:
     // used for populating the world

@@ -167,35 +167,6 @@ void MainWindow::undo() {
 }
 
 void MainWindow::train() {
-//    QMessageBox box;
-//    QPushButton Koningin;
-//    QInputDialog value;
-//    Koningin.setText(QString("Koningin"));
-////    connect(&Koningin, SIGNAL(clicked()), this, SLOT(pressKoningin()));
-//    QPushButton Toren;
-//    Toren.setText(QString("Toren"));
-////    connect(&Toren, SIGNAL(clicked()), this, SLOT(pressToren()));
-//    QPushButton Loper;
-//    Loper.setText(QString("Loper"));
-////    connect(&Loper, SIGNAL(clicked()), this, SLOT(pressLoper()));
-//    QPushButton Paard;
-//    Paard.setText(QString("Paard"));
-////    connect(&Paard, SIGNAL(clicked()), this, SLOT(pressPaard()));
-//    box.addButton(&Koningin, QMessageBox::YesRole);
-//    box.addButton(&Toren, QMessageBox::YesRole);
-//    box.addButton(&Loper, QMessageBox::YesRole);
-//    box.addButton(&Paard, QMessageBox::YesRole);
-//    QLineEdit help = QLineEdit();
-//    help.move(100, 100);
-//    QLineEdit max_steps = QLineEdit();
-//    max_steps.move(100, 100);
-//    QLineEdit print_epochs = QLineEdit();
-//    print_epochs.move(100, 100);
-//    box.setText(QString("Gelieve het schaakstuk aan te duiden naar waar u uw pion wilt promoveren: "));
-//    box.layout()->addWidget(&help);
-//    box.layout()->addWidget(&max_steps);
-//    box.layout()->addWidget(&print_epochs);
-//    box.exec();
     TrainAgentWindow x;
     x.exec();
     scene->agent.train(&scene->env, 1000, 200, 200);

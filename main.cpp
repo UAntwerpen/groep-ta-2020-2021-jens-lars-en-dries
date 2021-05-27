@@ -4,6 +4,7 @@
 #include "parser/LAParser.h"
 #include "parser/EnvironmentParser.h"
 #include "visualisatie/mainwindow.h"
+#include <stack>
 
 #include <QApplication>
 
@@ -13,7 +14,7 @@ int main(int argc, char *argv[]) {
 
     std::vector<int> actions{0, 1, 2, 3};
 
-    Environment env = Environment(20, 20, 3, false, -0.01, 10, 0.2);
+    Environment env = Environment(20, 20, 3, true, -0.01, 10, 0.2);
     MCLearning agent(env, 0.1);
     env.render();
 //    agent.train(env, 100000, 200, 10000);
@@ -51,6 +52,10 @@ int main(int argc, char *argv[]) {
     }
 
     std::cout<<"Average steps = "<<average/(double)50<<std::endl;
+
+    // Aantal vakken van start naar einde, inclusief de start en eindvakken.
+    auto stackpath = env.runDijkstra();
+    std::cout << "Optimal route size = " <<stackpath.size() << std::endl;
 
     QApplication a(argc, argv);
     MainWindow w;
