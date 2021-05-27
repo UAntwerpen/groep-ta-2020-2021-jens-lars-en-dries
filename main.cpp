@@ -53,7 +53,7 @@ int main(int argc, char *argv[]) {
 
     std::cout<<"Average steps = "<<average/(double)50<<std::endl;
 
-    // Aantal vakken van start naar einde, inclusief de start en eindvakken.
+    // Aantal vakken van start -> einde, inclusief de start en eindvakken.
     auto stackpath = env.runDijkstra();
     std::cout << "Optimal route size = " <<stackpath.size() << std::endl;
 
