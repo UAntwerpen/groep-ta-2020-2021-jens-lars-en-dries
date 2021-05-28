@@ -15,26 +15,15 @@ Q_OBJECT
 
 public:
     MainWindow(QWidget *parent = 0);
-
-    void update();
-    bool selectFase() {return policy_flag;}
-    void selectToggle() { policy_flag = !policy_flag && true;}
-
-
-private:
     World *scene;
-    bool policy_flag = true;
 
 private slots:
     void clicked(int x, int y);
     void newGame();
     void open();
     void save();
-    void undo();
     void train();
     void visualizationChange();
-
-    // De volgende lijnen kunnen genegeerd worden voor de opdracht
 
     void on_actionExit_triggered();
     void closeEvent (QCloseEvent *event)
@@ -53,7 +42,6 @@ private:
     QAction *newAct;
     QAction *openAct;
     QAction *saveAct;
-    QAction *undoAct;
     QAction *trainAgent;
     QAction *exitAct;
 

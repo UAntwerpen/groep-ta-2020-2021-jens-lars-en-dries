@@ -1,7 +1,7 @@
 #include <algorithm>
 #include "Environment.h"
-#include "../random/Random.h"
 #include "../parser/tinyxml/tinyxml.h"
+#include "../random/Random.h"
 #include "../procederual-generation/RiverBezier.h"
 #include "../procederual-generation/LavaPools.h"
 #include <sstream>
@@ -98,9 +98,11 @@ void Environment::generate_obstacles(float obst_percentage) {
     int n_obstacles = (width * height) * obst_percentage;
     int temp = n_obstacles;
     int x, y;
-    Random random(this->seed);
+    int i = 0;
     while(true){
+        Random random((this->seed + i));
         n_obstacles = temp;
+        cout << i << endl;
         while (n_obstacles > 0) {
             x = random.rand() % width;
             y = random.rand() % height;
@@ -118,6 +120,7 @@ void Environment::generate_obstacles(float obst_percentage) {
                     state.symbol = ".";
                 }
             }
+            i += 1;
             cout << "Redoing obstacle generation..." << std::endl;
             continue;
         }

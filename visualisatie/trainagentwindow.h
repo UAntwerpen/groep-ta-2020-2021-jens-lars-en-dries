@@ -2,6 +2,7 @@
 #define TRAINAGENTWINDOW_H
 
 #include <QDialog>
+#include <algorithms/QLearning.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class TrainAgentWindow; }
@@ -15,6 +16,10 @@ public:
     TrainAgentWindow(QWidget *parent = nullptr);
     ~TrainAgentWindow();
 
+    void setEnv(Environment *env);
+
+    void setAgent(QLearning *agent);
+
 private slots:
     void on_pushButton_clicked();
 
@@ -22,5 +27,8 @@ private slots:
 
 private:
     Ui::TrainAgentWindow *ui;
+    Environment* env = nullptr;
+//    MCLearning agent = MCLearning(env, 0.1);
+    QLearning* agent = nullptr;
 };
 #endif // TRAINAGENTWINDOW_H

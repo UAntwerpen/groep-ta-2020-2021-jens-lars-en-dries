@@ -4,9 +4,6 @@
 #include <QPixmap>
 
 World::World(QObject* parent ): QGraphicsScene(parent){
-    cGrassColor = Qt::green;
-    cRockColor = Qt::gray;
-    cWaterColor = Qt::blue;
     cBlockSize = 40;
 }
 

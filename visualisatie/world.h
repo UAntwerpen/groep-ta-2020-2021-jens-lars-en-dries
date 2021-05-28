@@ -19,7 +19,6 @@ public:
     void refreshWorld();
     void setEnv(Environment newEnv);
     void togglePolicy(){fShowPolicy = !fShowPolicy;}
-    void toggleTraining(){fTraining = !fTraining;}
     void updateAgent(LA* savedLA);
     void drawPierePath();
 protected:
@@ -27,11 +26,6 @@ protected:
 signals:
     void clicked(int x,int y);
 private:
-    QColor cWaterColor;
-    QColor cGrassColor;
-    QColor cRockColor;
-
-    bool fTraining = false;
     bool fShowPolicy = false;
     quint32 cBlockSize;
     qint32 focusRow, focusCol;

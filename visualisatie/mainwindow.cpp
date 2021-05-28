@@ -10,6 +10,7 @@
 #include <unistd.h>
 #endif
 #include "trainagentwindow.h"
+#include "newwindow.h"
 
 #include <QMessageBox>
 #include <QtWidgets>
@@ -24,6 +25,7 @@ QTextStream& qStdOut()
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
+    this->showMaximized();
     scene = new World;
     QGraphicsView *view = new QGraphicsView(scene);
     setCentralWidget(view);
@@ -37,24 +39,20 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     Q.parseFile(parse_test);
     scene->updateAgent(parse_test);
 
-
-    connect(scene,SIGNAL(clicked(int,int)),this,SLOT(clicked(int,int)));
     createActions();
     createMenus();
     scene->drawWorld();
 }
 
-
-// Deze functie wordt opgeroepen telkens er op het schaakbord
-// geklikt wordt. x,y geeft de positie aan waar er geklikt
-// werd; r is de 0-based rij, k de 0-based kolom
-void MainWindow::clicked(int r, int k) {
-    QTextStream out(stdout);
-    out << "Clicked: " << r << ", " << k << endl;
-}
-
 void MainWindow::newGame()
-{}
+{
+    NewWindow y;
+    y.setW(this);
+    y.exec();
+    scene->refreshWorld();
+    QGraphicsView *view = new QGraphicsView(scene);
+    setCentralWidget(view);
+}
 
 void MainWindow::save() {
 //    QString fileName = QFileDialog::getSaveFileName(this,
@@ -127,51 +125,14 @@ void MainWindow::open() {
     update();
 }
 
-//void MainWindow::schaakPopup(zw kleur) {
-//    QMessageBox box;
-//    if(kleur == 0){
-//        box.setText(QString("Zwart staat schaak!"));
-//    }
-//    else{
-//        box.setText(QString("Wit staat schaak!"));
-//    }
-//    box.exec();
-//}
-
-//void MainWindow::schaakmatPopup(zw kleur) {
-//    QMessageBox box;
-//    if(kleur == 0){
-//        box.setText(QString("Zwart staat schaakmat! Wit is de winnaar."));
-//    }
-//    else{
-//        box.setText(QString("Wit staat schaakmat! Zwart is de winnaar."));
-//    }
-//    box.exec();
-//}
-
-//void MainWindow::patPopup(zw kleur) {
-//    QMessageBox box;
-//    if(kleur == 0){
-//        box.setText(QString("Zwart staat pat! Gelijkspel."));
-//    }
-//    else{
-//        box.setText(QString("Wit staat pat! Gelijkspel."));
-//    }
-//    box.exec();
-//}
-
-void MainWindow::undo() {
-    QMessageBox box;
-    box.setText(QString("Je hebt undo gekozen"));
-    box.exec();
-}
-
 void MainWindow::train() {
     TrainAgentWindow x;
-    x.exec();
-    scene->agent.train(&scene->env, 1000, 200, 200);
-    scene->refreshWorld();
-    scene->drawPierePath();
+    x.setEnv(&scene->env);
+    x.setAgent(&scene->agent);
+    if(x.exec() == 0){
+        scene->refreshWorld();
+        scene->drawPierePath();
+    }
 }
 
 void MainWindow::visualizationChange() {
@@ -179,49 +140,26 @@ void MainWindow::visualizationChange() {
     scene->refreshWorld();
 }
 
-
-// Update de inhoud van de grafische weergave van het schaakbord (scene)
-// en maak het consistent met de game state in variabele g.
-void MainWindow::update() {
-
-}
-
-
-
-
-
-////////////////
-
-
-
-
-
-
 void MainWindow::createActions() {
     newAct = new QAction(tr("&New"), this);
     newAct->setShortcuts(QKeySequence::New);
-    newAct->setStatusTip(tr("Start a new game"));
+    newAct->setStatusTip(tr("Create a new Environment and Agent."));
     connect(newAct, &QAction::triggered, this, &MainWindow::newGame);
 
     openAct = new QAction(tr("&Open"), this);
     openAct->setShortcuts(QKeySequence::Open);
-    openAct->setStatusTip(tr("Read game from disk"));
+    openAct->setStatusTip(tr("Read data from disk"));
     connect(openAct, &QAction::triggered, this, &MainWindow::open);
 
     saveAct = new QAction(tr("&Save"), this);
     saveAct->setShortcuts(QKeySequence::Save);
-    saveAct->setStatusTip(tr("Save game to disk"));
+    saveAct->setStatusTip(tr("Save data to disk"));
     connect(saveAct, &QAction::triggered, this, &MainWindow::save);
 
     exitAct = new QAction(tr("&Exit"), this);
     exitAct->setShortcuts(QKeySequence::Quit);
     exitAct->setStatusTip(tr("Abandon game"));
     connect(exitAct, &QAction::triggered, this, &MainWindow::on_actionExit_triggered);
-
-    undoAct = new QAction(tr("&Undo"), this);
-    undoAct->setShortcuts(QKeySequence::Undo);
-    undoAct->setStatusTip(tr("Undo last move"));
-    connect(undoAct, &QAction::triggered, this, &MainWindow::undo);
 
     trainAgent = new QAction(tr("&train"), this);
     trainAgent->setStatusTip(tr("start a training"));
@@ -236,14 +174,13 @@ void MainWindow::createActions() {
 }
 
 void MainWindow::createMenus() {
-    fileMenu = menuBar()->addMenu(tr("&File"));
+    fileMenu = menuBar()->addMenu(tr("&General"));
     fileMenu->addAction(newAct);
     fileMenu->addAction(openAct);
     fileMenu->addAction(saveAct);
     fileMenu->addAction(exitAct);
 
     gameMenu = menuBar()->addMenu(tr("&Game"));
-    gameMenu->addAction(undoAct);
     gameMenu->addAction(trainAgent);
 
     visualizeMenu = menuBar()->addMenu(tr("&Visualize"));
