@@ -20,6 +20,9 @@ class MCLearning {
     // the learning automata
     LA la;
 
+    // improve the policy of the LA
+    void learn();
+
 public:
     // constructor
     MCLearning(Environment &env, float in_epsilon);
@@ -29,9 +32,6 @@ public:
 
     // Play an episode in the enviroment
     std::vector<std::tuple<State*, int, float >> play(Environment& gridworld, int max_steps);
-
-    // improve the policy of the LA
-    void learn();
 
     void setEpsilon(float x){ epsilon = x;}
 
