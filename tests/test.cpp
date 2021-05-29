@@ -310,6 +310,23 @@ TEST_CASE("Non deterministic enviroment") {
 }
 
 TEST_CASE("Optimal Path (Dijkstra)") {
-    Environment env = Environment(5, 5, 42, false, -0.01, 10, 0.2);
-
+    Environment env = Environment(5, 5, 42, true, -0.01, 10, 0.2);
+    SECTION("Small sized 5x5 Environment"){
+        Environment env = Environment(5, 5, 3, true, -0.01, 100, 0.2);
+        // Optimal path only makes sense in deterministic environment.
+        REQUIRE(env.deterministic);
+        REQUIRE(env.runDijkstra().size() == 5);
+    }
+    SECTION("Medium sized 10x10 Environment"){
+        Environment env = Environment(10, 10, 3, true, -0.01, 100, 0.2);
+        // Optimal path only makes sense in deterministic environment.
+        REQUIRE(env.deterministic);
+        REQUIRE(env.runDijkstra().size() == 10);
+    }
+    SECTION("Large sized 20x20 Environment"){
+        Environment env = Environment(20, 20, 3, true, -0.01, 100, 0.2);
+        // Optimal path only makes sense in deterministic environment.
+        REQUIRE(env.deterministic);
+        REQUIRE(env.runDijkstra().size() == 26);
+    }
 }

@@ -102,7 +102,6 @@ void Environment::generate_obstacles(float obst_percentage) {
     while(true){
         Random random((this->seed + i));
         n_obstacles = temp;
-        cout << i << endl;
         while (n_obstacles > 0) {
             x = random.rand() % width;
             y = random.rand() % height;

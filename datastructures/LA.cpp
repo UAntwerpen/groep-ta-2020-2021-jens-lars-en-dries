@@ -110,7 +110,6 @@ LA::LA(const int height, const int width, std::pair<int, int> start_coordinates,
 LA::LA() {
     width = 0;
     height = 0;
-    properly_init = this;
 }
 
 bool LA::isProperlyInitialized() {
