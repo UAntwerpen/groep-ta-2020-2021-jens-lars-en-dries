@@ -24,7 +24,9 @@ public:
     void setEpsilon(float x){ epsilon = x;}
     LA getLA(){return la;};
 
+    void save(string outfileName);
     void load(LA* savedLA);
+
 private:
     void learn(State* current_state, int current_action, State* next_state, float reward);
 };

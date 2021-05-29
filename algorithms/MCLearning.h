@@ -35,7 +35,7 @@ public:
 
     void setEpsilon(float x){ epsilon = x;}
 
-    void save();
+    void save(string outfileName);
 
     void load(LA* savedLA);
 

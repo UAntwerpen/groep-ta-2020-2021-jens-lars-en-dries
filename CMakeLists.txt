@@ -32,7 +32,7 @@ target_link_libraries(TO_Groep parser_lib procedural_generation_lib )
 
 add_executable(TESTS tests/test.cpp datastructures/Environment.cpp datastructures/Environment.h algorithms/QLearning.h algorithms/QLearning.cpp datastructures/LA.cpp
         datastructures/LA.h datastructures/State.cpp datastructures/State.h algorithms/MCLearning.cpp algorithms/MCLearning.h tests/catch.hpp random/Random.cpp random/Random.h
-        tests/catch.cpp datastructures/MDPState.cpp datastructures/MDPState.h )
+        tests/catch.cpp datastructures/MDPState.cpp datastructures/MDPState.h tests/testUtils.cpp tests/testUtils.h)
 
 target_link_libraries(TESTS parser_lib procedural_generation_lib)
 

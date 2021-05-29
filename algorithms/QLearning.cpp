@@ -55,3 +55,7 @@ void QLearning::train(Environment * env, int nr_episodes, int max_steps, int pri
 void QLearning::load(LA *savedLA) {
     la = *savedLA;
 }
+
+void QLearning::save(string outfileName) {
+    la.save(outfileName);
+}

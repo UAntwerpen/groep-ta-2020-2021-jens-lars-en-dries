@@ -2,14 +2,17 @@
 
 #include <iostream>
 #include "catch.hpp"
+#include "testUtils.h"
 #include "../datastructures/Environment.h"
 #include "../random/Random.h"
 #include "../datastructures/LA.h"
 #include "../datastructures/State.h"
 #include "../algorithms/MCLearning.h"
 #include "../algorithms/QLearning.h"
+#include "../parser/EnvironmentParser.h"
+#include "../parser/LAParser.h"
 
-//Todo: Saving en Loading Test (Lars),
+// Working directory needs to be set to the tests map for the saving and loading of certain files needed for tests.
 
 TEST_CASE("Deterministic Automaton") {
     std::vector<int> actions{0, 1, 2, 3};
@@ -328,5 +331,108 @@ TEST_CASE("Optimal Path (Dijkstra)") {
         // Optimal path only makes sense in deterministic environment.
         REQUIRE(env.deterministic);
         REQUIRE(env.runDijkstra().size() == 26);
+    }
+}
+
+TEST_CASE("Saving of Environment")
+{
+    SECTION("Deterministic Environment"){
+        Environment env = Environment(20, 20, 3, true, -0.01, 10, 0.2);
+        env.save("determinsticEnvironmentSavingOutput.xml");
+        REQUIRE(DirectoryExists("testData/deterministicEnvironmentSave.xml"));
+        REQUIRE(DirectoryExists("data/determinsticEnvironmentSavingOutput.xml"));
+        REQUIRE(FileCompare("testData/deterministicEnvironmentSave.xml", "data/determinsticEnvironmentSavingOutput.xml"));
+    }
+    SECTION("Non-Deterministic Environment"){
+        Environment env = Environment(20, 20, 3, false, -0.01, 10, 0.2);
+        env.save("nonDeterminsticEnvironmentSavingOutput.xml");
+        REQUIRE(DirectoryExists("testData/nonDeterministicEnvironmentSave.xml"));
+        REQUIRE(DirectoryExists("data/nonDeterminsticEnvironmentSavingOutput.xml"));
+        REQUIRE(FileCompare("testData/nonDeterministicEnvironmentSave.xml", "data/nonDeterminsticEnvironmentSavingOutput.xml"));
+    }
+}
+
+TEST_CASE("Loading of Environment"){
+    SECTION("Deterministic Environment"){
+        Environment env = Environment(20, 20, 3, true, -0.01, 10, 0.2);
+        REQUIRE(DirectoryExists("testData/deterministicEnvironmentSave.xml"));
+        EnvironmentParser Q;
+        Q.loadFile("testData/deterministicEnvironmentSave.xml");
+        Environment* loadedEnv = Q.parseFile();
+        REQUIRE(env.height == loadedEnv->height);
+        REQUIRE(env.width == loadedEnv->width);
+        REQUIRE(env.seed == loadedEnv->seed);
+        REQUIRE(env.deterministic == loadedEnv->deterministic);
+        REQUIRE(env.living_reward == loadedEnv->living_reward);
+        REQUIRE(env.end_reward == loadedEnv->end_reward);
+        REQUIRE(env.percentage_obstacles == loadedEnv->percentage_obstacles);
+    }
+    SECTION("Non-Deterministic Environment"){
+        Environment env = Environment(20, 20, 3, false, -0.01, 10, 0.2);
+        REQUIRE(DirectoryExists("testData/nonDeterministicEnvironmentSave.xml"));
+        EnvironmentParser Q;
+        Q.loadFile("testData/nonDeterministicEnvironmentSave.xml");
+        Environment* loadedEnv = Q.parseFile();
+        REQUIRE(env.height == loadedEnv->height);
+        REQUIRE(env.width == loadedEnv->width);
+        REQUIRE(env.seed == loadedEnv->seed);
+        REQUIRE(env.deterministic == loadedEnv->deterministic);
+        REQUIRE(env.living_reward == loadedEnv->living_reward);
+        REQUIRE(env.end_reward == loadedEnv->end_reward);
+        REQUIRE(env.percentage_obstacles == loadedEnv->percentage_obstacles);
+    }
+}
+
+TEST_CASE("Saving of LA"){
+    SECTION("MCLearning"){
+        Environment env = Environment(20, 20, 3, true, -0.01, 10, 0.2);
+        MCLearning agent = MCLearning(env, 0.1);
+        agent.save("MCLearningLASavingOutput.xml");
+        REQUIRE(DirectoryExists("testData/savedLA.xml"));
+        REQUIRE(DirectoryExists("data/MCLearningLASavingOutput.xml"));
+        REQUIRE(FileCompare("testData/savedLA.xml", "data/MCLearningLASavingOutput.xml"));
+    }
+    SECTION("QLearning"){
+        Environment env = Environment(20, 20, 3, true, -0.01, 10, 0.2);
+        QLearning agent = QLearning(&env, 0.1, 1, 0.9);
+        agent.save("QLearningLASavingOutput.xml");
+        REQUIRE(DirectoryExists("testData/savedLA.xml"));
+        REQUIRE(DirectoryExists("data/MCLearningLASavingOutput.xml"));
+        REQUIRE(FileCompare("testData/savedLA.xml", "data/MCLearningLASavingOutput.xml"));
+    }
+}
+
+TEST_CASE("Loading of LA"){
+    SECTION("MCLearning"){
+        Environment env = Environment(20, 20, 3, true, -0.01, 10, 0.2);
+        MCLearning agent = MCLearning(env, 0.1);
+        MCLearning loadedAgent = MCLearning(env, 0.1);
+        LAParser Q;
+        REQUIRE(DirectoryExists("testData/savedLA.xml"));
+        Q.loadFile("testData/savedLA.xml");
+        LA* loadedLA = new LA();
+        Q.parseFile(loadedLA);
+        loadedAgent.load(loadedLA);
+
+        REQUIRE(agent.getLA().getHeight() == loadedAgent.getLA().getHeight());
+        REQUIRE(agent.getLA().getWidth() == loadedAgent.getLA().getWidth());
+        REQUIRE(agent.getLA().getStartState()->getCoordinates() == loadedAgent.getLA().getStartState()->getCoordinates());
+        REQUIRE(agent.getLA().getAllActions() == loadedAgent.getLA().getAllActions());
+    }
+    SECTION("QLearning"){
+        Environment env = Environment(20, 20, 3, true, -0.01, 10, 0.2);
+        QLearning agent = QLearning(&env, 0.1, 1, 0.9);
+        QLearning loadedAgent = QLearning(&env, 0.1, 1, 0.9);
+        LAParser Q;
+        REQUIRE(DirectoryExists("testData/savedLA.xml"));
+        Q.loadFile("testData/savedLA.xml");
+        LA* loadedLA = new LA();
+        Q.parseFile(loadedLA);
+        loadedAgent.load(loadedLA);
+
+        REQUIRE(agent.getLA().getHeight() == loadedAgent.getLA().getHeight());
+        REQUIRE(agent.getLA().getWidth() == loadedAgent.getLA().getWidth());
+        REQUIRE(agent.getLA().getStartState()->getCoordinates() == loadedAgent.getLA().getStartState()->getCoordinates());
+        REQUIRE(agent.getLA().getAllActions() == loadedAgent.getLA().getAllActions());
     }
 }
