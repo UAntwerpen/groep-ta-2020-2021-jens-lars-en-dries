@@ -32,7 +32,7 @@ TEST_CASE("Deterministic Automaton") {
     SECTION("Deterministic LA with Environment"){
         Environment env = Environment(5, 5, 42, true, -0.01, 10, 0.2);
         QLearning ql = QLearning(&env,0.1, 0.01, 0.9);
-        ql.train(&env, 200, 50, 10);
+        ql.train(env, 200, 50, 10);
         deterministic_LA = ql.getLA().toDeterministic();
         for (auto &state: deterministic_LA.getAllStates()) {
             REQUIRE(state->getProbabilities().size() == 1);
@@ -286,7 +286,7 @@ TEST_CASE("Learning automata tests") {
 TEST_CASE("QLearning Tests") {
     Environment env = Environment(10, 10, 42, true, -0.01, 10, 0.2);
     QLearning ql = QLearning(&env,0.1, 0.01, 0.9);
-    ql.train(&env, 2000, 50, 10);
+    ql.train(env, 2000, 50, 10);
     // todo write a test once we have an optimal path algorithm
 }
 

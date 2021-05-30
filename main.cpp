@@ -56,7 +56,7 @@ int main(int argc, char *argv[]) {
 
     // Aantal vakken van start -> einde, inclusief de start en eindvakken.
     auto stackpath = env.runDijkstra();
-    std::cout << "Optimal route size = " <<stackpath.size() << std::endl;
+    std::cout << "Optimal route size = " <<stackpath.size() - 1 << " steps"<< std::endl;
 
     QApplication a(argc, argv);
     MainWindow w;
