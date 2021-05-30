@@ -26,7 +26,7 @@ void TrainAgentWindow::on_pushButton_2_clicked()
     if(i <= 0){
         i = 200;
     }
-    agent->train(env, ui->lineEdit->text().toInt(), ui->lineEdit_2->text().toInt(), i);
+    agent->train(*env, ui->lineEdit->text().toInt(), ui->lineEdit_2->text().toInt(), i);
     QDialog::done(0);
 
 }

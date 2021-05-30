@@ -23,7 +23,7 @@ set(SOURCE_FILES main.cpp datastructures/Environment.cpp datastructures/Environm
         datastructures/State.cpp datastructures/State.h algorithms/MCLearning.cpp algorithms/MCLearning.h random/Random.cpp random/Random.h
         datastructures/MDPState.cpp datastructures/MDPState.h algorithms/QLearning.cpp algorithms/QLearning.h
         visualisatie/trainagentwindow.cpp visualisatie/trainagentwindow.h visualisatie/trainagentwindow.ui
-        visualisatie/mainwindow.h visualisatie/world.h visualisatie/mainwindow.cpp visualisatie/world.cpp visualisatie/ui_newwindow.h visualisatie/newwindow.h visualisatie/newwindow.cpp)
+        visualisatie/mainwindow.h visualisatie/world.h visualisatie/mainwindow.cpp visualisatie/world.cpp visualisatie/ui_newwindow.h visualisatie/newwindow.h visualisatie/newwindow.cpp algorithms/AbstractAgent.cpp algorithms/AbstractAgent.h)
 
 add_executable(TO_Groep ${SOURCE_FILES})
 qt5_use_modules(TO_Groep Core Widgets Gui)

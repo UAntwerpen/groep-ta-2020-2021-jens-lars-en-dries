@@ -8,8 +8,9 @@
 #include <stdio.h>
 #include "../datastructures/LA.h"
 #include "../random/Random.h"
+#include "AbstractAgent.h"
 
-class MCLearning {
+class MCLearning : AbstractAgent {
 
     // epsilon is the infinite exploration part of GLIE. It will asymptotically increase the greediness of the policy.
     float epsilon;
