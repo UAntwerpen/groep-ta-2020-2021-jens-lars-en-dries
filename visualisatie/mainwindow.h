@@ -18,10 +18,7 @@ public:
     World *scene;
 
 private slots:
-    void clicked(int x, int y);
     void newGame();
-    void open();
-    void save();
     void train();
     void visualizationChange();
 
@@ -40,8 +37,6 @@ private:
     QMenu *visualizeMenu;
 
     QAction *newAct;
-    QAction *openAct;
-    QAction *saveAct;
     QAction *trainAgent;
     QAction *exitAct;
 

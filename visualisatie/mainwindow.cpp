@@ -54,77 +54,6 @@ void MainWindow::newGame()
     setCentralWidget(view);
 }
 
-void MainWindow::save() {
-//    QString fileName = QFileDialog::getSaveFileName(this,
-//                                                    tr("Save game"), "",
-//                                                    tr("Chess File (*.chs);;All Files (*)"));
-//
-//    if (fileName.isEmpty())
-//        return;
-//    else {
-//        QFile file(fileName);
-//        if (!file.open(QIODevice::WriteOnly)) {
-//            QMessageBox::information(this, tr("Unable to open file"),
-//                                     file.errorString());
-//            return;
-//        }
-//        QDataStream out(&file);
-//        out << QString("Rb") << QString("Hb") << QString("Bb") << QString("Qb") << QString("Kb") << QString("Bb") << QString("Hb") << QString("Rb");
-//        for  (int i=0;i<8;i++) {
-//            out << QString("Pb");
-//        }
-//        for  (int r=3;r<7;r++) {
-//            for (int k=0;k<8;k++) {
-//                out << QString(".");
-//            }
-//        }
-//        for  (int i=0;i<8;i++) {
-//            out << QString("Pw");
-//        }
-//        out << QString("Rw") << QString("Hw") << QString("Bw") << QString("Qw") << QString("Kw") << QString("Bw") << QString("Hw") << QString("Rw");
-//    }
-}
-
-void MainWindow::open() {
-    QString fileName = QFileDialog::getOpenFileName(this,
-                                                    tr("Load game"), "",
-                                                    tr("Chess File (*.chs);;All Files (*)"));
-    if (fileName.isEmpty())
-        return;
-    else {
-
-        QFile file(fileName);
-
-        if (!file.open(QIODevice::ReadOnly)) {
-            QMessageBox::information(this, tr("Unable to open file"),
-                                     file.errorString());
-            return;
-        }
-
-        try {
-            QDataStream in(&file);
-            QString debugstring;
-            for (int r=0;r<8;r++) {
-                for (int k=0;k<8;k++) {
-                    QString piece;
-                    in >> piece;
-                    debugstring += "\t" + piece;
-                    if (in.status()!=QDataStream::Ok) {
-                        throw QString("Error reading file "+fileName);
-                    }
-                }
-                debugstring += "\n";
-            }
-            QMessageBox::information(this, tr("Debug"),
-                                     debugstring);
-        } catch (QString& Q) {
-            QMessageBox::information(this, tr("Error reading file"),
-                                     Q);
-        }
-    }
-    update();
-}
-
 void MainWindow::train() {
     TrainAgentWindow x;
     x.setEnv(&scene->env);
@@ -146,16 +75,6 @@ void MainWindow::createActions() {
     newAct->setStatusTip(tr("Create a new Environment and Agent."));
     connect(newAct, &QAction::triggered, this, &MainWindow::newGame);
 
-    openAct = new QAction(tr("&Open"), this);
-    openAct->setShortcuts(QKeySequence::Open);
-    openAct->setStatusTip(tr("Read data from disk"));
-    connect(openAct, &QAction::triggered, this, &MainWindow::open);
-
-    saveAct = new QAction(tr("&Save"), this);
-    saveAct->setShortcuts(QKeySequence::Save);
-    saveAct->setStatusTip(tr("Save data to disk"));
-    connect(saveAct, &QAction::triggered, this, &MainWindow::save);
-
     exitAct = new QAction(tr("&Exit"), this);
     exitAct->setShortcuts(QKeySequence::Quit);
     exitAct->setStatusTip(tr("Abandon game"));
@@ -176,8 +95,6 @@ void MainWindow::createActions() {
 void MainWindow::createMenus() {
     fileMenu = menuBar()->addMenu(tr("&General"));
     fileMenu->addAction(newAct);
-    fileMenu->addAction(openAct);
-    fileMenu->addAction(saveAct);
     fileMenu->addAction(exitAct);
 
     gameMenu = menuBar()->addMenu(tr("&Game"));
