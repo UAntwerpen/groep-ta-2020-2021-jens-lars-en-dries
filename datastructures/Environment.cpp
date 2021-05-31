@@ -289,6 +289,7 @@ void Environment::generate_non_deterministic_world() {
                                               next_state);
         } else if (next_state->symbol == "L") {
             insert_non_deterministic_dynamics(&current_state, 0, lava_reward, 1, next_state);
+            current_state.terminal = lava_terminal;
         } else {
             insert_non_deterministic_dynamics(&current_state, 0, living_reward, 1, next_state);
         }
@@ -315,6 +316,7 @@ void Environment::generate_non_deterministic_world() {
                                               next_state);
         } else if (next_state->symbol == "L") {
             insert_non_deterministic_dynamics(&current_state, 2, lava_reward, 1, next_state);
+            current_state.terminal = lava_terminal;
         } else {
             insert_non_deterministic_dynamics(&current_state, 2, living_reward, 1, next_state);
         }
@@ -340,8 +342,9 @@ void Environment::generate_non_deterministic_world() {
                                                                                  (drifting_away_chance /
                                                                                   (float) drifting_amount)),
                                               next_state);
-        } else if (next_state->symbol == "O") {
+        } else if (next_state->symbol == "L") {
             insert_non_deterministic_dynamics(&current_state, 1, lava_reward, 1, next_state);
+            current_state.terminal = lava_terminal;
         } else {
             insert_non_deterministic_dynamics(&current_state, 1, living_reward, 1, next_state);
         }
@@ -369,6 +372,7 @@ void Environment::generate_non_deterministic_world() {
                                               next_state);
         } else if (next_state->symbol == "L") {
             insert_non_deterministic_dynamics(&current_state, 3, lava_reward, 1, next_state);
+            current_state.terminal = lava_terminal;
         } else {
             insert_non_deterministic_dynamics(&current_state, 3, living_reward, 1, next_state);
         }
