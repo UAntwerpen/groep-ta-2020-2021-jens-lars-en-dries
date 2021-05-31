@@ -1,3 +1,4 @@
+[![codecov](https://codecov.io/gh/DriesDeMaeseneer/TO-Groep/branch/main/graph/badge.svg?token=73GROVMJDY)](https://codecov.io/gh/DriesDeMaeseneer/TO-Groep)
 # TO-Groep
 Learning Automata en Game Agents
 
