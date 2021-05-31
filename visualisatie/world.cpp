@@ -200,6 +200,8 @@ void World::drawPierePath() {
     LA deterministic_automaton = agent.getLA().toDeterministic();
     std::pair<int,int> current_coordinates = std::make_pair(env.start->x, env.start->y);
     unsigned int step_count = 0;
+    env.reset();
+
     while(current_coordinates != std::make_pair(env.end->x, env.end->y) and step_count<300) {
 
         State* next_state = deterministic_automaton.coordinatesToState(current_coordinates);

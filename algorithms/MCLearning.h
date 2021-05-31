@@ -12,17 +12,19 @@
 
 class MCLearning : AbstractAgent {
 
-    // epsilon is the infinite exploration part of GLIE. It will asymptotically increase the greediness of the policy.
+    // epsilon is the greediness of the agent.
     float epsilon;
 
     // the discount factor
-    float discountfactor = 1;
+    float discountfactor = 0.9;
 
     // the learning automata
     LA la;
 
     // improve the policy of the LA
-    void learn();
+    void learn(std::vector<State*>& states);
+
+    std::map<std::pair<State*, unsigned int>, std::vector<float>> Returns;
 
 public:
     // constructor

@@ -21,7 +21,7 @@ public:
     int seed;
     bool deterministic;
     float living_reward;
-    float lava_reward = -10.0;
+    float lava_reward = -100.0;
     float end_reward;
     float percentage_obstacles;
     float drifting_away_chance = 0.3;

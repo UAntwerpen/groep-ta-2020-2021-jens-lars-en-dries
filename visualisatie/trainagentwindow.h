@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include <algorithms/QLearning.h>
+#include <algorithms/MCLearning.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class TrainAgentWindow; }

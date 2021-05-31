@@ -23,25 +23,32 @@ void MCLearning::train(Environment& gridworld, int nr_episodes, int max_steps, i
         if(i%prints_every_epoch==0) {
             printf("Processed episode (%02d/%02d) in %zu steps\n", i, nr_episodes, episode.size());
         }
+        std::vector<State*> states;
         // Calculate cumulative reward of episode
         float cumulative_reward = 0;
-        for(long unsigned int i = 0;i<episode.size();i++) cumulative_reward += std::get<2>(episode[i])*std::pow(discountfactor, i);
+
         // Loop over time steps in the i'th episode
-        for(long unsigned int time_step = 0; time_step<episode.size(); time_step++){
+        for(long int time_step = episode.size()-1; time_step>=0; time_step--){
+            cumulative_reward = discountfactor*cumulative_reward + std::get<2>(episode[time_step]);
             // get values from tuple.
             auto state = std::get<0>(episode[time_step]);
             int action = std::get<1>(episode[time_step]);
             // increment counter.
             state->incrementCounter(action);
+            bool found = false;
+            for(auto it:states) {
+                if(it==state) found =true;
+            }
+            if(!found) states.emplace_back(state);
             // get current action value
             float value = state->getValue(action);
             // get action counter.
             int state_action_count = state->getActionCount(action);
             // calculate new Q_value for action action in the current state
-            state->setValue(action, value + ((float)(cumulative_reward - value)/(float)state_action_count));
+            state->setValue(action, value + ((float)(cumulative_reward - value) / (float)state_action_count));
         }
         // policy improvement
-        learn();
+        learn(states);
     }
 }
 
@@ -76,14 +83,14 @@ std::vector<std::tuple<State*, int, float>>  MCLearning::play(Environment& gridw
     return to_export;
 }
 
-void MCLearning::learn() {
+void MCLearning::learn(std::vector<State*>& states) {
      /*
       * the learn method will become more greedy over time, this is useful to encourage exploration.
       * Reinforcement Learning: An Introduction second edition, 5.4 Monte Carlo Control without Exploring Starts p 124.
       */
 
     // loop over all the states in the learning automata
-    for(auto& it:la.getAllStates()){
+    for(auto& it:states){
         for(int action:it->getActions()){
 
             // if 'action' is the argmax action of the current state, give it a transition probability of 1-e + e/|A(s)|
