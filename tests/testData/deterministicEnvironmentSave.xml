@@ -1,0 +1,9 @@
+<Environment>
+    <width>20</width>
+    <height>20</height>
+    <seed>3</seed>
+    <deterministic>1</deterministic>
+    <livingreward>-0.01</livingreward>
+    <endreward>10</endreward>
+    <percentageobstacles>0.2</percentageobstacles>
+</Environment>

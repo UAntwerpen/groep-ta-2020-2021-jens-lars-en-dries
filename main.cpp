@@ -15,12 +15,12 @@ int main(int argc, char *argv[]) {
     std::vector<int> actions{0, 1, 2, 3};
 
     // 0.22 lukt prima 0.23 precies niet.
-    Environment env = Environment(20, 20, 3, true, -0.01, 10, 0.2);
+    Environment env = Environment(20, 20, 3, true, -0.01, 1000000, 0.2);
     MCLearning agent(env, 0.1);
     env.render();
 //    agent.train(env, 1000, 200, 200);
 //    env.reset();
-    agent.save("../tests/testData/savedLA.xml");
+    agent.save("testLA.xml");
 
     double average=0;
     for(int i=0;i<50;i++){
