@@ -30,9 +30,9 @@ private:
     quint32 cBlockSize;
     qint32 focusRow, focusCol;
 public:
-    Environment env = Environment(20, 20, 42, true, -0.01, 100, 0.2);
+    Environment env = Environment(20, 20, 42, true, -0.01, 1000000, 0.2);
 //    MCLearning agent = MCLearning(env, 0.1);
-    QLearning agent = QLearning(&env, 0.1, 1, 0.9);
+    QLearning agent = QLearning(&env, 0.1, 0.1, 0.9);
 
 };
 
