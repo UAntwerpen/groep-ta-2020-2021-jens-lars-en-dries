@@ -294,11 +294,18 @@ TEST_CASE("MCLearning tests") {
     std::vector<int> actions{0, 1, 2, 3};
 
     Environment env = Environment(5, 5, 42, true, -0.01, 10, 0.2);
-    MCLearning agent(env, 0.9);
+    MCLearning agent(env, 0.01);
     agent.play(env, 200);
     SECTION("episode test") {
+        env.reset();
         auto episode = agent.play(env, 200);
         REQUIRE(episode.empty()==false);
+    }SECTION("training"){
+        env.reset();
+        agent.train(env, 10000, 100, 2500);
+        env.reset();
+        // Dijkstra calculates distance, not amount of steps -> amount of steps + 1 = distance.
+        REQUIRE(agent.play(env, 200).size() + 1 == env.runDijkstra().size());
     }
 }
 
