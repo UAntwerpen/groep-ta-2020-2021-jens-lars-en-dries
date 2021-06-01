@@ -13,7 +13,7 @@
 
 class LavaPools {
 public:
-    static void Lava(std::vector<std::vector<char>>& map, int lava_pits, int seed = -1);
+    static void Lava(std::vector<std::vector<char>> &map, int lava_pits, int seed = -1);
 };
 
 

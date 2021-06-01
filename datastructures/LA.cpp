@@ -8,11 +8,13 @@ void LA::reset() {
 
 }
 
-LA LA::toDeterministic(){
+LA LA::toDeterministic() {
     std::vector<int> new_actions = this->getAllActions();
-    LA deterministic_LA = LA(this->getHeight(), this->getWidth(), std::pair<int, int> {start_state->getX(), start_state->getY()}, new_actions);
+    LA deterministic_LA = LA(this->getHeight(), this->getWidth(),
+                             std::pair<int, int>{start_state->getX(), start_state->getY()}, new_actions);
     for (auto &state: all_states) {
-        State * deterministic_state = deterministic_LA.coordinatesToState(std::pair<int, int> {state->getX(), state->getY()});
+        State *deterministic_state = deterministic_LA.coordinatesToState(
+                std::pair<int, int>{state->getX(), state->getY()});
         int action = argmax(state);
         deterministic_state->resetProbabilities();
         deterministic_state->setProbability(action, 1.0);
@@ -101,12 +103,6 @@ LA::LA(const int height, const int width, std::pair<int, int> start_coordinates,
     all_actions = actions;
 }
 
-/*LA::~LA() {
-    for (int i = 0; i<all_states.size();i++) {
-        delete all_states[all_states.size()-1-i];
-    }
-}*/
-
 LA::LA() {
     width = 0;
     height = 0;
@@ -116,7 +112,8 @@ bool LA::isProperlyInitialized() {
     return properly_init == this;
 }
 
-int LA::argmax(State *in_state) const{
+int LA::argmax(State *in_state) const {
+    // return the action with the biggest value
     int action = -1;
     float max_value = -1 * std::numeric_limits<float>::max();
     for (auto &it: in_state->getQValue()) {
@@ -125,7 +122,7 @@ int LA::argmax(State *in_state) const{
             action = it.first;
         }
     }
-    if(action != -1){
+    if (action != -1) {
         in_state->setPreviousArgmax(action);
     }
     return in_state->getPreviousArgmax();

@@ -6,12 +6,8 @@
 void MCLearning::train(Environment& gridworld, int nr_episodes, int max_steps, int prints_every_epoch) {
     /*
      *  the onPolicyImprove method will improve the agent's policy over nr_episodes episodes.
-     *  we use the GLIE Monte-Carlo Control to converge to the optimal action-Q_value function Q(s,a) -> q*(s,a).
-     *  the GLIE method will encourage exploration and overtime become more greedy to optimize the policy.
+     *  we use the Monte-Carlo Control to converge to the optimal action-Q_value function Q(s,a) -> q*(s,a).
      */
-
-    //init variables
-    // TODO: init vars
 
     std::cout<<"Learning, please wait a moment...\n";
 
@@ -24,11 +20,12 @@ void MCLearning::train(Environment& gridworld, int nr_episodes, int max_steps, i
             printf("Processed episode (%02d/%02d) in %zu steps\n", i, nr_episodes, episode.size());
         }
         std::vector<State*> states;
-        // Calculate cumulative reward of episode
+
         float cumulative_reward = 0;
 
-        // Loop over time steps in the i'th episode
+        // Loop over time steps in reverse order
         for(long int time_step = episode.size()-1; time_step>=0; time_step--){
+            // Calculate cumulative reward of timestep
             cumulative_reward = discountfactor*cumulative_reward + std::get<2>(episode[time_step]);
             // get values from tuple.
             auto state = std::get<0>(episode[time_step]);

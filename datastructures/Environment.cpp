@@ -1,7 +1,6 @@
 #include <algorithm>
 #include "Environment.h"
 #include "../parser/tinyxml/tinyxml.h"
-#include "../random/Random.h"
 #include "../procederual-generation/RiverBezier.h"
 #include "../procederual-generation/LavaPools.h"
 #include <sstream>
@@ -91,7 +90,7 @@ void Environment::generate_deterministic_world() {
 }
 
 void Environment::generate_obstacles(float obst_percentage) {
-    if(obst_percentage > 0.31){
+    if (obst_percentage > 0.31) {
         cerr << "Cannot generate environment with obstacle percentage > 0.3.";
         return;
     }
@@ -99,7 +98,7 @@ void Environment::generate_obstacles(float obst_percentage) {
     int temp = n_obstacles;
     int x, y;
     int i = 0;
-    while(true){
+    while (true) {
         Random random((this->seed + i));
         n_obstacles = temp;
         while (n_obstacles > 0) {
@@ -113,9 +112,9 @@ void Environment::generate_obstacles(float obst_percentage) {
             }
         }
         auto pathstack = runDijkstra();
-        if(pathstack.size() == 0){
-            for(auto state : states){
-                if(state.symbol == "O"){
+        if (pathstack.size() == 0) {
+            for (auto state : states) {
+                if (state.symbol == "O") {
                     state.symbol = ".";
                 }
             }
@@ -134,9 +133,9 @@ map<tuple<MDPState *, float>, float> Environment::p(MDPState *state, int action)
 }
 
 MDPState *Environment::get_state_by_coordinates(int x, int y) {
-    for (int i = 0; i < states.size(); i++) {
-        if (states[i].x == x && states[i].y == y) {
-            return &states[i];
+    for (MDPState &state:states) {
+        if (state.x == x && state.y == y) {
+            return &state;
         }
     }
     return nullptr;
@@ -259,20 +258,25 @@ bool Environment::save(std::string outputFileName) {
 }
 
 void Environment::generate_non_deterministic_world() {
+
     Random random(seed);
-    float obst_percentage = this->percentage_obstacles / 8.0;
+    const float obst_percentage = this->percentage_obstacles / 8.0;
+    // generation of non deterministic elements
     generate_non_deterministic_obstacles();
+    // generation of deterministic elements
     generate_obstacles(obst_percentage);
+    // loop over all the states and insert dynamics.
     for (auto &current_state: states) {
         int x = current_state.x;
         int y = current_state.y;
         MDPState *next_state = get_state_by_coordinates(x, y + 1);
-        // check bounds of environment -> if actions leads outside bounds, stay put
+        // check bounds of environment || next type == wall
         if (y + 1 >= height || next_state->symbol == "O") {
             next_state = get_state_by_coordinates(x, y);
         } else {
             next_state = get_state_by_coordinates(x, y + 1);
         }
+        // if next element is a water type -> insert drifting dynamics.
         if (next_state->symbol == "w") {
             int drifting_amount = random.rand() % 4;
             for (int i = 0; i < drifting_amount; i++) {
@@ -287,19 +291,23 @@ void Environment::generate_non_deterministic_world() {
                                                                                  (drifting_away_chance /
                                                                                   (float) drifting_amount)),
                                               next_state);
-        } else if (next_state->symbol == "L") {
+        }
+            // if next element is a lava type -> insert lava reward and lava_terminal.
+        else if (next_state->symbol == "L") {
             insert_non_deterministic_dynamics(&current_state, 0, lava_reward, 1, next_state);
             current_state.terminal = lava_terminal;
         } else {
             insert_non_deterministic_dynamics(&current_state, 0, living_reward, 1, next_state);
         }
+
         next_state = get_state_by_coordinates(x, y - 1);
+        // check bounds of environment || next type == wall
         if (y - 1 < 0 || next_state->symbol == "O") {
             next_state = get_state_by_coordinates(x, y);
         } else {
             next_state = get_state_by_coordinates(x, y - 1);
         }
-
+        // if next element is a water type -> insert drifting dynamics.
         if (next_state->symbol == "w") {
             int drifting_amount = random.rand() % 4;
             for (int i = 0; i < drifting_amount; i++) {
@@ -314,7 +322,9 @@ void Environment::generate_non_deterministic_world() {
                                                                                  (drifting_away_chance /
                                                                                   (float) drifting_amount)),
                                               next_state);
-        } else if (next_state->symbol == "L") {
+        }
+            // if next element is a lava type -> insert lava reward and lava_terminal.
+        else if (next_state->symbol == "L") {
             insert_non_deterministic_dynamics(&current_state, 2, lava_reward, 1, next_state);
             current_state.terminal = lava_terminal;
         } else {
@@ -322,12 +332,13 @@ void Environment::generate_non_deterministic_world() {
         }
 
         next_state = get_state_by_coordinates(x + 1, y);
+        // check bounds of environment || next type == wall
         if (x + 1 >= width || next_state->symbol == "O") {
             next_state = get_state_by_coordinates(x, y);
         } else {
             next_state = get_state_by_coordinates(x + 1, y);
         }
-
+        // if next element is a water type -> insert drifting dynamics.
         if (next_state->symbol == "w") {
             int drifting_amount = random.rand() % 4;
             for (int i = 0; i < drifting_amount; i++) {
@@ -342,7 +353,9 @@ void Environment::generate_non_deterministic_world() {
                                                                                  (drifting_away_chance /
                                                                                   (float) drifting_amount)),
                                               next_state);
-        } else if (next_state->symbol == "L") {
+        }
+            // if next element is a lava type -> insert lava reward and lava_terminal.
+        else if (next_state->symbol == "L") {
             insert_non_deterministic_dynamics(&current_state, 1, lava_reward, 1, next_state);
             current_state.terminal = lava_terminal;
         } else {
@@ -351,11 +364,13 @@ void Environment::generate_non_deterministic_world() {
 
 
         next_state = get_state_by_coordinates(x - 1, y);
+        // check bounds of environment || next type == wall
         if (x - 1 < 0 || next_state->symbol == "O") {
             next_state = get_state_by_coordinates(x, y);
         } else {
             next_state = get_state_by_coordinates(x - 1, y);
         }
+        // if next element is a water type -> insert drifting dynamics.
         if (next_state->symbol == "w") {
             int drifting_amount = random.rand() % 4;
             for (int i = 0; i < drifting_amount; i++) {
@@ -370,7 +385,9 @@ void Environment::generate_non_deterministic_world() {
                                                                                  (drifting_away_chance /
                                                                                   (float) drifting_amount)),
                                               next_state);
-        } else if (next_state->symbol == "L") {
+        }
+            // if next element is a lava type -> insert lava reward and lava_terminal.
+        else if (next_state->symbol == "L") {
             insert_non_deterministic_dynamics(&current_state, 3, lava_reward, 1, next_state);
             current_state.terminal = lava_terminal;
         } else {
@@ -433,7 +450,7 @@ Environment::insert_non_deterministic_dynamics(MDPState *current_state, int acti
     dynamics[current_state_action].insert({next_state_reward, probability});
 }
 
-inline int manhattanLenght(MDPState u, MDPState v){
+inline int manhattanLenght(const MDPState &u, const MDPState &v) {
     return abs(u.x - v.x) + abs(u.y - v.y);
 }
 
@@ -445,87 +462,91 @@ std::stack<MDPState> Environment::runDijkstra() {
 
     bool possible = true;
 
-    for(MDPState state : states){
-        if(state.symbol != "O"){
+    for (MDPState state : states) {
+        if (state.symbol != "O") {
             distanceMap[tuple(state.x, state.y)] = std::numeric_limits<int>::max();
             previousMap[tuple(state.x, state.y)];
             Q.push_back(make_tuple(state.x, state.y));
-            if(state == *start){
+            if (state == *start) {
                 distanceMap[tuple(state.x, state.y)] = 0;
             }
         }
     }
 
-    while(!Q.empty()){
+    while (!Q.empty()) {
         MDPState u;
         // Get vertex with minimum distance
         int smallestD = std::numeric_limits<int>::max();
-        for(tuple<int, int> state : Q){
-            if(distanceMap[state] < smallestD){
+        for (tuple<int, int> state : Q) {
+            if (distanceMap[state] < smallestD) {
                 u = *get_state_by_coordinates(get<0>(state), get<1>(state));
                 smallestD = distanceMap[state];
             }
         }
-        if(smallestD == std::numeric_limits<int>::max()){
+        if (smallestD == std::numeric_limits<int>::max()) {
             possible = false;
             break;
         }
 
         Q.erase(find(Q.begin(), Q.end(), make_tuple(u.x, u.y)));
-        if(u == *end){
+        if (u == *end) {
             break;
         }
 
         // Get all valid neighbors that are still in Q.
         vector<tuple<int, int>> friendlyNeighbors;
-        if(u.x - 1 >= 0){
-            for(tuple<int, int> state : Q){
-                if(*get_state_by_coordinates(get<0>(state), get<1>(state)) == *get_state_by_coordinates(u.x - 1, u.y)){
+        if (u.x - 1 >= 0) {
+            for (tuple<int, int> state : Q) {
+                if (*get_state_by_coordinates(get<0>(state), get<1>(state)) ==
+                    *get_state_by_coordinates(u.x - 1, u.y)) {
                     friendlyNeighbors.push_back(make_tuple(u.x - 1, u.y));
                 }
             }
         }
-        if(u.x + 1 < width){
-            for(tuple<int, int> state : Q){
-                if(*get_state_by_coordinates(get<0>(state), get<1>(state)) == *get_state_by_coordinates(u.x + 1, u.y)){
+        if (u.x + 1 < width) {
+            for (tuple<int, int> state : Q) {
+                if (*get_state_by_coordinates(get<0>(state), get<1>(state)) ==
+                    *get_state_by_coordinates(u.x + 1, u.y)) {
                     friendlyNeighbors.push_back(make_tuple(u.x + 1, u.y));
                 }
             }
         }
-        if(u.y - 1 >= 0){
-            for(tuple<int, int> state : Q){
-                if(*get_state_by_coordinates(get<0>(state), get<1>(state)) == *get_state_by_coordinates(u.x, u.y - 1)){
+        if (u.y - 1 >= 0) {
+            for (tuple<int, int> state : Q) {
+                if (*get_state_by_coordinates(get<0>(state), get<1>(state)) ==
+                    *get_state_by_coordinates(u.x, u.y - 1)) {
                     friendlyNeighbors.push_back(make_tuple(u.x, u.y - 1));
                 }
             }
         }
-        if(u.y + 1 < height){
-            for(tuple<int, int> state : Q){
-                if(*get_state_by_coordinates(get<0>(state), get<1>(state)) == *get_state_by_coordinates(u.x, u.y + 1)){
+        if (u.y + 1 < height) {
+            for (tuple<int, int> state : Q) {
+                if (*get_state_by_coordinates(get<0>(state), get<1>(state)) ==
+                    *get_state_by_coordinates(u.x, u.y + 1)) {
                     friendlyNeighbors.push_back(make_tuple(u.x, u.y + 1));
                 }
             }
         }
-        for(tuple<int, int> v : friendlyNeighbors){
-            int alt = distanceMap[tuple(u.x, u.y)] + manhattanLenght(u, *get_state_by_coordinates(get<0>(v), get<1>(v)));
-            if(alt < distanceMap[v]){
+        for (tuple<int, int> v : friendlyNeighbors) {
+            int alt =
+                    distanceMap[tuple(u.x, u.y)] + manhattanLenght(u, *get_state_by_coordinates(get<0>(v), get<1>(v)));
+            if (alt < distanceMap[v]) {
                 distanceMap[v] = alt;
                 previousMap[v] = tuple(u.x, u.y);
             }
         }
     }
-    if(possible){
+    if (possible) {
         std::stack<MDPState> s;
         MDPState u = *end;
-        while(!(u == *start)){
+        while (!(u == *start)) {
             s.push(u);
-            std::tuple<int , int > temp = previousMap[tuple(u.x, u.y)];
+            std::tuple<int, int> temp = previousMap[tuple(u.x, u.y)];
             u = *get_state_by_coordinates(get<0>(temp), get<1>(temp));
         }
         s.push(u);
         return s;
-    }
-    else{
+    } else {
         return stack<MDPState>();
     }
 

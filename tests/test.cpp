@@ -16,10 +16,10 @@
 
 TEST_CASE("Deterministic Automaton") {
     std::vector<int> actions{0, 1, 2, 3};
-    std::pair<int,int> start_coordinates{0,0};
+    std::pair<int, int> start_coordinates{0, 0};
     LA la(2, 2, start_coordinates, actions);
     LA deterministic_LA = la.toDeterministic();
-    SECTION("Deterministic LA Construction"){
+    SECTION("Deterministic LA Construction") {
         REQUIRE(deterministic_LA.isProperlyInitialized());
         REQUIRE(deterministic_LA.getAllStates().size() == 4);
         REQUIRE(deterministic_LA.getAllActions().size() == 4);
@@ -28,10 +28,9 @@ TEST_CASE("Deterministic Automaton") {
         for (auto &state: deterministic_LA.getAllStates()) {
             REQUIRE(state->getProbabilities().size() == 1);
         }
-    }
-    SECTION("Deterministic LA with Environment"){
+    }SECTION("Deterministic LA with Environment") {
         Environment env = Environment(5, 5, 42, true, -0.01, 10, 0.2);
-        QLearning ql = QLearning(&env,0.1, 0.01, 0.9);
+        QLearning ql = QLearning(&env, 0.1, 0.01, 0.9);
         ql.train(env, 200, 50, 10);
         deterministic_LA = ql.getLA().toDeterministic();
         for (auto &state: deterministic_LA.getAllStates()) {
@@ -197,7 +196,7 @@ TEST_CASE("Environment Stepping: Deterministic with Obstacles") {
         state_reward_bool = env.step(0);
         REQUIRE(get<1>(state_reward_bool) == env.living_reward);
         REQUIRE(get<2>(state_reward_bool) == false);
-        MDPState * current_state = env.get_state_by_coordinates(4, 4);
+        MDPState *current_state = env.get_state_by_coordinates(4, 4);
         REQUIRE(env.curr_state == current_state);
         // step down once
         state_reward_bool = env.step(2);
@@ -233,16 +232,14 @@ TEST_CASE("Randomness") {
         REQUIRE(random.rand() == 434478924);
         REQUIRE(random.random() == 540529033);
         REQUIRE(random.random() == 442346658);
-    }
-    SECTION("random range") {
-        REQUIRE(random.rand(100, 200)==188);
-        REQUIRE(random.random_range(100, 200)==104);
-    }
-    SECTION("random item in any vector") {
+    }SECTION("random range") {
+        REQUIRE(random.rand(100, 200) == 188);
+        REQUIRE(random.random_range(100, 200) == 104);
+    }SECTION("random item in any vector") {
         std::vector<int> test_case{9, 8, 7, 6, 5, 4, 3, 2, 1, 0};
-        REQUIRE(random.random_item(test_case)==1);
-        REQUIRE(random.random_item(test_case)==9);
-        REQUIRE(random.random_item(test_case)==2);
+        REQUIRE(random.random_item(test_case) == 1);
+        REQUIRE(random.random_item(test_case) == 9);
+        REQUIRE(random.random_item(test_case) == 2);
     }
 }
 
@@ -250,42 +247,39 @@ TEST_CASE("Randomness") {
 TEST_CASE("State getters and setters") {
     std::vector<int> actions{0, 1, 2, 3};
     State state(0, 0, actions);
-    REQUIRE(state.getCoordinates() == std::make_pair(0,0));
-    REQUIRE(state.getValue(0)==0);
-    REQUIRE(state.getActionCount(1)==0);
+    REQUIRE(state.getCoordinates() == std::make_pair(0, 0));
+    REQUIRE(state.getValue(0) == 0);
+    REQUIRE(state.getActionCount(1) == 0);
     state.incrementCounter(1);
-    REQUIRE(state.getActionCount(1)==1);
+    REQUIRE(state.getActionCount(1) == 1);
     state.resetCounter();
-    REQUIRE(state.getActionCount(1)==0);
+    REQUIRE(state.getActionCount(1) == 0);
 }
 
 TEST_CASE("Learning automata tests") {
     std::vector<int> actions{0, 1, 2, 3};
-    std::pair<int,int> start_coordinates{0,0};
+    std::pair<int, int> start_coordinates{0, 0};
     LA la(2, 2, start_coordinates, actions);
-    SECTION("start state"){
+    SECTION("start state") {
         REQUIRE(la.getStartState()->getCoordinates() == start_coordinates);
-    }
-    SECTION("argmax") {
-        State* state = la.getStartState();
+    }SECTION("argmax") {
+        State *state = la.getStartState();
         state->setValue(0, 1);
-        REQUIRE(la.argmax(state)==0);
+        REQUIRE(la.argmax(state) == 0);
         state->setValue(1, 2);
-        REQUIRE(la.argmax(state)==1);
-    }
-    SECTION("coordinates to state") {
-        REQUIRE(la.coordinatesToState(std::make_tuple(1, 1))->getCoordinates()==std::make_pair(1,1));
-    }
-    SECTION("default constructor") {
+        REQUIRE(la.argmax(state) == 1);
+    }SECTION("coordinates to state") {
+        REQUIRE(la.coordinatesToState(std::make_tuple(1, 1))->getCoordinates() == std::make_pair(1, 1));
+    }SECTION("default constructor") {
         LA la2;
-        REQUIRE(la2.isProperlyInitialized()==false);
-        REQUIRE(la.isProperlyInitialized()==true);
+        REQUIRE(la2.isProperlyInitialized() == false);
+        REQUIRE(la.isProperlyInitialized() == true);
     }
 }
 
 TEST_CASE("QLearning Tests") {
     Environment env = Environment(10, 10, 42, true, -0.01, 10, 0.2);
-    QLearning ql = QLearning(&env,0.1, 0.01, 0.9);
+    QLearning ql = QLearning(&env, 0.1, 0.01, 0.9);
     ql.train(env, 2000, 50, 10);
     // todo write a test once we have an optimal path algorithm
 }
@@ -299,8 +293,8 @@ TEST_CASE("MCLearning tests") {
     SECTION("episode test") {
         env.reset();
         auto episode = agent.play(env, 200);
-        REQUIRE(episode.empty()==false);
-    }SECTION("training"){
+        REQUIRE(episode.empty() == false);
+    }SECTION("training") {
         env.reset();
         agent.train(env, 10000, 100, 2500);
         env.reset();
@@ -312,28 +306,26 @@ TEST_CASE("MCLearning tests") {
 TEST_CASE("Non deterministic enviroment") {
     Environment env = Environment(5, 5, 42, false, -0.01, 10, 0.2);
     REQUIRE(env.deterministic == false);
-    REQUIRE(env.get_state_by_coordinates(2,2)->symbol == "w");
+    REQUIRE(env.get_state_by_coordinates(2, 2)->symbol == "w");
     // test if there is a non-1 probability
-    REQUIRE((env.p(env.get_state_by_coordinates(2,2), 0).begin()->second)!=1);
+    REQUIRE((env.p(env.get_state_by_coordinates(2, 2), 0).begin()->second) != 1);
     // test if there are more that one resulting state in the dynamics
-    REQUIRE((env.p(env.get_state_by_coordinates(4,2), 2).size())!=1);
+    REQUIRE((env.p(env.get_state_by_coordinates(4, 2), 2).size()) != 1);
 }
 
 TEST_CASE("Optimal Path (Dijkstra)") {
     Environment env = Environment(5, 5, 42, true, -0.01, 10, 0.2);
-    SECTION("Small sized 5x5 Environment"){
+    SECTION("Small sized 5x5 Environment") {
         Environment env = Environment(5, 5, 3, true, -0.01, 100, 0.2);
         // Optimal path only makes sense in deterministic environment.
         REQUIRE(env.deterministic);
         REQUIRE(env.runDijkstra().size() == 5);
-    }
-    SECTION("Medium sized 10x10 Environment"){
+    }SECTION("Medium sized 10x10 Environment") {
         Environment env = Environment(10, 10, 3, true, -0.01, 100, 0.2);
         // Optimal path only makes sense in deterministic environment.
         REQUIRE(env.deterministic);
         REQUIRE(env.runDijkstra().size() == 10);
-    }
-    SECTION("Large sized 20x20 Environment"){
+    }SECTION("Large sized 20x20 Environment") {
         Environment env = Environment(20, 20, 3, true, -0.01, 100, 0.2);
         // Optimal path only makes sense in deterministic environment.
         REQUIRE(env.deterministic);
@@ -343,29 +335,30 @@ TEST_CASE("Optimal Path (Dijkstra)") {
 
 TEST_CASE("Saving of Environment")
 {
-    SECTION("Deterministic Environment"){
+    SECTION("Deterministic Environment") {
         Environment env = Environment(20, 20, 3, true, -0.01, 10, 0.2);
         env.save("determinsticEnvironmentSavingOutput.xml");
         REQUIRE(DirectoryExists("testData/deterministicEnvironmentSave.xml"));
         REQUIRE(DirectoryExists("data/determinsticEnvironmentSavingOutput.xml"));
-        REQUIRE(FileCompare("testData/deterministicEnvironmentSave.xml", "data/determinsticEnvironmentSavingOutput.xml"));
-    }
-    SECTION("Non-Deterministic Environment"){
+        REQUIRE(FileCompare("testData/deterministicEnvironmentSave.xml",
+                            "data/determinsticEnvironmentSavingOutput.xml"));
+    }SECTION("Non-Deterministic Environment") {
         Environment env = Environment(20, 20, 3, false, -0.01, 10, 0.2);
         env.save("nonDeterminsticEnvironmentSavingOutput.xml");
         REQUIRE(DirectoryExists("testData/nonDeterministicEnvironmentSave.xml"));
         REQUIRE(DirectoryExists("data/nonDeterminsticEnvironmentSavingOutput.xml"));
-        REQUIRE(FileCompare("testData/nonDeterministicEnvironmentSave.xml", "data/nonDeterminsticEnvironmentSavingOutput.xml"));
+        REQUIRE(FileCompare("testData/nonDeterministicEnvironmentSave.xml",
+                            "data/nonDeterminsticEnvironmentSavingOutput.xml"));
     }
 }
 
-TEST_CASE("Loading of Environment"){
-    SECTION("Deterministic Environment"){
+TEST_CASE("Loading of Environment") {
+    SECTION("Deterministic Environment") {
         Environment env = Environment(20, 20, 3, true, -0.01, 10, 0.2);
         REQUIRE(DirectoryExists("testData/deterministicEnvironmentSave.xml"));
         EnvironmentParser Q;
         Q.loadFile("testData/deterministicEnvironmentSave.xml");
-        Environment* loadedEnv = Q.parseFile();
+        Environment *loadedEnv = Q.parseFile();
         REQUIRE(env.height == loadedEnv->height);
         REQUIRE(env.width == loadedEnv->width);
         REQUIRE(env.seed == loadedEnv->seed);
@@ -373,13 +366,12 @@ TEST_CASE("Loading of Environment"){
         REQUIRE(env.living_reward == loadedEnv->living_reward);
         REQUIRE(env.end_reward == loadedEnv->end_reward);
         REQUIRE(env.percentage_obstacles == loadedEnv->percentage_obstacles);
-    }
-    SECTION("Non-Deterministic Environment"){
+    }SECTION("Non-Deterministic Environment") {
         Environment env = Environment(20, 20, 3, false, -0.01, 10, 0.2);
         REQUIRE(DirectoryExists("testData/nonDeterministicEnvironmentSave.xml"));
         EnvironmentParser Q;
         Q.loadFile("testData/nonDeterministicEnvironmentSave.xml");
-        Environment* loadedEnv = Q.parseFile();
+        Environment *loadedEnv = Q.parseFile();
         REQUIRE(env.height == loadedEnv->height);
         REQUIRE(env.width == loadedEnv->width);
         REQUIRE(env.seed == loadedEnv->seed);
@@ -390,16 +382,15 @@ TEST_CASE("Loading of Environment"){
     }
 }
 
-TEST_CASE("Saving of LA"){
-    SECTION("MCLearning"){
+TEST_CASE("Saving of LA") {
+    SECTION("MCLearning") {
         Environment env = Environment(20, 20, 3, true, -0.01, 10, 0.2);
         MCLearning agent = MCLearning(env, 0.1);
         agent.save("MCLearningLASavingOutput.xml");
         REQUIRE(DirectoryExists("testData/savedLA.xml"));
         REQUIRE(DirectoryExists("data/MCLearningLASavingOutput.xml"));
         REQUIRE(FileCompare("testData/savedLA.xml", "data/MCLearningLASavingOutput.xml"));
-    }
-    SECTION("QLearning"){
+    }SECTION("QLearning") {
         Environment env = Environment(20, 20, 3, true, -0.01, 10, 0.2);
         QLearning agent = QLearning(&env, 0.1, 1, 0.9);
         agent.save("QLearningLASavingOutput.xml");
@@ -409,37 +400,38 @@ TEST_CASE("Saving of LA"){
     }
 }
 
-TEST_CASE("Loading of LA"){
-    SECTION("MCLearning"){
+TEST_CASE("Loading of LA") {
+    SECTION("MCLearning") {
         Environment env = Environment(20, 20, 3, true, -0.01, 10, 0.2);
         MCLearning agent = MCLearning(env, 0.1);
         MCLearning loadedAgent = MCLearning(env, 0.1);
         LAParser Q;
         REQUIRE(DirectoryExists("testData/savedLA.xml"));
         Q.loadFile("testData/savedLA.xml");
-        LA* loadedLA = new LA();
+        LA *loadedLA = new LA();
         Q.parseFile(loadedLA);
         loadedAgent.load(loadedLA);
 
         REQUIRE(agent.getLA().getHeight() == loadedAgent.getLA().getHeight());
         REQUIRE(agent.getLA().getWidth() == loadedAgent.getLA().getWidth());
-        REQUIRE(agent.getLA().getStartState()->getCoordinates() == loadedAgent.getLA().getStartState()->getCoordinates());
+        REQUIRE(agent.getLA().getStartState()->getCoordinates() ==
+                loadedAgent.getLA().getStartState()->getCoordinates());
         REQUIRE(agent.getLA().getAllActions() == loadedAgent.getLA().getAllActions());
-    }
-    SECTION("QLearning"){
+    }SECTION("QLearning") {
         Environment env = Environment(20, 20, 3, true, -0.01, 10, 0.2);
         QLearning agent = QLearning(&env, 0.1, 1, 0.9);
         QLearning loadedAgent = QLearning(&env, 0.1, 1, 0.9);
         LAParser Q;
         REQUIRE(DirectoryExists("testData/savedLA.xml"));
         Q.loadFile("testData/savedLA.xml");
-        LA* loadedLA = new LA();
+        LA *loadedLA = new LA();
         Q.parseFile(loadedLA);
         loadedAgent.load(loadedLA);
 
         REQUIRE(agent.getLA().getHeight() == loadedAgent.getLA().getHeight());
         REQUIRE(agent.getLA().getWidth() == loadedAgent.getLA().getWidth());
-        REQUIRE(agent.getLA().getStartState()->getCoordinates() == loadedAgent.getLA().getStartState()->getCoordinates());
+        REQUIRE(agent.getLA().getStartState()->getCoordinates() ==
+                loadedAgent.getLA().getStartState()->getCoordinates());
         REQUIRE(agent.getLA().getAllActions() == loadedAgent.getLA().getAllActions());
     }
 }
