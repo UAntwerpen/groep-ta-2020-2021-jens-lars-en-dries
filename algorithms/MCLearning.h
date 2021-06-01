@@ -46,6 +46,8 @@ public:
 
     // get the optimal route
     std::vector<int> getOptimalRoute(Environment& gridworld);
+
+    float score(Environment& gridworld, LA* la);
 };
 
 
