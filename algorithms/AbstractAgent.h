@@ -14,7 +14,7 @@ public:
     virtual void save(string outfileName) = 0;
     virtual void load(LA* savedLA) = 0;
 
-    virtual float score(Environment& gridworld, LA* la);
+    virtual float score(Environment& gridworld, LA* la) = 0;
 
 
 };

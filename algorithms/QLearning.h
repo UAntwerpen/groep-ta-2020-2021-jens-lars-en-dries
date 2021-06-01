@@ -30,6 +30,8 @@ public:
     void save(string outfileName);
     void load(LA* savedLA);
 
+    float score(Environment& gridworld, LA* la);
+
 private:
     void learn(State* current_state, int current_action, State* next_state, float reward);
 };
